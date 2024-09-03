@@ -25,7 +25,7 @@ namespace TokenDemo.Web
         {
             //services.AddControllers();
             services.AddMvc();
-            services.AddDbContext<DemoTokenContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:DefaultConnection"]));
+            services.AddDbContext<UserAuthorization>(opts => opts.UseSqlServer(Configuration["ConnectionString:DefaultConnection"]));
 
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("ServiceConfiguration");
