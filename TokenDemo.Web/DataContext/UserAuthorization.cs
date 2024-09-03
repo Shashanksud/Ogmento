@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace TokenDemo.Web.DataContext
 {
-    public partial class DemoTokenContext : DbContext
+    public partial class UserAuthorization : DbContext
     {
-        public DemoTokenContext()
+        public UserAuthorization()
         {
         }
 
-        public DemoTokenContext(DbContextOptions<DemoTokenContext> options)
+        public UserAuthorization(DbContextOptions<UserAuthorization> options)
             : base(options)
         {
         }

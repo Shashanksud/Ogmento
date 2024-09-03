@@ -12,9 +12,9 @@ namespace TokenDemo.Web.Services
     }
     public class UserService : IUserService
     {
-        private readonly DemoTokenContext _context;
+        private readonly UserAuthorization _context;
 
-        public UserService(DemoTokenContext context)
+        public UserService(UserAuthorization context)
         {
             _context = context;
         }

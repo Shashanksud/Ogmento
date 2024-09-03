@@ -23,11 +23,11 @@ namespace TokenDemo.Web.Services
 
     public class IdentityService : IIdentityService
     {
-        private readonly DemoTokenContext _context;
+        private readonly UserAuthorization _context;
         private readonly ServiceConfiguration _appSettings;
 
         private readonly TokenValidationParameters _tokenValidationParameters;
-        public IdentityService(DemoTokenContext context,
+        public IdentityService(UserAuthorization context,
             IOptions<ServiceConfiguration> settings,
             TokenValidationParameters tokenValidationParameters)
         {
