@@ -5,6 +5,14 @@ VisualStudioVersion = 17.11.35219.272
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI", "TokenDemo.Web\OgmentoAPI.csproj", "{FC6EC953-C6A9-4569-A092-55C868B6532A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hosts", "Hosts", "{C2FDB269-06B8-4237-A356-B7F534BE5DE5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{EDCE2E33-485A-45C6-853D-99B85BBA94DD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Authorization", "Authorization", "{D2E195C4-A27C-4E65-9F51-CD213A96CB2A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OgmentoAPI.Domain.Authorization.Infrastructure", "OgmentoAPI.Domain.Authorization.Infrastructure\OgmentoAPI.Domain.Authorization.Infrastructure.csproj", "{69984FAC-49BA-4BF5-8D53-C9E84251AA0B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,9 +23,18 @@ Global
 		{FC6EC953-C6A9-4569-A092-55C868B6532A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC6EC953-C6A9-4569-A092-55C868B6532A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FC6EC953-C6A9-4569-A092-55C868B6532A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69984FAC-49BA-4BF5-8D53-C9E84251AA0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69984FAC-49BA-4BF5-8D53-C9E84251AA0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69984FAC-49BA-4BF5-8D53-C9E84251AA0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69984FAC-49BA-4BF5-8D53-C9E84251AA0B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FC6EC953-C6A9-4569-A092-55C868B6532A} = {C2FDB269-06B8-4237-A356-B7F534BE5DE5}
+		{D2E195C4-A27C-4E65-9F51-CD213A96CB2A} = {EDCE2E33-485A-45C6-853D-99B85BBA94DD}
+		{69984FAC-49BA-4BF5-8D53-C9E84251AA0B} = {D2E195C4-A27C-4E65-9F51-CD213A96CB2A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B543B321-CD20-4B61-A5EF-265A029D186F}
