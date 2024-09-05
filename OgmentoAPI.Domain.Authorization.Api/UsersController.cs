@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Runtime.InteropServices;
+using OgmentoAPI.Domain.Authorization.Abstraction;
+using OgmentoAPI.Domain.Authorization.Services;
 using System.Security.Claims;
-using TokenDemo.Web.Services;
+
 
 namespace OgmentoAPI.Domain.Authorization.Api
 {

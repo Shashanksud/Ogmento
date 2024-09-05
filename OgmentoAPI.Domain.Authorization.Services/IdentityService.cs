@@ -3,25 +3,18 @@ using Microsoft.IdentityModel.Tokens;
 using OgmentoAPI.Domain.Authorization.Abstraction;
 using OgmentoAPI.Domain.Authorization.Abstraction.DataContext;
 using OgmentoAPI.Domain.Authorization.Abstraction.Models;
-using System;
-using System.Collections.Generic;
+
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
+
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
+
 
 using JwtRegisteredClaimNames = System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames;
 
 namespace OgmentoAPI.Domain.Authorization.Services
 {
-    public interface IIdentityService
-    {
-        Task<ResponseModel<TokenModel>> LoginAsync(LoginModel login);
-        // Task<ResponseModel<TokenModel>> RefreshTokenAsync(TokenModel request);
-
-
-    }
+    
 
     public class IdentityService : IIdentityService
     {
