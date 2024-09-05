@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Reflection.Emit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using OgmentoAPI.Domain.Authorization.Abstraction;
+using OgmentoAPI.Domain.Authorization.Abstraction.DataContext;
+using OgmentoAPI.Domain.Authorization.Abstraction.Models;
 
 namespace TokenDemo.Web.DataContext
 {
-    public partial class AuthorizationDbContext : DbContext
+    public partial class AuthorizationDbContext : DbContext, IAuthorizationContext
     {
         public AuthorizationDbContext()
         {
@@ -21,6 +24,20 @@ namespace TokenDemo.Web.DataContext
         public virtual DbSet<RolesMaster> RolesMaster { get; set; }
         public virtual DbSet<UserRoles> UserRoles { get; set; }
         public virtual DbSet<UsersMaster> UsersMaster { get; set; }
+
+        public UsersMaster GetUserDetail(LoginModel login)
+        {
+           return UsersMaster.FirstOrDefault(c => c.UserName == login.UserName && c.Password == login.Password);
+        }
+
+        public List<RolesMaster> GetUserRoles(long userID)
+        {
+            return (from UM in UsersMaster
+             join UR in UserRoles on UM.UserId equals UR.UserId
+             join RM in RolesMaster on UR.RoleId equals RM.RoleId
+             where UM.UserId == userID
+                    select RM).ToList();
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

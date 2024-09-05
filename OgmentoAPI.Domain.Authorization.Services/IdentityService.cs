@@ -1,5 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using OgmentoAPI.Domain.Authorization.Abstraction;
+using OgmentoAPI.Domain.Authorization.Abstraction.DataContext;
+using OgmentoAPI.Domain.Authorization.Abstraction.Models;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -10,7 +13,7 @@ using System.Threading.Tasks;
 
 using JwtRegisteredClaimNames = System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames;
 
-namespace gmentoAPI.Domain.Authorization.Services
+namespace OgmentoAPI.Domain.Authorization.Services
 {
     public interface IIdentityService
     {
@@ -22,17 +25,18 @@ namespace gmentoAPI.Domain.Authorization.Services
 
     public class IdentityService : IIdentityService
     {
-        private readonly UserAuthorization _context;
+        
         private readonly ServiceConfiguration _appSettings;
 
         private readonly TokenValidationParameters _tokenValidationParameters;
-        public IdentityService(UserAuthorization context,
-            IOptions<ServiceConfiguration> settings,
-            TokenValidationParameters tokenValidationParameters)
+        private readonly IAuthorizationContext _contextService;
+
+        public IdentityService(IOptions<ServiceConfiguration> settings, 
+            TokenValidationParameters tokenValidationParameters, IAuthorizationContext contextService)
         {
-            _context = context;
             _appSettings = settings.Value;
             _tokenValidationParameters = tokenValidationParameters;
+            _contextService = contextService;
         }
 
 
@@ -41,7 +45,7 @@ namespace gmentoAPI.Domain.Authorization.Services
             ResponseModel<TokenModel> response = new ResponseModel<TokenModel>();
             try
             {
-                UsersMaster loginUser = _context.UsersMaster.FirstOrDefault(c => c.UserName == login.UserName && c.Password == login.Password);
+                UsersMaster loginUser = _contextService.GetUserDetail(login);
 
                 if (loginUser == null)
                 {
@@ -76,11 +80,7 @@ namespace gmentoAPI.Domain.Authorization.Services
         {
             try
             {
-                List<RolesMaster> rolesMasters = (from UM in _context.UsersMaster
-                                                  join UR in _context.UserRoles on UM.UserId equals UR.UserId
-                                                  join RM in _context.RolesMaster on UR.RoleId equals RM.RoleId
-                                                  where UM.UserId == UserId
-                                                  select RM).ToList();
+                List<RolesMaster> rolesMasters = _contextService.GetUserRoles(UserId);
                 return rolesMasters;
             }
             catch (Exception)
@@ -134,7 +134,7 @@ namespace gmentoAPI.Domain.Authorization.Services
                     ExpiryDate = DateTime.UtcNow.AddMonths(6)
                 };
                 // await _context.RefreshToken.AddAsync(refreshToken);
-                await _context.SaveChangesAsync();
+            //    await _context.SaveChangesAsync();
                 //     authenticationResult.RefreshToken = refreshToken.Token;
                 authenticationResult.Success = true;
                 return authenticationResult;
