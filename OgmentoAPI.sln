@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35219.272
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI", "TokenDemo.Web\OgmentoAPI.csproj", "{FC6EC953-C6A9-4569-A092-55C868B6532A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI", "OgmentoAPI.Web\OgmentoAPI.csproj", "{FC6EC953-C6A9-4569-A092-55C868B6532A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{065C42E5-7BBB-4D3A-AAB8-CA8F0C3A6BDD} = {065C42E5-7BBB-4D3A-AAB8-CA8F0C3A6BDD}
 		{69984FAC-49BA-4BF5-8D53-C9E84251AA0B} = {69984FAC-49BA-4BF5-8D53-C9E84251AA0B}
