@@ -5,9 +5,37 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\**" />
+    <Compile Remove="DataContext\**" />
+    <Compile Remove="Models\**" />
+    <Compile Remove="Services\**" />
+    <Content Remove="Controllers\**" />
+    <Content Remove="DataContext\**" />
+    <Content Remove="Models\**" />
+    <Content Remove="Services\**" />
+    <EmbeddedResource Remove="Controllers\**" />
+    <EmbeddedResource Remove="DataContext\**" />
+    <EmbeddedResource Remove="Models\**" />
+    <EmbeddedResource Remove="Services\**" />
+    <None Remove="Controllers\**" />
+    <None Remove="DataContext\**" />
+    <None Remove="Models\**" />
+    <None Remove="Services\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\UserAuthorizationModelSnapshot.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Controllers\WeatherForecastController.cs" />
+    <Compile Include="Models\ServiceConfiguration.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
+     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
+       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -18,7 +46,17 @@
     </PackageReference>
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.0.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.4" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore" Version="8.0.4" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OgmentoAPI.Domain.Authorization.Api\OgmentoAPI.Domain.Authorization.Api.csproj" />
+    <ProjectReference Include="..\OgmentoAPI.Domain.Authorization.Services\OgmentoAPI.Domain.Authorization.Services.csproj" />
   </ItemGroup>
 
 

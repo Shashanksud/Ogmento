@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace TokenDemo.Web.DataContext
+﻿
+namespace OgmentoAPI.Domain.Authorization.Abstraction.DataContext
 {
     public partial class RolesMaster
     {

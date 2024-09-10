@@ -1,17 +1,18 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
+using OgmentoAPI.Domain.Authorization.Abstraction;
+using OgmentoAPI.Domain.Authorization.Abstraction.DataContext;
+using OgmentoAPI.Domain.Authorization.Abstraction.Models;
 
 namespace TokenDemo.Web.DataContext
 {
-    public partial class UserAuthorization : DbContext
+    public partial class AuthorizationDbContext : DbContext, IAuthorizationContext, IUserContext
     {
-        public UserAuthorization()
+        public AuthorizationDbContext()
         {
         }
 
-        public UserAuthorization(DbContextOptions<UserAuthorization> options)
-            : base(options)
+        public AuthorizationDbContext(DbContextOptions<AuthorizationDbContext> options)
+        : base(options)
         {
         }
 
@@ -19,6 +20,46 @@ namespace TokenDemo.Web.DataContext
         public virtual DbSet<RolesMaster> RolesMaster { get; set; }
         public virtual DbSet<UserRoles> UserRoles { get; set; }
         public virtual DbSet<UsersMaster> UsersMaster { get; set; }
+
+        public List<string> GetRoleNames(long UserId)
+        {
+            return (from UM in UsersMaster
+                    join UR in UserRoles on UM.UserId equals UR.UserId
+                    join RM in RolesMaster on UR.RoleId equals RM.RoleId
+                    where UM.UserId == UserId
+                    select RM.RoleName).ToList();
+        }
+
+        public UserModel GetUserByID(long UserId)
+        {
+            return (from UM in UsersMaster
+                    where UM.UserId == UserId
+                    select new UserModel
+                    {
+                        UserId = UM.UserId,
+                        FirstName = UM.FirstName,
+                        LastName = UM.LastName,
+                        Email = UM.Email,
+                        PhoneNumber = UM.PhoneNumber,
+                        UserName = UM.UserName
+                    }).FirstOrDefault(); 
+        }
+
+        public UsersMaster GetUserDetail(LoginModel login)
+        {
+           return UsersMaster.FirstOrDefault(c => c.UserName == login.UserName && c.Password == login.Password);
+        }
+
+        public List<RolesMaster> GetUserRoles(long userID)
+        {
+            return (from UM in UsersMaster
+             join UR in UserRoles on UM.UserId equals UR.UserId
+             join RM in RolesMaster on UR.RoleId equals RM.RoleId
+             where UM.UserId == userID
+                    select RM).ToList();
+        }
+
+        
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -79,7 +120,6 @@ namespace TokenDemo.Web.DataContext
 
                 entity.Property(e => e.UserName).IsRequired();
             });
-
             OnModelCreatingPartial(modelBuilder);
         }
 

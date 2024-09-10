@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using TokenDemo.Web.Models;
-using TokenDemo.Web.Services;
+using OgmentoAPI.Domain.Authorization.Abstraction;
+using OgmentoAPI.Domain.Authorization.Abstraction.Models;
 
-namespace TokenDemo.Web.Controllers
+
+namespace OgmentoAPI.Domain.Authorization.Api
 {
     [Route("api/[controller]")]
 
@@ -18,7 +18,7 @@ namespace TokenDemo.Web.Controllers
         }
         [Route("login")]
         [HttpPost]
-        public async Task<IActionResult> LoginAsync([FromBody]LoginModel loginModel)
+        public async Task<IActionResult> LoginAsync([FromBody] LoginModel loginModel)
         {
             var result = await _identityService.LoginAsync(loginModel);
             return Ok(result);
@@ -35,3 +35,4 @@ namespace TokenDemo.Web.Controllers
 
     }
 }
+

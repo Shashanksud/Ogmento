@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OgmentoAPI.Domain.Authorization.Abstraction\OgmentoAPI.Domain.Authorization.Abstraction.csproj" />
+    <ProjectReference Include="..\OgmentoAPI.Domain.Authorization.Services\OgmentoAPI.Domain.Authorization.Services.csproj" />
+  </ItemGroup>
+
+</Project>

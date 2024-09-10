@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+using OgmentoAPI.Domain.Authorization.Abstraction;
+using OgmentoAPI.Domain.Authorization.Services;
 using System.Security.Claims;
-using TokenDemo.Web.Services;
 
-namespace TokenDemo.Web.Controllers
+
+namespace OgmentoAPI.Domain.Authorization.Api
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -50,6 +51,6 @@ namespace TokenDemo.Web.Controllers
                 return UserId;
             }
         }
-       
+
     }
 }
