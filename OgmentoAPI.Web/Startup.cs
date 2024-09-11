@@ -33,6 +33,8 @@ namespace TokenDemo.Web
             services.Configure<ServiceConfiguration>(appSettingsSection);
             
             services.AddAuth(Configuration["ConnectionString:DefaultConnection"]);
+            
+ 
             // configure jwt authentication
             var serviceConfiguration = appSettingsSection.Get<ServiceConfiguration>();
             var JwtSecretkey = Encoding.ASCII.GetBytes(serviceConfiguration.JwtSettings.Secret);

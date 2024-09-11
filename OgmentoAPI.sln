@@ -19,11 +19,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Authorization", "Authorizat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI.Domain.Authorization.Infrastructure", "OgmentoAPI.Domain.Authorization.Infrastructure\OgmentoAPI.Domain.Authorization.Infrastructure.csproj", "{69984FAC-49BA-4BF5-8D53-C9E84251AA0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OgmentoAPI.Domain.Authorization.Services", "OgmentoAPI.Domain.Authorization.Services\OgmentoAPI.Domain.Authorization.Services.csproj", "{BE201169-3B70-445C-95DB-2D036317140A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI.Domain.Authorization.Services", "OgmentoAPI.Domain.Authorization.Services\OgmentoAPI.Domain.Authorization.Services.csproj", "{BE201169-3B70-445C-95DB-2D036317140A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI.Domain.Authorization.Abstraction", "OgmentoAPI.Domain.Authorization.Abstraction\OgmentoAPI.Domain.Authorization.Abstraction.csproj", "{065C42E5-7BBB-4D3A-AAB8-CA8F0C3A6BDD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI.Domain.Authorization.Api", "OgmentoAPI.Domain.Authorization.Api\OgmentoAPI.Domain.Authorization.Api.csproj", "{CE80F874-67B6-427C-89C0-0BCE08D31145}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{8F71D6CF-31B2-4BF1-950B-649364BD3CAB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{305F547B-68A4-4DBA-A3E2-0BD8CA00CEFD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI.Domain.Client.Abstractions", "OgmentoAPI.Domain.Client.Abstractions\OgmentoAPI.Domain.Client.Abstractions.csproj", "{0704C4B6-4462-4381-B3D9-76AB42E3C2C2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI.Domain.Common.Abstractions", "OgmentoAPI.Domain.Common.Abstractions\OgmentoAPI.Domain.Common.Abstractions.csproj", "{F1DD6FE3-E934-4283-A4CF-957CC93F626A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI.Domain.Client.Infrastructure", "OgmentoAPI.Domain.Client.Infrastructure\OgmentoAPI.Domain.Client.Infrastructure.csproj", "{BD88C988-9128-498B-B71C-DC08A567E383}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI.Domain.Common.Infrastructure", "OgmentoAPI.Domain.Common.Infrastructure\OgmentoAPI.Domain.Common.Infrastructure.csproj", "{F15D4820-257D-402E-BF7A-0FE58AE2AA11}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OgmentoAPI.Domain.Client.Services", "OgmentoAPI.Domain.Client.Services\OgmentoAPI.Domain.Client.Services.csproj", "{10D1F084-ABC6-46C4-89A9-860A917A0C72}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +65,26 @@ Global
 		{CE80F874-67B6-427C-89C0-0BCE08D31145}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE80F874-67B6-427C-89C0-0BCE08D31145}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE80F874-67B6-427C-89C0-0BCE08D31145}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0704C4B6-4462-4381-B3D9-76AB42E3C2C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0704C4B6-4462-4381-B3D9-76AB42E3C2C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0704C4B6-4462-4381-B3D9-76AB42E3C2C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0704C4B6-4462-4381-B3D9-76AB42E3C2C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1DD6FE3-E934-4283-A4CF-957CC93F626A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1DD6FE3-E934-4283-A4CF-957CC93F626A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1DD6FE3-E934-4283-A4CF-957CC93F626A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1DD6FE3-E934-4283-A4CF-957CC93F626A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD88C988-9128-498B-B71C-DC08A567E383}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD88C988-9128-498B-B71C-DC08A567E383}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD88C988-9128-498B-B71C-DC08A567E383}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD88C988-9128-498B-B71C-DC08A567E383}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F15D4820-257D-402E-BF7A-0FE58AE2AA11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F15D4820-257D-402E-BF7A-0FE58AE2AA11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F15D4820-257D-402E-BF7A-0FE58AE2AA11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F15D4820-257D-402E-BF7A-0FE58AE2AA11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10D1F084-ABC6-46C4-89A9-860A917A0C72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10D1F084-ABC6-46C4-89A9-860A917A0C72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10D1F084-ABC6-46C4-89A9-860A917A0C72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10D1F084-ABC6-46C4-89A9-860A917A0C72}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -61,6 +95,13 @@ Global
 		{BE201169-3B70-445C-95DB-2D036317140A} = {D2E195C4-A27C-4E65-9F51-CD213A96CB2A}
 		{065C42E5-7BBB-4D3A-AAB8-CA8F0C3A6BDD} = {D2E195C4-A27C-4E65-9F51-CD213A96CB2A}
 		{CE80F874-67B6-427C-89C0-0BCE08D31145} = {D2E195C4-A27C-4E65-9F51-CD213A96CB2A}
+		{8F71D6CF-31B2-4BF1-950B-649364BD3CAB} = {EDCE2E33-485A-45C6-853D-99B85BBA94DD}
+		{305F547B-68A4-4DBA-A3E2-0BD8CA00CEFD} = {EDCE2E33-485A-45C6-853D-99B85BBA94DD}
+		{0704C4B6-4462-4381-B3D9-76AB42E3C2C2} = {8F71D6CF-31B2-4BF1-950B-649364BD3CAB}
+		{F1DD6FE3-E934-4283-A4CF-957CC93F626A} = {305F547B-68A4-4DBA-A3E2-0BD8CA00CEFD}
+		{BD88C988-9128-498B-B71C-DC08A567E383} = {8F71D6CF-31B2-4BF1-950B-649364BD3CAB}
+		{F15D4820-257D-402E-BF7A-0FE58AE2AA11} = {305F547B-68A4-4DBA-A3E2-0BD8CA00CEFD}
+		{10D1F084-ABC6-46C4-89A9-860A917A0C72} = {8F71D6CF-31B2-4BF1-950B-649364BD3CAB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B543B321-CD20-4B61-A5EF-265A029D186F}

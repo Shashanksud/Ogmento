@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using OgmentoAPI.Domain.Authorization.Abstraction;
+using OgmentoAPI.Domain.Authorization.Abstraction.DataContext;
 using TokenDemo.Web.DataContext;
 
 namespace OgmentoAPI.Domain.Authorization.Services
