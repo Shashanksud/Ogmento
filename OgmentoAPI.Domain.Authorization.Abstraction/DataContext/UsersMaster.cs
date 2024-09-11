@@ -1,5 +1,4 @@
-﻿using OgmentoAPI.Domain.Authorization.Abstraction.DataContext;
-using OgmentoAPI.Domain.Client.Abstractions.DataContext;
+﻿using OgmentoAPI.Domain.Client.Abstractions.DataContext;
 
 namespace OgmentoAPI.Domain.Authorization.Abstraction.DataContext
 {

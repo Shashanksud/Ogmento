@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI.Domain.Authoriza
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI.Domain.Authorization.Services", "OgmentoAPI.Domain.Authorization.Services\OgmentoAPI.Domain.Authorization.Services.csproj", "{BE201169-3B70-445C-95DB-2D036317140A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI.Domain.Authorization.Abstraction", "OgmentoAPI.Domain.Authorization.Abstraction\OgmentoAPI.Domain.Authorization.Abstraction.csproj", "{065C42E5-7BBB-4D3A-AAB8-CA8F0C3A6BDD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI.Domain.Authorization.Abstractions", "OgmentoAPI.Domain.Authorization.Abstraction\OgmentoAPI.Domain.Authorization.Abstractions.csproj", "{065C42E5-7BBB-4D3A-AAB8-CA8F0C3A6BDD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI.Domain.Authorization.Api", "OgmentoAPI.Domain.Authorization.Api\OgmentoAPI.Domain.Authorization.Api.csproj", "{CE80F874-67B6-427C-89C0-0BCE08D31145}"
 EndProject
@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI.Domain.Client.In
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI.Domain.Common.Infrastructure", "OgmentoAPI.Domain.Common.Infrastructure\OgmentoAPI.Domain.Common.Infrastructure.csproj", "{F15D4820-257D-402E-BF7A-0FE58AE2AA11}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OgmentoAPI.Domain.Client.Services", "OgmentoAPI.Domain.Client.Services\OgmentoAPI.Domain.Client.Services.csproj", "{10D1F084-ABC6-46C4-89A9-860A917A0C72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI.Domain.Client.Services", "OgmentoAPI.Domain.Client.Services\OgmentoAPI.Domain.Client.Services.csproj", "{10D1F084-ABC6-46C4-89A9-860A917A0C72}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
