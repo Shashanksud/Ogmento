@@ -121,6 +121,15 @@ namespace TokenDemo.Web.DataContext
                 entity.Property(e => e.UserName).IsRequired();
             });
             OnModelCreatingPartial(modelBuilder);
+
+            modelBuilder.Entity<UsersMaster>()
+                .HasMany(u => u.UserSalesCenter)
+                .WithOne()
+                .HasForeignKey(sc => sc.UserId)
+                .IsRequired();
+            
+
+            base.OnModelCreating(modelBuilder);
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,10 +9,11 @@ namespace OgmentoAPI.Domain.Client.Abstractions.DataContext
 {
     public class SalesCenterUserMapping
     {
-
-        public int UserID { get; set; }
-     
-        public int SalesCentreID { get; set; }
+        
+        public int UserId { get; set; }
+        
+        public int SalesCenterId { get; set; }
         public SalesCenter SalesCenters { get; set; }
+        //public UsersMaster User {  get; set; }
     }
 }

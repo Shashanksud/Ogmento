@@ -15,16 +15,18 @@ namespace OgmentoAPI.Domain.Client.Infrastructure
                 .HasOne(sc => sc.Country)
                 .WithMany()
                 .HasForeignKey(sc => sc.CountryId);
-            
+
+            //modelBuilder.Entity<SalesCenterUserMapping>()
+                //.HasKey(sc => sc.ID);
 
             modelBuilder.Entity<SalesCenterUserMapping>()
-                .HasKey(sc => new { sc.UserID, sc.SalesCentreID });
+                .HasKey(sc => new { sc.UserId, sc.SalesCenterId });
 
             modelBuilder.Entity<SalesCenterUserMapping>()
                 .HasOne(sc => sc.SalesCenters)
                 .WithMany(sc => sc.SalesCenterUsers)
-                .HasForeignKey(sc => sc.SalesCentreID)
-                .HasForeignKey(sc => sc.UserID);
+                .HasForeignKey(sc => sc.SalesCenterId);
+            
 
             base.OnModelCreating(modelBuilder);
         }
