@@ -6,8 +6,8 @@ namespace OgmentoAPI.Domain.Client.Infrastructure
     public class ClientDBContext: DbContext
     {
         public ClientDBContext(DbContextOptions<ClientDBContext>options): base(options) { }
-        public DbSet<SalesCenter> SalesCenters { get; set; }
-        public DbSet<SalesCenterUserMapping> SalesCentreUsers { get; set; }
+        public DbSet<SalesCenter> SalesCenter{ get; set; }
+        public DbSet<SalesCenterUserMapping> SalesCenterUserMapping { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -16,17 +16,17 @@ namespace OgmentoAPI.Domain.Client.Infrastructure
                 .WithMany()
                 .HasForeignKey(sc => sc.CountryId);
 
-            //modelBuilder.Entity<SalesCenterUserMapping>()
-                //.HasKey(sc => sc.ID);
 
             modelBuilder.Entity<SalesCenterUserMapping>()
                 .HasKey(sc => new { sc.UserId, sc.SalesCenterId });
-
             modelBuilder.Entity<SalesCenterUserMapping>()
-                .HasOne(sc => sc.SalesCenters)
-                .WithMany(sc => sc.SalesCenterUsers)
-                .HasForeignKey(sc => sc.SalesCenterId);
-            
+                .HasIndex(sc=> sc.UserId);
+
+            //modelBuilder.Entity<SalesCenterUserMapping>()
+            //    .HasForeignKey(sc => sc.SalesCenterId);
+            //modelBuilder.Entity<SalesCenterUserMapping>()
+            //    .HasForeignKey(sc => sc.UserId);
+
 
             base.OnModelCreating(modelBuilder);
         }

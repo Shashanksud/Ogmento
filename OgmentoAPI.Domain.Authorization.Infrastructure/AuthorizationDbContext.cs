@@ -2,8 +2,11 @@
 using OgmentoAPI.Domain.Authorization.Abstraction;
 using OgmentoAPI.Domain.Authorization.Abstraction.DataContext;
 using OgmentoAPI.Domain.Authorization.Abstraction.Models;
+using OgmentoAPI.Domain.Client.Abstractions.DataContext;
 
-namespace TokenDemo.Web.DataContext
+
+
+namespace OgmentoAPI.Web.DataContext
 {
     public partial class AuthorizationDbContext : DbContext, IAuthorizationContext, IUserContext
     {
@@ -29,6 +32,8 @@ namespace TokenDemo.Web.DataContext
                     where UM.UserId == UserId
                     select RM.RoleName).ToList();
         }
+
+
 
         public UserModel GetUserByID(long UserId)
         {
@@ -123,7 +128,7 @@ namespace TokenDemo.Web.DataContext
             OnModelCreatingPartial(modelBuilder);
 
             modelBuilder.Entity<UsersMaster>()
-                .HasMany(u => u.UserSalesCenter)
+                .HasMany(u => u.SalesCenterUsers)
                 .WithOne()
                 .HasForeignKey(sc => sc.UserId)
                 .IsRequired();

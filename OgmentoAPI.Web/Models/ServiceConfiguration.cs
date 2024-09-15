@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TokenDemo.Web.Models
+namespace OgmentoAPI.Web.Models
 {
     public class ServiceConfiguration
     {

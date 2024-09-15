@@ -1,15 +1,15 @@
-﻿using OgmentoAPI.Domain.Client.Abstractions.DataContext;
+﻿
+using OgmentoAPI.Domain.Client.Abstractions.DataContext;
 
 namespace OgmentoAPI.Domain.Authorization.Abstraction.DataContext
 {
-    public partial class UsersMaster
+    public class UsersMaster
     {
         public UsersMaster()
         {
             RefreshToken = new HashSet<RefreshToken>();
             UserRoles = new HashSet<UserRoles>();
-            UserSalesCenter= new HashSet<SalesCenterUserMapping>();
-            
+            SalesCenterUsers= new HashSet<SalesCenterUserMapping>();
         }
 
         public long UserId { get; set; }
@@ -24,6 +24,6 @@ namespace OgmentoAPI.Domain.Authorization.Abstraction.DataContext
         public int? ValidityDays {  get; set; }
         public virtual ICollection<RefreshToken> RefreshToken { get; set; }
         public virtual ICollection<UserRoles> UserRoles { get; set; }
-        public virtual ICollection<SalesCenterUserMapping> UserSalesCenter { get; set; }
+        public virtual ICollection<SalesCenterUserMapping>SalesCenterUsers{ get;set; }
     }
 }

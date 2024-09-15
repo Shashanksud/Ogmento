@@ -57,6 +57,8 @@
   <ItemGroup>
     <ProjectReference Include="..\OgmentoAPI.Domain.Authorization.Api\OgmentoAPI.Domain.Authorization.Api.csproj" />
     <ProjectReference Include="..\OgmentoAPI.Domain.Authorization.Services\OgmentoAPI.Domain.Authorization.Services.csproj" />
+    <ProjectReference Include="..\OgmentoAPI.Domain.Client.Services\OgmentoAPI.Domain.Client.Services.csproj" />
+    <ProjectReference Include="..\OgmentoAPI.Domain.Common.Services\OgmentoAPI.Domain.Common.Services.csproj" />
   </ItemGroup>
 
 

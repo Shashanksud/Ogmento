@@ -11,14 +11,16 @@ namespace OgmentoAPI.Domain.Client.Abstractions.DataContext
     public class SalesCenter
     {
         [Key]
-        public int SalesCenterId { get; set; }
-        public string Name { get; set; }
+        public int ID { get; set; }
+        public string SalesCenterName { get; set; }
        
         public int CountryId { get; set; }
-        public string City { get; set; }
         public Country Country { get; set; }
+        public string City { get; set; }
+        
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
-        public virtual ICollection<SalesCenterUserMapping> SalesCenterUsers { get; set; }
+        public ICollection<SalesCenterUserMapping> salesCenterUsers { get; set; }
+
 
     }
 

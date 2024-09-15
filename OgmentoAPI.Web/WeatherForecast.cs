@@ -1,6 +1,6 @@
 using System;
 
-namespace TokenDemo.Web
+namespace OgmentoAPI.Web
 {
     public class WeatherForecast
     {
