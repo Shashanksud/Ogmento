@@ -10,10 +10,11 @@ namespace OgmentoAPI.Domain.Client.Abstractions.DataContext
 {
     public class SalesCenterUserMapping
     {
-        
-        public int UserId { get; set; }
+      
+        public long UserId { get; set; }
+      
         public int SalesCenterId { get; set; }
-        public SalesCenter SalesCenter { get; set; }
+      //  public SalesCenter SalesCenter { get; set; }
         //public UsersMaster User {  get; set; }
 
     }

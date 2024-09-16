@@ -29,7 +29,6 @@
 
   <ItemGroup>
     <Compile Include="Controllers\WeatherForecastController.cs" />
-    <Compile Include="Models\ServiceConfiguration.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -52,6 +51,7 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 
   <ItemGroup>

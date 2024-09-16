@@ -9,6 +9,6 @@ namespace OgmentoAPI.Domain.Client.Abstractions.Service
 {
     public interface ISalesCenterService
     {
-        IEnumerable<string> GetSalesCenterNames(long Id);
+        IEnumerable<SalesCenter> GetSalesCenterDetails(long Id);
     }
 }

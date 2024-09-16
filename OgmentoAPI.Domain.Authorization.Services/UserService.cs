@@ -25,7 +25,7 @@ namespace OgmentoAPI.Domain.Authorization.Services
             {
                 UserModel user = _context.GetUserByID(UserId);
                 List<string> roleNames = _context.GetRoleNames(UserId);
-                var SalesCenterNames = _SalesCenterService.GetSalesCenterNames(UserId).ToList();
+                var SalesCenterNames = _SalesCenterService.GetSalesCenterDetails(UserId).Select(x=> x.SalesCenterName).ToList();
            
                 if (user != null)
                 {

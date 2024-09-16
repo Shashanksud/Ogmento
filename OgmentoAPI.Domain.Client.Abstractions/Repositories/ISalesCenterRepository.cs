@@ -6,8 +6,9 @@ namespace OgmentoAPI.Domain.Client.Abstractions.Repositories
 {
     public interface ISalesCenterRepository
     {
-        IEnumerable<SalesCenter> GetSalesCenters(Expression<Func<SalesCenterUserMapping, bool>> predicate);
-        
+        IEnumerable<int> GetSalesCenterIds(Expression<Func<SalesCenterUserMapping, bool>> predicate);
+        IEnumerable<SalesCenter> GetSalesCenterDetails(Expression<Func<SalesCenterUserMapping, bool>> predicate);
+
 
     }
 }

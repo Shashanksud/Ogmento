@@ -127,12 +127,10 @@ namespace OgmentoAPI.Web.DataContext
             });
             OnModelCreatingPartial(modelBuilder);
 
-            modelBuilder.Entity<UsersMaster>()
-                .HasMany(u => u.SalesCenterUsers)
-                .WithOne()
-                .HasForeignKey(sc => sc.UserId)
-                .IsRequired();
-            
+            modelBuilder.Entity<UsersMaster>().HasMany(x=> x.SalesCenterUsers).WithOne();
+            modelBuilder.Entity<SalesCenterUserMapping>()
+              .HasKey(sc => new { sc.UserId, sc.SalesCenterId });
+            // modelBuilder.Entity<SalesCenterUserMapping>().Has();
 
             base.OnModelCreating(modelBuilder);
         }

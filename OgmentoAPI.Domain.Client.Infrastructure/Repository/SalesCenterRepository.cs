@@ -17,14 +17,27 @@ namespace OgmentoAPI.Domain.Client.Infrastructure.Repository
         {
             _Context = Context;
         }
-        public IEnumerable<SalesCenter> GetSalesCenters(Expression<Func<SalesCenterUserMapping, bool>> predicate)
+
+
+        public IEnumerable<int> GetSalesCenterIds(Expression<Func<SalesCenterUserMapping, bool>> predicate)
         {
-            return _Context.SalesCenterUserMapping
+            var salesCenterIds = _Context.SalesCenterUserMapping
                 .AsNoTracking()
                 .Where(predicate)
-                .Include(mapping=>mapping.SalesCenter)
-                .Select(mapping=> mapping.SalesCenter)
+                .Select(mapping => mapping.SalesCenterId)
                 .ToList();
+
+            return salesCenterIds;
+        }
+
+        public IEnumerable<SalesCenter> GetSalesCenterDetails(Expression<Func<SalesCenterUserMapping, bool>> predicate)
+        {
+            var salesCenterIds = GetSalesCenterIds(predicate);
+            return _Context.SalesCenter
+                .AsNoTracking()
+                .Where(x => salesCenterIds.Contains(x.ID))
+                .ToList();
+
         }
     }
 }

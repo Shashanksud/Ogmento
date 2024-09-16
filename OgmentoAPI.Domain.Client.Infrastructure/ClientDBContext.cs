@@ -22,12 +22,6 @@ namespace OgmentoAPI.Domain.Client.Infrastructure
             modelBuilder.Entity<SalesCenterUserMapping>()
                 .HasIndex(sc=> sc.UserId);
 
-            //modelBuilder.Entity<SalesCenterUserMapping>()
-            //    .HasForeignKey(sc => sc.SalesCenterId);
-            //modelBuilder.Entity<SalesCenterUserMapping>()
-            //    .HasForeignKey(sc => sc.UserId);
-
-
             base.OnModelCreating(modelBuilder);
         }
 

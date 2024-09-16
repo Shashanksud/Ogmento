@@ -8,7 +8,7 @@ using OgmentoAPI.Domain.Authorization.Services;
 using OgmentoAPI.Domain.Client.Services;
 using OgmentoAPI.Domain.Common.Services;
 using System.Text;
-using OgmentoAPI.Web.Models;
+using OgmentoAPI.Domain.Authorization.Abstraction.Models;
 
 
 namespace OgmentoAPI.Web

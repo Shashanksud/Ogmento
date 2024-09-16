@@ -19,7 +19,7 @@ namespace OgmentoAPI.Domain.Client.Abstractions.DataContext
         public string City { get; set; }
         
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
-        public ICollection<SalesCenterUserMapping> salesCenterUsers { get; set; }
+        public ICollection<SalesCenterUserMapping> SalesCenterUsers { get; set; }
 
 
     }
