@@ -16,8 +16,8 @@ namespace OgmentoAPI.Domain.Authorization.Abstraction.Models
         [JsonProperty("phoneNumber")]
         public string PhoneNumber { get; set; }
 
-        [JsonProperty("userRoles")]
-        public List<string> UserRoles { get; set; }
+        [JsonProperty("userRole")]
+        public string UserRole { get; set; }
         [JsonProperty("validityDays")]
         public int? ValidityDays {  get; set; }
         [JsonProperty("salesCenter")]

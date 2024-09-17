@@ -24,13 +24,12 @@ namespace OgmentoAPI.Domain.Authorization.Services
             try
             {
                 UserModel user = _context.GetUserByID(UserId);
-                List<string> roleNames = _context.GetRoleNames(UserId);
                 var SalesCenterNames = _SalesCenterService.GetSalesCenterDetails(UserId).Select(x=> x.SalesCenterName).ToList();
-           
+                var Role= _context.GetRoleName(UserId);
                 if (user != null)
                 {
-                    user.UserRoles = roleNames;
                     user.UserSalesCenter = SalesCenterNames;
+                    user.UserRole= Role;
                     response.Data = user;
                     return response;
                 }

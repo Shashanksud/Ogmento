@@ -14,14 +14,22 @@ namespace OgmentoAPI.Domain.Authorization.Infrastructure.Repository
             _context = context;
 
         }
-        public List<string> GetRoleNames(int UserId)
+
+        public string GetRoleName(int UserId)
+        {
+            var RoleMaster = GetUserRoles(UserId);
+            return RoleMaster.RoleName;
+        }
+
+        //commenting this function as this is not needed as we dont have multiples roles for a user
+        /*public string GetRoleNames(int UserId)
         {
             return (from UM in _context.UsersMaster
                     join UR in _context.UserRoles on UM.UserId equals UR.UserId
                     join RM in _context.RolesMaster on UR.RoleId equals RM.RoleId
                     where UM.UserId == UserId
                     select RM.RoleName).ToList();
-        }
+        }*/
 
 
 
@@ -34,7 +42,8 @@ namespace OgmentoAPI.Domain.Authorization.Infrastructure.Repository
                         UserId = UM.UserId,
                         Email = UM.Email,
                         PhoneNumber = UM.PhoneNumber,
-                        UserName = UM.UserName
+                        UserName = UM.UserName,
+
                     }).FirstOrDefault();
         }
 
@@ -45,15 +54,15 @@ namespace OgmentoAPI.Domain.Authorization.Infrastructure.Repository
             return _context.UsersMaster.FirstOrDefault(c => c.UserName == login.UserName && c.Password == login.Password);
         }
 
-        public List<RolesMaster> GetUserRoles(int userID)
+        public RolesMaster GetUserRoles(int userID)
         {
-            return (from UM in _context.UsersMaster
-                    join UR in _context.UserRoles on UM.UserId equals UR.UserId
-                    join RM in _context.RolesMaster on UR.RoleId equals RM.RoleId
-                    where UM.UserId == userID
-                    select RM).ToList();
+            var RoleID=  _context.UsersMaster
+                .Where(x=>x.UserId==userID)
+                .Select(x=>x.RoleId)
+                .FirstOrDefault();
+            return _context.RolesMaster.FirstOrDefault(x => x.RoleId == RoleID);
         }
-
+        
 
     }
 }
