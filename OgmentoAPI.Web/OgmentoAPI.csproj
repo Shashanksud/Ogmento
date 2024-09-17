@@ -29,7 +29,6 @@
 
   <ItemGroup>
     <Compile Include="Controllers\WeatherForecastController.cs" />
-    <Compile Include="Models\ServiceConfiguration.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -52,11 +51,14 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\OgmentoAPI.Domain.Authorization.Api\OgmentoAPI.Domain.Authorization.Api.csproj" />
     <ProjectReference Include="..\OgmentoAPI.Domain.Authorization.Services\OgmentoAPI.Domain.Authorization.Services.csproj" />
+    <ProjectReference Include="..\OgmentoAPI.Domain.Client.Services\OgmentoAPI.Domain.Client.Services.csproj" />
+    <ProjectReference Include="..\OgmentoAPI.Domain.Common.Services\OgmentoAPI.Domain.Common.Services.csproj" />
   </ItemGroup>
 
 

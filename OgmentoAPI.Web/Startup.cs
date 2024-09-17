@@ -1,16 +1,17 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-//using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using OgmentoAPI.Domain.Authorization.Services;
+using OgmentoAPI.Domain.Client.Services;
+using OgmentoAPI.Domain.Common.Services;
 using System.Text;
-using TokenDemo.Web.Models;
+using OgmentoAPI.Domain.Authorization.Abstraction.Models;
 
 
-namespace TokenDemo.Web
+namespace OgmentoAPI.Web
 {
     public class Startup
     {
@@ -31,8 +32,11 @@ namespace TokenDemo.Web
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("ServiceConfiguration");
             services.Configure<ServiceConfiguration>(appSettingsSection);
-            
-            services.AddAuth(Configuration["ConnectionString:DefaultConnection"]);
+
+            services.AddAuth(Configuration["ConnectionString:DefaultConnection"])
+                    .AddClient(Configuration["ConnectionString:DefaultConnection"])
+                    .AddCommon(Configuration["ConnectionString:DefaultConnection"]);
+
             // configure jwt authentication
             var serviceConfiguration = appSettingsSection.Get<ServiceConfiguration>();
             var JwtSecretkey = Encoding.ASCII.GetBytes(serviceConfiguration.JwtSettings.Secret);

@@ -1,5 +1,6 @@
 ﻿using OgmentoAPI.Domain.Authorization.Abstraction;
 using OgmentoAPI.Domain.Authorization.Abstraction.Models;
+using OgmentoAPI.Domain.Client.Abstractions.Service;
 
 
 
@@ -10,10 +11,11 @@ namespace OgmentoAPI.Domain.Authorization.Services
     public class UserService : IUserService
     {
         private readonly IUserContext _context;
-
-        public UserService(IUserContext context)
+        private readonly ISalesCenterService _SalesCenterService;
+        public UserService(IUserContext context, ISalesCenterService salesCenterService)
         {
             _context = context;
+            _SalesCenterService = salesCenterService;
         }
         public ResponseModel<UserModel> Get(long UserId)
         {
@@ -23,9 +25,12 @@ namespace OgmentoAPI.Domain.Authorization.Services
             {
                 UserModel user = _context.GetUserByID(UserId);
                 List<string> roleNames = _context.GetRoleNames(UserId);
+                var SalesCenterNames = _SalesCenterService.GetSalesCenterDetails(UserId).Select(x=> x.SalesCenterName).ToList();
+           
                 if (user != null)
                 {
                     user.UserRoles = roleNames;
+                    user.UserSalesCenter = SalesCenterNames;
                     response.Data = user;
                     return response;
                 }

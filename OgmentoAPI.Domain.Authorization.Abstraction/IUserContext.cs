@@ -8,5 +8,6 @@ namespace OgmentoAPI.Domain.Authorization.Abstraction
     {
         UserModel GetUserByID(long UserId);
         List<string> GetRoleNames(long UserId);
+
     }
 }

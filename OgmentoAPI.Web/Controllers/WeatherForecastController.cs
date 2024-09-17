@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace TokenDemo.Web.Controllers
+namespace OgmentoAPI.Web.Controllers
 {
     [ApiController]
     [Route("[controller]")]
