@@ -69,17 +69,17 @@ namespace OgmentoAPI.Domain.Authorization.Services
             }
         }
 
-        private List<RolesMaster> GetUserRole(int UserId)
+        private RolesMaster GetUserRole(int UserId)
         {
             try
             {
-                List<RolesMaster> rolesMasters = _contextService.GetUserRoles(UserId);
+                RolesMaster rolesMasters = _contextService.GetUserRoles(UserId);
                 return rolesMasters;
             }
             catch (Exception)
             {
 
-                return new List<RolesMaster>();
+                return new RolesMaster();
             }
         }
 
@@ -99,11 +99,9 @@ namespace OgmentoAPI.Domain.Authorization.Services
                     new Claim("EmailId",user.Email==null?"":user.Email),
                     new Claim("UserName",user.UserName==null?"":user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim("Role", GetUserRole(user.UserId).RoleName),
                     });
-                foreach (var item in GetUserRole(user.UserId))
-                {
-                    Subject.AddClaim(new Claim(ClaimTypes.Role, item.RoleName));
-                }
+                
 
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
