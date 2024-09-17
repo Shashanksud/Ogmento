@@ -8,7 +8,7 @@ using OgmentoAPI.Domain.Client.Abstractions.DataContext;
 
 namespace OgmentoAPI.Web.DataContext
 {
-    public partial class AuthorizationDbContext : DbContext, IAuthorizationContext, IUserContext
+    public partial class AuthorizationDbContext : DbContext
     {
         public AuthorizationDbContext()
         {
