@@ -19,8 +19,8 @@ namespace OgmentoAPI.Domain.Client.Infrastructure
 
             modelBuilder.Entity<SalesCenterUserMapping>()
                 .HasKey(sc => new { sc.UserId, sc.SalesCenterId });
-            modelBuilder.Entity<SalesCenterUserMapping>()
-                .HasIndex(sc=> sc.UserId);
+            /*modelBuilder.Entity<SalesCenterUserMapping>()
+                .HasIndex(sc=> sc.UserId);*/
 
             base.OnModelCreating(modelBuilder);
         }
