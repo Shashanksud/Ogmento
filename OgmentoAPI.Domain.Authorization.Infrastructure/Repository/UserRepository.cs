@@ -14,7 +14,7 @@ namespace OgmentoAPI.Domain.Authorization.Infrastructure.Repository
             _context = context;
 
         }
-        public List<string> GetRoleNames(long UserId)
+        public List<string> GetRoleNames(int UserId)
         {
             return (from UM in _context.UsersMaster
                     join UR in _context.UserRoles on UM.UserId equals UR.UserId
@@ -25,27 +25,27 @@ namespace OgmentoAPI.Domain.Authorization.Infrastructure.Repository
 
 
 
-        public UserModel GetUserByID(long UserId)
+        public UserModel GetUserByID(int UserId)
         {
             return (from UM in _context.UsersMaster
                     where UM.UserId == UserId
                     select new UserModel
                     {
                         UserId = UM.UserId,
-                        FirstName = UM.FirstName,
-                        LastName = UM.LastName,
                         Email = UM.Email,
                         PhoneNumber = UM.PhoneNumber,
                         UserName = UM.UserName
                     }).FirstOrDefault();
         }
 
+
+
         public UsersMaster GetUserDetail(LoginModel login)
         {
             return _context.UsersMaster.FirstOrDefault(c => c.UserName == login.UserName && c.Password == login.Password);
         }
 
-        public List<RolesMaster> GetUserRoles(long userID)
+        public List<RolesMaster> GetUserRoles(int userID)
         {
             return (from UM in _context.UsersMaster
                     join UR in _context.UserRoles on UM.UserId equals UR.UserId
@@ -53,6 +53,7 @@ namespace OgmentoAPI.Domain.Authorization.Infrastructure.Repository
                     where UM.UserId == userID
                     select RM).ToList();
         }
+
 
     }
 }

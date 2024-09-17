@@ -24,47 +24,7 @@ namespace OgmentoAPI.Web.DataContext
         public virtual DbSet<UserRoles> UserRoles { get; set; }
         public virtual DbSet<UsersMaster> UsersMaster { get; set; }
 
-        public List<string> GetRoleNames(int UserId)
-        {
-            return (from UM in UsersMaster
-                    join UR in UserRoles on UM.UserId equals UR.UserId
-                    join RM in RolesMaster on UR.RoleId equals RM.RoleId
-                    where UM.UserId == UserId
-                    select RM.RoleName).ToList();
-        }
-
-
-
-        public UserModel GetUserByID(int UserId)
-        {
-            return (from UM in UsersMaster
-                    where UM.UserId == UserId
-                    select new UserModel
-                    {
-                        UserId = UM.UserId,
-                        Email = UM.Email,
-                        PhoneNumber = UM.PhoneNumber,
-                        UserName = UM.UserName
-
-                    }).FirstOrDefault(); 
-        }
-
-        public UsersMaster GetUserDetail(LoginModel login)
-        {
-           return UsersMaster.FirstOrDefault(c => c.UserName == login.UserName && c.Password == login.Password);
-        }
-
-        public List<RolesMaster> GetUserRoles(int userID)
-        {
-            return (from UM in UsersMaster
-             join UR in UserRoles on UM.UserId equals UR.UserId
-             join RM in RolesMaster on UR.RoleId equals RM.RoleId
-             where UM.UserId == userID
-                    select RM).ToList();
-        }
-
-        
-
+    
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
