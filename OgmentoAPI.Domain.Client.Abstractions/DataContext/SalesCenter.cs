@@ -12,6 +12,7 @@ namespace OgmentoAPI.Domain.Client.Abstractions.DataContext
     {
         [Key]
         public int ID { get; set; }
+        public Guid SalesCenterUid { get; set; }
         public string SalesCenterName { get; set; }
        
         public int CountryId { get; set; }
@@ -20,6 +21,8 @@ namespace OgmentoAPI.Domain.Client.Abstractions.DataContext
         
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
         public ICollection<SalesCenterUserMapping> SalesCenterUsers { get; set; }
+
+        
 
 
     }

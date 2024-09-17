@@ -6,8 +6,8 @@ namespace OgmentoAPI.Domain.Authorization.Abstraction
 {
     public interface IUserContext
     {
-        UserModel GetUserByID(long UserId);
-        List<string> GetRoleNames(long UserId);
+        UserModel GetUserByID(int UserId);
+        List<string> GetRoleNames(int UserId);
 
     }
 }

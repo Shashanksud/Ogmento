@@ -8,7 +8,7 @@ namespace OgmentoAPI.Domain.Authorization.Abstraction.DataContext
             UserRoles = new HashSet<UserRoles>();
         }
 
-        public long RoleId { get; set; }
+        public int RoleId { get; set; }
         public string RoleName { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime UpdatedOn { get; set; }

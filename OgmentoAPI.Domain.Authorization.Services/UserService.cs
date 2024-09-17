@@ -17,7 +17,7 @@ namespace OgmentoAPI.Domain.Authorization.Services
             _context = context;
             _SalesCenterService = salesCenterService;
         }
-        public ResponseModel<UserModel> Get(long UserId)
+        public ResponseModel<UserModel> Get(int UserId)
         {
             ResponseModel<UserModel> response = new ResponseModel<UserModel>();
 

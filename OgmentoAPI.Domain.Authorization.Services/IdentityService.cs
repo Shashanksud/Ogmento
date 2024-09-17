@@ -69,7 +69,7 @@ namespace OgmentoAPI.Domain.Authorization.Services
             }
         }
 
-        private List<RolesMaster> GetUserRole(long UserId)
+        private List<RolesMaster> GetUserRole(int UserId)
         {
             try
             {
@@ -96,8 +96,6 @@ namespace OgmentoAPI.Domain.Authorization.Services
                 ClaimsIdentity Subject = new ClaimsIdentity(new Claim[]
                     {
                     new Claim("UserId", user.UserId.ToString()),
-                    new Claim("FirstName", user.FirstName),
-                    new Claim("LastName",user.LastName),
                     new Claim("EmailId",user.Email==null?"":user.Email),
                     new Claim("UserName",user.UserName==null?"":user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),

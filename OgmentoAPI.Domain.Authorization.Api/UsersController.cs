@@ -23,14 +23,14 @@ namespace OgmentoAPI.Domain.Authorization.Api
         [Authorize]
         public IActionResult GetCurrentUser()
         {
-            long UserId = GetUserIdFromToken();
+            int UserId = GetUserIdFromToken();
             var result = _userService.Get(UserId);
             return Ok(result);
         }
 
-        protected long GetUserIdFromToken()
+        protected int GetUserIdFromToken()
         {
-            long UserId = 0;
+            int UserId = 0;
             try
             {
                 if (HttpContext.User.Identity.IsAuthenticated)
@@ -40,7 +40,7 @@ namespace OgmentoAPI.Domain.Authorization.Api
                     {
                         IEnumerable<Claim> claims = identity.Claims;
                         string strUserId = identity.FindFirst("UserId").Value;
-                        long.TryParse(strUserId, out UserId);
+                        int.TryParse(strUserId, out UserId);
 
                     }
                 }

@@ -24,7 +24,7 @@ namespace OgmentoAPI.Web.DataContext
         public virtual DbSet<UserRoles> UserRoles { get; set; }
         public virtual DbSet<UsersMaster> UsersMaster { get; set; }
 
-        public List<string> GetRoleNames(long UserId)
+        public List<string> GetRoleNames(int UserId)
         {
             return (from UM in UsersMaster
                     join UR in UserRoles on UM.UserId equals UR.UserId
@@ -35,18 +35,17 @@ namespace OgmentoAPI.Web.DataContext
 
 
 
-        public UserModel GetUserByID(long UserId)
+        public UserModel GetUserByID(int UserId)
         {
             return (from UM in UsersMaster
                     where UM.UserId == UserId
                     select new UserModel
                     {
                         UserId = UM.UserId,
-                        FirstName = UM.FirstName,
-                        LastName = UM.LastName,
                         Email = UM.Email,
                         PhoneNumber = UM.PhoneNumber,
                         UserName = UM.UserName
+
                     }).FirstOrDefault(); 
         }
 
@@ -55,7 +54,7 @@ namespace OgmentoAPI.Web.DataContext
            return UsersMaster.FirstOrDefault(c => c.UserName == login.UserName && c.Password == login.Password);
         }
 
-        public List<RolesMaster> GetUserRoles(long userID)
+        public List<RolesMaster> GetUserRoles(int userID)
         {
             return (from UM in UsersMaster
              join UR in UserRoles on UM.UserId equals UR.UserId
@@ -114,10 +113,6 @@ namespace OgmentoAPI.Web.DataContext
                 entity.HasKey(e => e.UserId);
 
                 entity.Property(e => e.Email).IsRequired();
-
-                entity.Property(e => e.FirstName).IsRequired();
-
-                entity.Property(e => e.LastName).IsRequired();
 
                 entity.Property(e => e.Password).IsRequired();
 

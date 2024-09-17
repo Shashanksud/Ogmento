@@ -5,7 +5,7 @@ namespace OgmentoAPI.Domain.Authorization.Abstraction
 {
     public interface IUserService
     {
-        ResponseModel<UserModel> Get(long UserId);
+        ResponseModel<UserModel> Get(int UserId);
     
     }
 }

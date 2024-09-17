@@ -6,21 +6,21 @@ namespace OgmentoAPI.Domain.Authorization.Abstraction.Models
     public class UserModel
     {
         [JsonProperty("userId")]
-        public long UserId { get; set; }
-        [JsonProperty("firstName")]
-        public string FirstName { get; set; }
-        [JsonProperty("lastName")]
-        public string LastName { get; set; }
+        public int UserId { get; set; }
+        [JsonProperty("userUid")]
+        public Guid UserUid { get; set; }
         [JsonProperty("userName")]
         public string UserName { get; set; }
         [JsonProperty("email")]
         public string Email { get; set; }
         [JsonProperty("phoneNumber")]
         public string PhoneNumber { get; set; }
+
         [JsonProperty("userRoles")]
         public List<string> UserRoles { get; set; }
+        [JsonProperty("validityDays")]
         public int? ValidityDays {  get; set; }
-        
+        [JsonProperty("salesCenter")]
         public List<string> UserSalesCenter { get; set; }
     }
 }

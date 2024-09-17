@@ -15,7 +15,7 @@ namespace OgmentoAPI.Domain.Client.Services
 
         }
 
-        public IEnumerable<SalesCenter> GetSalesCenterDetails(long Id)
+        public IEnumerable<SalesCenter> GetSalesCenterDetails(int Id)
         {
             Expression<Func<SalesCenterUserMapping, bool>> predicate = (mapping => mapping.UserId == Id);
             return _salesCenterRepository.GetSalesCenterDetails(predicate);
