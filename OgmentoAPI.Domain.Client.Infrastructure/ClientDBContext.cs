@@ -20,6 +20,5 @@ namespace OgmentoAPI.Domain.Client.Infrastructure
 
             base.OnModelCreating(modelBuilder);
         }
-
     }
 }
