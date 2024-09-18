@@ -15,10 +15,10 @@ namespace OgmentoAPI.Domain.Authorization.Infrastructure.Repository
 
         }
 
-        public string GetRoleName(int UserId)
+        public string GetRoleName(int userId)
         {
-            var RoleMaster = GetUserRoles(UserId);
-            return RoleMaster.RoleName;
+            var roleMaster = GetUserRole(userId);
+            return roleMaster.RoleName;
         }
 
         //commenting this function as this is not needed as we dont have multiples roles for a user
@@ -33,16 +33,19 @@ namespace OgmentoAPI.Domain.Authorization.Infrastructure.Repository
 
 
 
-        public UserModel GetUserByID(int UserId)
+        public UserModel GetUserByID(int userId)
         {
             return (from UM in _context.UsersMaster
-                    where UM.UserId == UserId
+                    where UM.UserId == userId
                     select new UserModel
                     {
                         UserId = UM.UserId,
+                        UserUid= UM.UserUid,
+                        UserName = UM.UserName,
                         Email = UM.Email,
                         PhoneNumber = UM.PhoneNumber,
-                        UserName = UM.UserName,
+                        ValidityDays= UM.ValidityDays,
+                        
 
                     }).FirstOrDefault();
         }
@@ -54,13 +57,11 @@ namespace OgmentoAPI.Domain.Authorization.Infrastructure.Repository
             return _context.UsersMaster.FirstOrDefault(c => c.UserName == login.UserName && c.Password == login.Password);
         }
 
-        public RolesMaster GetUserRoles(int userID)
+        public RolesMaster GetUserRole(int userId)
         {
-            var RoleID=  _context.UsersMaster
-                .Where(x=>x.UserId==userID)
-                .Select(x=>x.RoleId)
-                .FirstOrDefault();
-            return _context.RolesMaster.FirstOrDefault(x => x.RoleId == RoleID);
+            var roleID = _context.UsersMaster.Find(userId).RoleId;
+                
+            return _context.RolesMaster.FirstOrDefault(x => x.RoleId == roleID);
         }
         
 
