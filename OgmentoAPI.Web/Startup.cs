@@ -71,7 +71,7 @@ namespace OgmentoAPI.Web
                 options.AddPolicy("SupportPolicy", policy => policy.RequireClaim("Role", UserRoles.Support.ToString()));
                 options.AddPolicy("MarketingTeamPolicy", policy => policy.RequireClaim("Role", UserRoles.MarketingTeam.ToString()));
             });
-
+            services.AddHttpContextAccessor();
 
             services.AddCors(options =>
             {
