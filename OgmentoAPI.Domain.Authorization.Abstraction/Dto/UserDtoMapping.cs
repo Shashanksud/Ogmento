@@ -1,11 +1,4 @@
-﻿using OgmentoAPI.Domain.Authorization.Abstraction.DataContext;
-using OgmentoAPI.Domain.Authorization.Abstraction.Models;
-using OgmentoAPI.Domain.Authorization.Abstractions.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using OgmentoAPI.Domain.Authorization.Abstractions.Models;
 
 namespace OgmentoAPI.Domain.Authorization.Abstractions.Dto
 {
