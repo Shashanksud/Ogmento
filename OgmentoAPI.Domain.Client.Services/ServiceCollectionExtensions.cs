@@ -5,8 +5,6 @@ using OgmentoAPI.Domain.Client.Abstractions.Service;
 using OgmentoAPI.Domain.Client.Infrastructure;
 using OgmentoAPI.Domain.Client.Infrastructure.Repository;
 
-
-
 namespace OgmentoAPI.Domain.Client.Services
 {
     public static class ServiceCollectionExtensions

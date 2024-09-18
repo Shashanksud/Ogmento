@@ -1,17 +1,12 @@
 ﻿
-
-
-namespace OgmentoAPI.Domain.Authorization.Abstraction.DataContext
+namespace OgmentoAPI.Domain.Authorization.Abstractions.DataContext
 {
     public class UsersMaster
     {
         public UsersMaster()
         {
             RefreshToken = new HashSet<RefreshToken>();
-           
-           // SalesCenterUsers= new HashSet<SalesCenterUserMapping>();
         }
-
         public int UserId { get; set; }
         public Guid UserUid { get; set; }
         public string UserName { get; set; }
@@ -23,10 +18,8 @@ namespace OgmentoAPI.Domain.Authorization.Abstraction.DataContext
         public DateTime CreatedOn { get; set; }
         public DateTime UpdatedOn { get; set; }
         public int? ValidityDays { get; set; }
-        
         public virtual ICollection<RefreshToken> RefreshToken { get; set; }
         public virtual RolesMaster UserRole { get; set; }
-       
-
+      
     }
 }

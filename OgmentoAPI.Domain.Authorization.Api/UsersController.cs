@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using OgmentoAPI.Domain.Authorization.Abstraction;
+
 using OgmentoAPI.Domain.Authorization.Abstractions.Dto;
 using OgmentoAPI.Domain.Authorization.Services;
+using OgmentoAPI.Domain.Authorization.Abstractions;
 using System.Security.Claims;
 
 
@@ -28,7 +29,6 @@ namespace OgmentoAPI.Domain.Authorization.Api
             var result = _userService.Get(UserId);
             return Ok(result);
         }
-
         [Route("GetUserDetails")]
         [HttpGet]
         [Authorize]
@@ -54,7 +54,6 @@ namespace OgmentoAPI.Domain.Authorization.Api
                         IEnumerable<Claim> claims = identity.Claims;
                         string strUserId = identity.FindFirst("UserId").Value;
                         int.TryParse(strUserId, out UserId);
-
                     }
                 }
                 return UserId;

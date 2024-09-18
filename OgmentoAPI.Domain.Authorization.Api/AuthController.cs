@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OgmentoAPI.Domain.Authorization.Abstraction;
-using OgmentoAPI.Domain.Authorization.Abstraction.Models;
-
-
+using OgmentoAPI.Domain.Authorization.Abstractions;
+using OgmentoAPI.Domain.Authorization.Abstractions.Models;
 
 namespace OgmentoAPI.Domain.Authorization.Api
 {
@@ -12,8 +10,6 @@ namespace OgmentoAPI.Domain.Authorization.Api
     public class AuthController : ControllerBase
     {
         private readonly IIdentityService _identityService;
-   
-
         public AuthController(IIdentityService identityService)
         {
             _identityService = identityService;

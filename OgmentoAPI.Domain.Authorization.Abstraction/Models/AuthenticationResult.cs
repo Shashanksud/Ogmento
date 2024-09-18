@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 
 
-namespace OgmentoAPI.Domain.Authorization.Abstraction.Models
+namespace OgmentoAPI.Domain.Authorization.Abstractions.Models
 {
     public class TokenModel
     {
