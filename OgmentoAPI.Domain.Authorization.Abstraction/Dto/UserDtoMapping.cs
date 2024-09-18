@@ -1,5 +1,6 @@
 ﻿using OgmentoAPI.Domain.Authorization.Abstraction.DataContext;
 using OgmentoAPI.Domain.Authorization.Abstraction.Models;
+using OgmentoAPI.Domain.Authorization.Abstractions.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace OgmentoAPI.Domain.Authorization.Abstractions.Dto
             UserDetailsDto dto = new UserDetailsDto
             {
                 UserName = user.UserName,
-                UserRole = string.Join(",", user.UserRoles),
+                UserRole = user.UserRole,
                 EmailId = user.Email,
                 UserUId = user.UserUid,
                 SalesCenters = string.Join(",", user.UserSalesCenter)
