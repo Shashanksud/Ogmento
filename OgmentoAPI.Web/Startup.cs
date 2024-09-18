@@ -8,8 +8,8 @@ using OgmentoAPI.Domain.Authorization.Services;
 using OgmentoAPI.Domain.Client.Services;
 using OgmentoAPI.Domain.Common.Services;
 using System.Text;
-using OgmentoAPI.Domain.Authorization.Abstraction.Models;
 using OgmentoAPI.Domain.Authorization.Abstractions.Enums;
+using OgmentoAPI.Domain.Authorization.Abstractions.Models;
 
 
 namespace OgmentoAPI.Web
@@ -77,9 +77,9 @@ namespace OgmentoAPI.Web
             {
                 options.AddPolicy("CorsPolicy", builder =>
                 builder.AllowAnyOrigin()
-             .AllowAnyMethod()
-             .AllowAnyHeader()
-             );
+                       .AllowAnyMethod()
+                       .AllowAnyHeader()
+                );
             });
         }
 

@@ -1,12 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OgmentoAPI.Domain.Client.Abstractions.DataContext;
 using OgmentoAPI.Domain.Client.Abstractions.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OgmentoAPI.Domain.Client.Infrastructure.Repository
 {
@@ -17,8 +12,6 @@ namespace OgmentoAPI.Domain.Client.Infrastructure.Repository
         {
             _Context = Context;
         }
-
-
         public IEnumerable<int> GetSalesCenterIds(Expression<Func<SalesCenterUserMapping, bool>> predicate)
         {
             var salesCenterIds = _Context.SalesCenterUserMapping
@@ -29,7 +22,6 @@ namespace OgmentoAPI.Domain.Client.Infrastructure.Repository
 
             return salesCenterIds;
         }
-
         public IEnumerable<SalesCenter> GetSalesCenterDetails(Expression<Func<SalesCenterUserMapping, bool>> predicate)
         {
             var salesCenterIds = GetSalesCenterIds(predicate);
@@ -37,7 +29,6 @@ namespace OgmentoAPI.Domain.Client.Infrastructure.Repository
                 .AsNoTracking()
                 .Where(x => salesCenterIds.Contains(x.ID))
                 .ToList();
-
         }
     }
 }

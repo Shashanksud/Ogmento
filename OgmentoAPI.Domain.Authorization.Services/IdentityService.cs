@@ -1,57 +1,45 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using OgmentoAPI.Domain.Authorization.Abstraction;
-using OgmentoAPI.Domain.Authorization.Abstraction.DataContext;
-using OgmentoAPI.Domain.Authorization.Abstraction.Models;
 using OgmentoAPI.Domain.Authorization.Abstractions;
+using OgmentoAPI.Domain.Authorization.Abstractions.DataContext;
+using OgmentoAPI.Domain.Authorization.Abstractions.Models;
 using System.IdentityModel.Tokens.Jwt;
-
 using System.Security.Claims;
 using System.Text;
-
-
 using JwtRegisteredClaimNames = System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames;
 
 namespace OgmentoAPI.Domain.Authorization.Services
 {
-    
-
     public class IdentityService : IIdentityService
     {
-        
         private readonly ServiceConfiguration _appSettings;
-
         private readonly TokenValidationParameters _tokenValidationParameters;
         private readonly IAuthorizationContext _contextService;
         private readonly ICookieService _cookieService;
 
         public IdentityService(IOptions<ServiceConfiguration> settings, 
-            TokenValidationParameters tokenValidationParameters, IAuthorizationContext contextService,ICookieService cookieService)
+            TokenValidationParameters tokenValidationParameters, IAuthorizationContext contextService, ICookieService cookieService)
         {
             _appSettings = settings.Value;
             _tokenValidationParameters = tokenValidationParameters;
             _contextService = contextService;
             _cookieService = cookieService;
         }
-
-
         public async Task<ResponseModel<TokenModel>> LoginAsync(LoginModel login)
         {
             ResponseModel<TokenModel> response = new ResponseModel<TokenModel>();
             try
             {
                 UsersMaster loginUser = _contextService.GetUserDetail(login);
-
                 if (loginUser == null)
                 {
                     response.IsSuccess = false;
                     response.Message = "Invalid Username And Password";
                     return response;
                 }
-
-
                 AuthenticationResult authenticationResult = await AuthenticateAsync(loginUser);
+
                 if (authenticationResult != null && authenticationResult.Success)
                 {
                     response.Data = new TokenModel() { Token = authenticationResult.Token };//, RefreshToken = authenticationResult.RefreshToken };
@@ -60,14 +48,11 @@ namespace OgmentoAPI.Domain.Authorization.Services
                 {
                     response.Message = "Something went wrong!";
                     response.IsSuccess = false;
-
                 }
-
                 return response;
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }
@@ -81,15 +66,12 @@ namespace OgmentoAPI.Domain.Authorization.Services
             }
             catch (Exception)
             {
-
                 return new RolesMaster();
             }
         }
 
         public async Task<AuthenticationResult> AuthenticateAsync(UsersMaster user)
         {
-            
-            // authentication successful so generate jwt token
             AuthenticationResult authenticationResult = new AuthenticationResult();
             var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -105,8 +87,7 @@ namespace OgmentoAPI.Domain.Authorization.Services
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim("Role", GetUserRole(user.UserId).RoleName),
                     });
-                
-
+               
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = Subject,
@@ -114,7 +95,6 @@ namespace OgmentoAPI.Domain.Authorization.Services
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
                 };
                 var token = tokenHandler.CreateToken(tokenDescriptor);
-
                 authenticationResult.Token = tokenHandler.WriteToken(token);
                 _cookieService.SetAuthToken(authenticationResult.Token);
 
@@ -138,6 +118,35 @@ namespace OgmentoAPI.Domain.Authorization.Services
                 return null;
             }
 
+        }
+
+        private ClaimsPrincipal GetPrincipalFromToken(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            try
+            {
+                var tokenValidationParameters = _tokenValidationParameters.Clone();
+                tokenValidationParameters.ValidateLifetime = false;
+                var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var validatedToken);
+                if (!IsJwtWithValidSecurityAlgorithm(validatedToken))
+                {
+                    return null;
+                }
+
+                return principal;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private bool IsJwtWithValidSecurityAlgorithm(SecurityToken validatedToken)
+        {
+            return (validatedToken is JwtSecurityToken jwtSecurityToken) &&
+                   jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
+                       StringComparison.InvariantCultureIgnoreCase);
         }
 
         //public async Task<ResponseModel<TokenModel>> RefreshTokenAsync(TokenModel request)
@@ -228,34 +237,5 @@ namespace OgmentoAPI.Domain.Authorization.Services
 
         //    return await AuthenticateAsync(user);
         //}
-
-        private ClaimsPrincipal GetPrincipalFromToken(string token)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-
-            try
-            {
-                var tokenValidationParameters = _tokenValidationParameters.Clone();
-                tokenValidationParameters.ValidateLifetime = false;
-                var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var validatedToken);
-                if (!IsJwtWithValidSecurityAlgorithm(validatedToken))
-                {
-                    return null;
-                }
-
-                return principal;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        private bool IsJwtWithValidSecurityAlgorithm(SecurityToken validatedToken)
-        {
-            return (validatedToken is JwtSecurityToken jwtSecurityToken) &&
-                   jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
-                       StringComparison.InvariantCultureIgnoreCase);
-        }
     }
 }

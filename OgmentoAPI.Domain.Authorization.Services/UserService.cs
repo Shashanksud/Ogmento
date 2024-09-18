@@ -1,12 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OgmentoAPI.Domain.Authorization.Abstraction;
-using OgmentoAPI.Domain.Authorization.Abstraction.Models;
+﻿using OgmentoAPI.Domain.Authorization.Abstractions;
+using OgmentoAPI.Domain.Authorization.Abstractions.Models;
 using OgmentoAPI.Domain.Authorization.Abstractions.Dto;
 using OgmentoAPI.Domain.Authorization.Abstractions.Enums;
 using OgmentoAPI.Domain.Client.Abstractions.Service;
-
-
-
 
 namespace OgmentoAPI.Domain.Authorization.Services
 {
@@ -27,8 +23,8 @@ namespace OgmentoAPI.Domain.Authorization.Services
             try
             {
                 UserModel user = _context.GetUserByID(userId);
-                var salesCenterNames = _SalesCenterService.GetSalesCenterDetails(userId).Select(x=> x.SalesCenterName).ToList();
-                var role= _context.GetRoleName(userId);
+                List<string> salesCenterNames = _SalesCenterService.GetSalesCenterDetails(userId).Select(x=> x.SalesCenterName).ToList();
+                string role= _context.GetRoleName(userId);
                 if (user != null)
                 {
                     user.UserSalesCenter = salesCenterNames;
@@ -42,12 +38,9 @@ namespace OgmentoAPI.Domain.Authorization.Services
                     response.Message = "User Not Found!";
                     return response;
                 }
-
-
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }

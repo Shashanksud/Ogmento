@@ -1,4 +1,4 @@
-﻿namespace OgmentoAPI.Domain.Authorization.Abstraction.DataContext
+﻿namespace OgmentoAPI.Domain.Authorization.Abstractions.DataContext
 {
     public partial class RefreshToken
     {
