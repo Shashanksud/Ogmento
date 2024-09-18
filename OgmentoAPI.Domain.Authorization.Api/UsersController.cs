@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OgmentoAPI.Domain.Authorization.Abstraction;
+using OgmentoAPI.Domain.Authorization.Abstractions.Dto;
 using OgmentoAPI.Domain.Authorization.Services;
 using System.Security.Claims;
 
@@ -25,6 +26,18 @@ namespace OgmentoAPI.Domain.Authorization.Api
         {
             int UserId = GetUserIdFromToken();
             var result = _userService.Get(UserId);
+            return Ok(result);
+        }
+
+        [Route("GetUserDetails")]
+        [HttpGet]
+        [Authorize]
+        [Produces(typeof(UserDetailsDto))]
+        public IActionResult GetUserDetails()
+        {
+            int UserId = GetUserIdFromToken();
+            var result = _userService.GetUserDetails(UserId).ToDto();
+          //  var obj= UserDto.ToUserDto(result);
             return Ok(result);
         }
 
