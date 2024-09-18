@@ -3,6 +3,7 @@ using OgmentoAPI.Domain.Authorization.Abstraction;
 using OgmentoAPI.Domain.Authorization.Abstraction.Models;
 
 
+
 namespace OgmentoAPI.Domain.Authorization.Api
 {
     [Route("api/[controller]")]
@@ -11,10 +12,12 @@ namespace OgmentoAPI.Domain.Authorization.Api
     public class AuthController : ControllerBase
     {
         private readonly IIdentityService _identityService;
+   
 
         public AuthController(IIdentityService identityService)
         {
             _identityService = identityService;
+   
         }
         [Route("login")]
         [HttpPost]
