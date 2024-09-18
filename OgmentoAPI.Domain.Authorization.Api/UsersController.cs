@@ -29,7 +29,6 @@ namespace OgmentoAPI.Domain.Authorization.Api
             var result = _userService.Get(UserId);
             return Ok(result);
         }
-
         [Route("GetUserDetails")]
         [HttpGet]
         [Authorize]
