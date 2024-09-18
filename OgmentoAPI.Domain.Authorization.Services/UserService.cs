@@ -1,5 +1,7 @@
-﻿using OgmentoAPI.Domain.Authorization.Abstraction;
+﻿using Microsoft.EntityFrameworkCore;
+using OgmentoAPI.Domain.Authorization.Abstraction;
 using OgmentoAPI.Domain.Authorization.Abstraction.Models;
+using OgmentoAPI.Domain.Authorization.Abstractions.Dto;
 using OgmentoAPI.Domain.Client.Abstractions.Service;
 
 
@@ -7,7 +9,7 @@ using OgmentoAPI.Domain.Client.Abstractions.Service;
 
 namespace OgmentoAPI.Domain.Authorization.Services
 {
-    
+
     public class UserService : IUserService
     {
         private readonly IUserContext _context;
@@ -25,8 +27,8 @@ namespace OgmentoAPI.Domain.Authorization.Services
             {
                 UserModel user = _context.GetUserByID(UserId);
                 List<string> roleNames = _context.GetRoleNames(UserId);
-                var SalesCenterNames = _SalesCenterService.GetSalesCenterDetails(UserId).Select(x=> x.SalesCenterName).ToList();
-           
+                var SalesCenterNames = _SalesCenterService.GetSalesCenterDetails(UserId).Select(x => x.SalesCenterName).ToList();
+
                 if (user != null)
                 {
                     user.UserRoles = roleNames;
@@ -39,6 +41,39 @@ namespace OgmentoAPI.Domain.Authorization.Services
                     response.IsSuccess = false;
                     response.Message = "User Not Found!";
                     return response;
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+    
+
+        public UserModel GetUserDetails(int UserId)
+        {
+            UserModel user = new UserModel();
+
+            try
+            {
+                 user = _context.GetUserByID(UserId);
+                List<string> roleNames = _context.GetRoleNames(UserId);
+                var SalesCenterNames = _SalesCenterService.GetSalesCenterDetails(UserId).Select(x => x.SalesCenterName).ToList();
+
+                if (user != null)
+                {
+                    user.UserRoles = roleNames;
+                    user.UserSalesCenter = SalesCenterNames;
+                  
+                    return user;
+                }
+                else
+                {
+                    return user;
                 }
 
 

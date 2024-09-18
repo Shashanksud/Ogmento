@@ -1,5 +1,5 @@
 ﻿
-using OgmentoAPI.Domain.Client.Abstractions.DataContext;
+
 
 namespace OgmentoAPI.Domain.Authorization.Abstraction.DataContext
 {
@@ -25,7 +25,7 @@ namespace OgmentoAPI.Domain.Authorization.Abstraction.DataContext
         
         public virtual ICollection<RefreshToken> RefreshToken { get; set; }
         public virtual ICollection<UserRoles> UserRoles { get; set; }
-        public virtual ICollection<SalesCenterUserMapping>SalesCenterUsers{ get;set; }
+      
 
     }
 }

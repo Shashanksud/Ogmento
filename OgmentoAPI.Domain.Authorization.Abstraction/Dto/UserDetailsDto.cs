@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OgmentoAPI.Domain.Authorization.Abstraction.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +15,9 @@ namespace OgmentoAPI.Domain.Authorization.Abstractions.Dto
 
         public string SalesCenters { get; set; }
         public string KioskName { get; set; }
-
+        
         public Guid UserUId { get; set; }
-    }
+    
 }
+}
+

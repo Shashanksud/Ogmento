@@ -31,9 +31,11 @@ namespace OgmentoAPI.Domain.Authorization.Infrastructure.Repository
                     where UM.UserId == UserId
                     select new UserModel
                     {
+                       
                         UserId = UM.UserId,
                         Email = UM.Email,
                         PhoneNumber = UM.PhoneNumber,
+                        UserUid = UM.UserUid,
                         UserName = UM.UserName
                     }).FirstOrDefault();
         }
