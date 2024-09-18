@@ -14,29 +14,38 @@ namespace OgmentoAPI.Domain.Authorization.Infrastructure.Repository
             _context = context;
 
         }
-        public List<string> GetRoleNames(int UserId)
+
+        public string GetRoleName(int userId)
+        {
+            var roleMaster = GetUserRole(userId);
+            return roleMaster.RoleName;
+        }
+
+        //commenting this function as this is not needed as we dont have multiples roles for a user
+        /*public string GetRoleNames(int UserId)
         {
             return (from UM in _context.UsersMaster
                     join UR in _context.UserRoles on UM.UserId equals UR.UserId
                     join RM in _context.RolesMaster on UR.RoleId equals RM.RoleId
                     where UM.UserId == UserId
                     select RM.RoleName).ToList();
-        }
+        }*/
 
 
 
-        public UserModel GetUserByID(int UserId)
+        public UserModel GetUserByID(int userId)
         {
             return (from UM in _context.UsersMaster
-                    where UM.UserId == UserId
+                    where UM.UserId == userId
                     select new UserModel
                     {
                        
                         UserId = UM.UserId,
+                        UserUid= UM.UserUid,
+                        UserName = UM.UserName,
                         Email = UM.Email,
                         PhoneNumber = UM.PhoneNumber,
-                        UserUid = UM.UserUid,
-                        UserName = UM.UserName
+                        ValidityDays= UM.ValidityDays,
                     }).FirstOrDefault();
         }
 
@@ -47,15 +56,13 @@ namespace OgmentoAPI.Domain.Authorization.Infrastructure.Repository
             return _context.UsersMaster.FirstOrDefault(c => c.UserName == login.UserName && c.Password == login.Password);
         }
 
-        public List<RolesMaster> GetUserRoles(int userID)
+        public RolesMaster GetUserRole(int userId)
         {
-            return (from UM in _context.UsersMaster
-                    join UR in _context.UserRoles on UM.UserId equals UR.UserId
-                    join RM in _context.RolesMaster on UR.RoleId equals RM.RoleId
-                    where UM.UserId == userID
-                    select RM).ToList();
+            var roleID = _context.UsersMaster.Find(userId).RoleId;
+                
+            return _context.RolesMaster.FirstOrDefault(x => x.RoleId == roleID);
         }
-
+        
 
     }
 }

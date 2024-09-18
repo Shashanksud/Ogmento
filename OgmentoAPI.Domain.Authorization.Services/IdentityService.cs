@@ -1,9 +1,10 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using OgmentoAPI.Domain.Authorization.Abstraction;
 using OgmentoAPI.Domain.Authorization.Abstraction.DataContext;
 using OgmentoAPI.Domain.Authorization.Abstraction.Models;
-
+using OgmentoAPI.Domain.Authorization.Abstractions;
 using System.IdentityModel.Tokens.Jwt;
 
 using System.Security.Claims;
@@ -23,13 +24,15 @@ namespace OgmentoAPI.Domain.Authorization.Services
 
         private readonly TokenValidationParameters _tokenValidationParameters;
         private readonly IAuthorizationContext _contextService;
+        private readonly ICookieService _cookieService;
 
         public IdentityService(IOptions<ServiceConfiguration> settings, 
-            TokenValidationParameters tokenValidationParameters, IAuthorizationContext contextService)
+            TokenValidationParameters tokenValidationParameters, IAuthorizationContext contextService,ICookieService cookieService)
         {
             _appSettings = settings.Value;
             _tokenValidationParameters = tokenValidationParameters;
             _contextService = contextService;
+            _cookieService = cookieService;
         }
 
 
@@ -69,22 +72,23 @@ namespace OgmentoAPI.Domain.Authorization.Services
             }
         }
 
-        private List<RolesMaster> GetUserRole(int UserId)
+        private RolesMaster GetUserRole(int userId)
         {
             try
             {
-                List<RolesMaster> rolesMasters = _contextService.GetUserRoles(UserId);
-                return rolesMasters;
+                RolesMaster rolesMaster = _contextService.GetUserRole(userId);
+                return rolesMaster;
             }
             catch (Exception)
             {
 
-                return new List<RolesMaster>();
+                return new RolesMaster();
             }
         }
 
         public async Task<AuthenticationResult> AuthenticateAsync(UsersMaster user)
         {
+            
             // authentication successful so generate jwt token
             AuthenticationResult authenticationResult = new AuthenticationResult();
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -99,11 +103,9 @@ namespace OgmentoAPI.Domain.Authorization.Services
                     new Claim("EmailId",user.Email==null?"":user.Email),
                     new Claim("UserName",user.UserName==null?"":user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim("Role", GetUserRole(user.UserId).RoleName),
                     });
-                foreach (var item in GetUserRole(user.UserId))
-                {
-                    Subject.AddClaim(new Claim(ClaimTypes.Role, item.RoleName));
-                }
+                
 
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
@@ -114,7 +116,7 @@ namespace OgmentoAPI.Domain.Authorization.Services
                 var token = tokenHandler.CreateToken(tokenDescriptor);
 
                 authenticationResult.Token = tokenHandler.WriteToken(token);
-
+                _cookieService.SetAuthToken(authenticationResult.Token);
 
                 var refreshToken = new RefreshToken
                 {

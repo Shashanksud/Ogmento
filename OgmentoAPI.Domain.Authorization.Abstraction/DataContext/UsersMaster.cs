@@ -8,7 +8,7 @@ namespace OgmentoAPI.Domain.Authorization.Abstraction.DataContext
         public UsersMaster()
         {
             RefreshToken = new HashSet<RefreshToken>();
-            UserRoles = new HashSet<UserRoles>();
+           
            // SalesCenterUsers= new HashSet<SalesCenterUserMapping>();
         }
 
@@ -19,13 +19,14 @@ namespace OgmentoAPI.Domain.Authorization.Abstraction.DataContext
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public int CountryId {  get; set; }
+        public int RoleId {  get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime UpdatedOn { get; set; }
         public int? ValidityDays { get; set; }
         
         public virtual ICollection<RefreshToken> RefreshToken { get; set; }
-        public virtual ICollection<UserRoles> UserRoles { get; set; }
-      
+        public virtual RolesMaster UserRole { get; set; }
+       
 
     }
 }

@@ -9,6 +9,7 @@ using OgmentoAPI.Domain.Client.Services;
 using OgmentoAPI.Domain.Common.Services;
 using System.Text;
 using OgmentoAPI.Domain.Authorization.Abstraction.Models;
+using OgmentoAPI.Domain.Authorization.Abstractions.Enums;
 
 
 namespace OgmentoAPI.Web
@@ -64,7 +65,13 @@ namespace OgmentoAPI.Web
                 x.TokenValidationParameters = tokenValidationParameters;
 
             });
-
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminPolicy", policy => policy.RequireClaim("Role", UserRoles.Admin.ToString()));
+                options.AddPolicy("SupportPolicy", policy => policy.RequireClaim("Role", UserRoles.Support.ToString()));
+                options.AddPolicy("MarketingTeamPolicy", policy => policy.RequireClaim("Role", UserRoles.MarketingTeam.ToString()));
+            });
+            services.AddHttpContextAccessor();
 
             services.AddCors(options =>
             {

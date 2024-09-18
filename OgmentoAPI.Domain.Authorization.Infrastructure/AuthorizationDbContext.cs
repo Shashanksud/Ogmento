@@ -21,7 +21,6 @@ namespace OgmentoAPI.Web.DataContext
 
         public virtual DbSet<RefreshToken> RefreshToken { get; set; }
         public virtual DbSet<RolesMaster> RolesMaster { get; set; }
-        public virtual DbSet<UserRoles> UserRoles { get; set; }
         public virtual DbSet<UsersMaster> UsersMaster { get; set; }
 
     
@@ -52,21 +51,7 @@ namespace OgmentoAPI.Web.DataContext
                 entity.HasKey(e => e.RoleId);
             });
 
-            modelBuilder.Entity<UserRoles>(entity =>
-            {
-                entity.HasKey(e => new { e.UserId, e.RoleId })
-                    .HasName("PK_UserRoles_1");
-
-                entity.HasIndex(e => e.UserId);
-
-                entity.HasOne(d => d.Role)
-                    .WithMany(p => p.UserRoles)
-                    .HasForeignKey(d => d.RoleId);
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.UserRoles)
-                    .HasForeignKey(d => d.UserId);
-            });
+            
 
             modelBuilder.Entity<UsersMaster>(entity =>
             {
@@ -80,10 +65,16 @@ namespace OgmentoAPI.Web.DataContext
 
                 entity.Property(e => e.UserName).IsRequired();
             });
+            modelBuilder.Entity<UsersMaster>()
+                .HasOne(x => x.UserRole)
+                .WithMany(x => x.Users)
+                .HasForeignKey(x => x.RoleId);
+
             OnModelCreatingPartial(modelBuilder);
 
-            modelBuilder.Entity<SalesCenterUserMapping>()
-              .HasKey(sc => new { sc.UserId, sc.SalesCenterId });
+            
+            //modelBuilder.Entity<SalesCenterUserMapping>()
+              //.HasKey(sc => new { sc.UserId, sc.SalesCenterId });
             // modelBuilder.Entity<SalesCenterUserMapping>().Has();
 
             base.OnModelCreating(modelBuilder);

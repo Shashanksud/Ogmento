@@ -10,6 +10,8 @@ namespace OgmentoAPI.Domain.Common.Services
         public static IServiceCollection AddCommon(this IServiceCollection services, string dbConnectionString)
         {
             return services.AddDbContext<CommonDBContext>(opts => opts.UseSqlServer(dbConnectionString));
+              
+            
         }
 
     }

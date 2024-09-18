@@ -21,7 +21,7 @@ namespace OgmentoAPI.Domain.Authorization.Api
 
         [Route("getCurrentUser")]
         [HttpGet]
-        [Authorize]
+        [Authorize(Policy ="AdminPolicy")]
         public IActionResult GetCurrentUser()
         {
             int UserId = GetUserIdFromToken();
