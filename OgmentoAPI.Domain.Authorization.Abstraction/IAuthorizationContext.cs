@@ -7,7 +7,7 @@ namespace OgmentoAPI.Domain.Authorization.Abstraction
     {
         UsersMaster GetUserDetail(LoginModel login);
 
-        RolesMaster GetUserRoles(int userID);
+        RolesMaster GetUserRole(int userId);
 
         
     }

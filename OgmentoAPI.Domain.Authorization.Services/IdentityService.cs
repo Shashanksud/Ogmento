@@ -73,8 +73,8 @@ namespace OgmentoAPI.Domain.Authorization.Services
         {
             try
             {
-                RolesMaster rolesMasters = _contextService.GetUserRoles(UserId);
-                return rolesMasters;
+                RolesMaster rolesMaster = _contextService.GetUserRole(UserId);
+                return rolesMaster;
             }
             catch (Exception)
             {

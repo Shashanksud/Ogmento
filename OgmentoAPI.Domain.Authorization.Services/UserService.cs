@@ -17,19 +17,19 @@ namespace OgmentoAPI.Domain.Authorization.Services
             _context = context;
             _SalesCenterService = salesCenterService;
         }
-        public ResponseModel<UserModel> Get(int UserId)
+        public ResponseModel<UserModel> Get(int userId)
         {
             ResponseModel<UserModel> response = new ResponseModel<UserModel>();
 
             try
             {
-                UserModel user = _context.GetUserByID(UserId);
-                var SalesCenterNames = _SalesCenterService.GetSalesCenterDetails(UserId).Select(x=> x.SalesCenterName).ToList();
-                var Role= _context.GetRoleName(UserId);
+                UserModel user = _context.GetUserByID(userId);
+                var salesCenterNames = _SalesCenterService.GetSalesCenterDetails(userId).Select(x=> x.SalesCenterName).ToList();
+                var role= _context.GetRoleName(userId);
                 if (user != null)
                 {
-                    user.UserSalesCenter = SalesCenterNames;
-                    user.UserRole= Role;
+                    user.UserSalesCenter = salesCenterNames;
+                    user.UserRole= role;
                     response.Data = user;
                     return response;
                 }
