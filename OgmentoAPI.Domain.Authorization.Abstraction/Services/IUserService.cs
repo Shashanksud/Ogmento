@@ -1,13 +1,9 @@
 ﻿using OgmentoAPI.Domain.Authorization.Abstractions.Models;
 
-namespace OgmentoAPI.Domain.Authorization.Abstractions
+namespace OgmentoAPI.Domain.Authorization.Abstractions.Services
 {
     public interface IUserService
     {
-        ResponseModel<UserModel> Get(int userId);
-
         UserModel GetUserDetails(int UserId);
-
     }
-
 }

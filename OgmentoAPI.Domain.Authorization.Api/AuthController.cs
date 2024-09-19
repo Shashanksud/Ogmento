@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OgmentoAPI.Domain.Authorization.Abstractions;
 using OgmentoAPI.Domain.Authorization.Abstractions.Models;
+using OgmentoAPI.Domain.Authorization.Abstractions.Services;
 
 namespace OgmentoAPI.Domain.Authorization.Api
 {

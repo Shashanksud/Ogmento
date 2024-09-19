@@ -1,32 +1,26 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
 using OgmentoAPI.Domain.Authorization.Abstractions.Dto;
-using OgmentoAPI.Domain.Authorization.Services;
-using OgmentoAPI.Domain.Authorization.Abstractions;
-using System.Security.Claims;
+using OgmentoAPI.Domain.Authorization.Abstractions.Services;
 
 
 namespace OgmentoAPI.Domain.Authorization.Api
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersController : IdentityController
     {
-        private readonly IUserService _userService;
-        public UsersController(IUserService userService)
+        public UsersController(IUserService _userService): base(_userService)//, contextAccessor)
         {
-            _userService = userService;
-        }
 
+        }
         [Route("getCurrentUser")]
         [HttpGet]
         [Authorize(Policy ="AdminPolicy")]
         public IActionResult GetCurrentUser()
         {
-            int UserId = GetUserIdFromToken();
-            var result = _userService.Get(UserId);
+            var result = Self;
             return Ok(result);
         }
         [Route("GetUserDetails")]
@@ -35,34 +29,8 @@ namespace OgmentoAPI.Domain.Authorization.Api
         [Produces(typeof(UserDetailsDto))]
         public IActionResult GetUserDetails()
         {
-            int UserId = GetUserIdFromToken();
-            var result = _userService.GetUserDetails(UserId).ToDto();
-          //  var obj= UserDto.ToUserDto(result);
+            var result = Self.ToDto();
             return Ok(result);
         }
-
-        protected int GetUserIdFromToken()
-        {
-            int UserId = 0;
-            try
-            {
-                if (HttpContext.User.Identity.IsAuthenticated)
-                {
-                    var identity = HttpContext.User.Identity as ClaimsIdentity;
-                    if (identity != null)
-                    {
-                        IEnumerable<Claim> claims = identity.Claims;
-                        string strUserId = identity.FindFirst("UserId").Value;
-                        int.TryParse(strUserId, out UserId);
-                    }
-                }
-                return UserId;
-            }
-            catch
-            {
-                return UserId;
-            }
-        }
-
     }
 }

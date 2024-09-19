@@ -1,5 +1,4 @@
-﻿
-namespace OgmentoAPI.Domain.Authorization.Abstractions
+﻿namespace OgmentoAPI.Domain.Authorization.Abstractions.Services
 {
     public interface ICookieService
     {
