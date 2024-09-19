@@ -9,7 +9,6 @@
         public DateTime ExpiryDate { get; set; }
         public bool? Used { get; set; }
         public int UserId { get; set; }
-
         public virtual UsersMaster User { get; set; }
     }
 }

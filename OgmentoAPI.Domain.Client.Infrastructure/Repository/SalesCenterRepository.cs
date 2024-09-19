@@ -22,13 +22,17 @@ namespace OgmentoAPI.Domain.Client.Infrastructure.Repository
 
             return salesCenterIds;
         }
-        public IEnumerable<SalesCenter> GetSalesCenterDetails(Expression<Func<SalesCenterUserMapping, bool>> predicate)
+        public IEnumerable<SalesCenter> GetSalesCenter(Expression<Func<SalesCenterUserMapping, bool>> predicate)
         {
             var salesCenterIds = GetSalesCenterIds(predicate);
             return _Context.SalesCenter
                 .AsNoTracking()
                 .Where(x => salesCenterIds.Contains(x.ID))
                 .ToList();
+        }
+        public IEnumerable<SalesCenter> GetSalesCenterDetails()
+        {
+            return _Context.SalesCenter.ToList();
         }
     }
 }
