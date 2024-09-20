@@ -19,7 +19,7 @@ namespace OgmentoAPI.Domain.Client.Api
         [HttpGet]
         public IActionResult GetAllSalesCenters()
         {
-            List<SalesCenterModel> response = _salesCenterService.GetAllCenters();
+            List<SalesCenterModel> response = _salesCenterService.GetAllSalesCenters();
             return Ok(response);
         }
     }
