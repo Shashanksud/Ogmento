@@ -7,14 +7,14 @@ namespace OgmentoAPI.Domain.Client.Infrastructure.Repository
 {
     public class SalesCenterRepository : ISalesCenterRepository
     {
-        private readonly ClientDBContext _Context;
+        private readonly ClientDBContext _context;
         public SalesCenterRepository(ClientDBContext Context)
         {
-            _Context = Context;
+            _context = Context;
         }
         public IEnumerable<int> GetSalesCenterIds(Expression<Func<SalesCenterUserMapping, bool>> predicate)
         {
-            var salesCenterIds = _Context.SalesCenterUserMapping
+            var salesCenterIds = _context.SalesCenterUserMapping
                 .AsNoTracking()
                 .Where(predicate)
                 .Select(mapping => mapping.SalesCenterId)
@@ -25,14 +25,14 @@ namespace OgmentoAPI.Domain.Client.Infrastructure.Repository
         public IEnumerable<SalesCenter> GetSalesCenter(Expression<Func<SalesCenterUserMapping, bool>> predicate)
         {
             var salesCenterIds = GetSalesCenterIds(predicate);
-            return _Context.SalesCenter
+            return _context.SalesCenter
                 .AsNoTracking()
                 .Where(x => salesCenterIds.Contains(x.ID))
                 .ToList();
         }
         public IEnumerable<SalesCenter> GetSalesCenterDetails()
         {
-            return _Context.SalesCenter.ToList();
+            return _context.SalesCenter.ToList();
         }
     }
 }

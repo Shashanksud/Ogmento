@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OgmentoAPI.Domain.Authorization.Abstractions.Models;
 using OgmentoAPI.Domain.Authorization.Abstractions.Services;
+using OgmentoAPI.Domain.Common.Abstractions;
 
 namespace OgmentoAPI.Domain.Authorization.Api
 {
@@ -12,11 +13,15 @@ namespace OgmentoAPI.Domain.Authorization.Api
         {
             _userService = userService;
         }
-        private int GetId()
+        private int GetUserId()
         {
             int userId = 0;
-            string strUserId = User == null ? string.Empty : User.FindFirst(c => c.Type == "UserId")?.Value;
+            string strUserId = User == null ? string.Empty : User.FindFirst(c => c.Type == CustomClaimTypes.UserId)?.Value;
             int.TryParse(strUserId, out userId);
+            if(userId == 0)
+            {
+                throw new InvalidOperationException();
+            }
             return userId;
         }
         protected UserModel Self
@@ -28,10 +33,11 @@ namespace OgmentoAPI.Domain.Authorization.Api
                     try
                     {
 
-                        _user = _userService.GetUserDetails(GetId());
+                        _user = _userService.GetUserDetails(GetUserId());
                     }
                     catch
                     {
+                        throw new InvalidOperationException();
                     }
                 }
 

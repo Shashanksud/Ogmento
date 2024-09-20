@@ -5,7 +5,7 @@ namespace OgmentoAPI.Domain.Client.Abstractions.Service
 {
     public interface ISalesCenterService
     {
-        IEnumerable<SalesCenter> GetSalesCenter(int Id);
-        List<SalesCenterModel> GetAllCenters();
+        IEnumerable<SalesCenter> GetSalesCenterForUser(int Id);
+        List<SalesCenterModel> GetAllSalesCenters();
     }
 }

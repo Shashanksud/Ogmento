@@ -26,9 +26,9 @@ namespace OgmentoAPI.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddControllers();
+      
             services.AddMvc();
-            services.AddControllers();
+      
             //services.AddDbContext<UserAuthorization>(opts => opts.UseSqlServer(Configuration["ConnectionString:DefaultConnection"]));
             
             // configure strongly typed settings objects

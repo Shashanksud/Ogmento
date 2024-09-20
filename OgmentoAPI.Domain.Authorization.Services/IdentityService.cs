@@ -1,14 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using OgmentoAPI.Domain.Authorization.Abstractions.DataContext;
 using OgmentoAPI.Domain.Authorization.Abstractions.Models;
 using OgmentoAPI.Domain.Authorization.Abstractions.Repository;
 using OgmentoAPI.Domain.Authorization.Abstractions.Services;
+using OgmentoAPI.Domain.Common.Abstractions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using JwtRegisteredClaimNames = System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames;
 
 namespace OgmentoAPI.Domain.Authorization.Services
 {
@@ -75,12 +74,12 @@ namespace OgmentoAPI.Domain.Authorization.Services
 
                 ClaimsIdentity Subject = new ClaimsIdentity(new Claim[]
                     {
-                    new Claim("UserId", user.UserId.ToString()),
-                    new Claim("UserUid",user.UserUid.ToString()),
-                    new Claim("EmailId",user.Email==null?"":user.Email),
-                    new Claim("UserName",user.UserName==null?"":user.UserName),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim("Role", GetUserRole(user.UserId).RoleName),
+                    new Claim(CustomClaimTypes.UserId, user.UserId.ToString()),
+                    new Claim(CustomClaimTypes.UserUid,user.UserUid.ToString()),
+                    new Claim(CustomClaimTypes.EmailId,user.Email==null?"":user.Email),
+                    new Claim(CustomClaimTypes.UserName,user.UserName==null?"":user.UserName),
+                    new Claim(CustomClaimTypes.Jti, Guid.NewGuid().ToString()),
+                    new Claim(CustomClaimTypes.Role, GetUserRole(user.UserId).RoleName),
                     });
                
                 var tokenDescriptor = new SecurityTokenDescriptor
