@@ -28,6 +28,7 @@ namespace OgmentoAPI.Web
         {
             //services.AddControllers();
             services.AddMvc();
+            services.AddControllers();
             //services.AddDbContext<UserAuthorization>(opts => opts.UseSqlServer(Configuration["ConnectionString:DefaultConnection"]));
             
             // configure strongly typed settings objects

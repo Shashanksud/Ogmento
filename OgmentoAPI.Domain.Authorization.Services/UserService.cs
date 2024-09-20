@@ -1,51 +1,19 @@
-﻿using OgmentoAPI.Domain.Authorization.Abstractions;
-using OgmentoAPI.Domain.Authorization.Abstractions.Models;
-using OgmentoAPI.Domain.Authorization.Abstractions.Dto;
-using OgmentoAPI.Domain.Authorization.Abstractions.Enums;
+﻿using OgmentoAPI.Domain.Authorization.Abstractions.Models;
+using OgmentoAPI.Domain.Authorization.Abstractions.Repository;
+using OgmentoAPI.Domain.Authorization.Abstractions.Services;
 using OgmentoAPI.Domain.Client.Abstractions.Service;
 
 namespace OgmentoAPI.Domain.Authorization.Services
 {
-
     public class UserService : IUserService
     {
-        private readonly IUserContext _context;
+        private readonly IAuthorizationRepository _context;
         private readonly ISalesCenterService _SalesCenterService;
-        public UserService(IUserContext context, ISalesCenterService salesCenterService)
+        public UserService(IAuthorizationRepository context, ISalesCenterService salesCenterService)
         {
             _context = context;
             _SalesCenterService = salesCenterService;
         }
-        public ResponseModel<UserModel> Get(int userId)
-        {
-            ResponseModel<UserModel> response = new ResponseModel<UserModel>();
-
-            try
-            {
-                UserModel user = _context.GetUserByID(userId);
-                List<string> salesCenterNames = _SalesCenterService.GetSalesCenterDetails(userId).Select(x=> x.SalesCenterName).ToList();
-                string role= _context.GetRoleName(userId);
-                if (user != null)
-                {
-                    user.UserSalesCenter = salesCenterNames;
-                    user.UserRole= role;
-                    response.Data = user;
-                    return response;
-                }
-                else
-                {
-                    response.IsSuccess = false;
-                    response.Message = "User Not Found!";
-                    return response;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-    
 
         public UserModel GetUserDetails(int UserId)
         {
@@ -53,27 +21,23 @@ namespace OgmentoAPI.Domain.Authorization.Services
 
             try
             {
-                 user = _context.GetUserByID(UserId);
+                user = _context.GetUserByID(UserId);
                 string UserRole = _context.GetRoleName(UserId);
-                var SalesCenterNames = _SalesCenterService.GetSalesCenterDetails(UserId).Select(x => x.SalesCenterName).ToList();
+                var SalesCenterNames = _SalesCenterService.GetSalesCenter(UserId).Select(x => x.SalesCenterName).ToList();
 
                 if (user != null)
                 {
                     user.UserRole = UserRole;
                     user.UserSalesCenter = SalesCenterNames;
-                  
                     return user;
                 }
                 else
                 {
                     return user;
                 }
-
-
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }

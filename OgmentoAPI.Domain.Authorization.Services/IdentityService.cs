@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using OgmentoAPI.Domain.Authorization.Abstractions;
 using OgmentoAPI.Domain.Authorization.Abstractions.DataContext;
 using OgmentoAPI.Domain.Authorization.Abstractions.Models;
+using OgmentoAPI.Domain.Authorization.Abstractions.Repository;
+using OgmentoAPI.Domain.Authorization.Abstractions.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -15,39 +16,32 @@ namespace OgmentoAPI.Domain.Authorization.Services
     {
         private readonly ServiceConfiguration _appSettings;
         private readonly TokenValidationParameters _tokenValidationParameters;
-        private readonly IAuthorizationContext _contextService;
+        private readonly IAuthorizationRepository _contextRepository;
         private readonly ICookieService _cookieService;
 
         public IdentityService(IOptions<ServiceConfiguration> settings, 
-            TokenValidationParameters tokenValidationParameters, IAuthorizationContext contextService, ICookieService cookieService)
+            TokenValidationParameters tokenValidationParameters, IAuthorizationRepository contextRepository, ICookieService cookieService)
         {
             _appSettings = settings.Value;
             _tokenValidationParameters = tokenValidationParameters;
-            _contextService = contextService;
+            _contextRepository = contextRepository;
             _cookieService = cookieService;
         }
-        public async Task<ResponseModel<TokenModel>> LoginAsync(LoginModel login)
+        public async Task<TokenModel> LoginAsync(LoginModel login)
         {
-            ResponseModel<TokenModel> response = new ResponseModel<TokenModel>();
+            TokenModel response = new TokenModel();
             try
             {
-                UsersMaster loginUser = _contextService.GetUserDetail(login);
+                UsersMaster loginUser = _contextRepository.GetUserDetail(login);
                 if (loginUser == null)
                 {
-                    response.IsSuccess = false;
-                    response.Message = "Invalid Username And Password";
                     return response;
                 }
                 AuthenticationResult authenticationResult = await AuthenticateAsync(loginUser);
 
                 if (authenticationResult != null && authenticationResult.Success)
                 {
-                    response.Data = new TokenModel() { Token = authenticationResult.Token };//, RefreshToken = authenticationResult.RefreshToken };
-                }
-                else
-                {
-                    response.Message = "Something went wrong!";
-                    response.IsSuccess = false;
+                    response = new TokenModel() { Token = authenticationResult.Token };//, RefreshToken = authenticationResult.RefreshToken };
                 }
                 return response;
             }
@@ -61,7 +55,7 @@ namespace OgmentoAPI.Domain.Authorization.Services
         {
             try
             {
-                RolesMaster rolesMaster = _contextService.GetUserRole(userId);
+                RolesMaster rolesMaster = _contextRepository.GetUserRole(userId);
                 return rolesMaster;
             }
             catch (Exception)
@@ -82,6 +76,7 @@ namespace OgmentoAPI.Domain.Authorization.Services
                 ClaimsIdentity Subject = new ClaimsIdentity(new Claim[]
                     {
                     new Claim("UserId", user.UserId.ToString()),
+                    new Claim("UserUid",user.UserUid.ToString()),
                     new Claim("EmailId",user.Email==null?"":user.Email),
                     new Claim("UserName",user.UserName==null?"":user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
@@ -114,7 +109,6 @@ namespace OgmentoAPI.Domain.Authorization.Services
             }
             catch (Exception ex)
             {
-
                 return null;
             }
 
