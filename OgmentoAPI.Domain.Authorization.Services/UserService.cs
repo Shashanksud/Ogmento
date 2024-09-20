@@ -8,11 +8,11 @@ namespace OgmentoAPI.Domain.Authorization.Services
     public class UserService : IUserService
     {
         private readonly IAuthorizationRepository _context;
-        private readonly ISalesCenterService _SalesCenterService;
+        private readonly ISalesCenterService _salesCenterService;
         public UserService(IAuthorizationRepository context, ISalesCenterService salesCenterService)
         {
             _context = context;
-            _SalesCenterService = salesCenterService;
+            _salesCenterService = salesCenterService;
         }
 
         public UserModel GetUserDetails(int UserId)
@@ -22,13 +22,13 @@ namespace OgmentoAPI.Domain.Authorization.Services
             try
             {
                 user = _context.GetUserByID(UserId);
-                string UserRole = _context.GetRoleName(UserId);
-                var SalesCenterNames = _SalesCenterService.GetSalesCenter(UserId).Select(x => x.SalesCenterName).ToList();
+                string userRole = _context.GetRoleName(UserId);
+                var salesCenterNames = _salesCenterService.GetSalesCenterForUser(UserId).Select(x => x.SalesCenterName).ToList();
 
                 if (user != null)
                 {
-                    user.UserRole = UserRole;
-                    user.UserSalesCenter = SalesCenterNames;
+                    user.UserRole = userRole;
+                    user.UserSalesCenter =salesCenterNames;
                     return user;
                 }
                 else

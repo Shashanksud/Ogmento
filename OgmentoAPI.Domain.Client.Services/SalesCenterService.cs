@@ -14,25 +14,25 @@ namespace OgmentoAPI.Domain.Client.Services
         {
             _salesCenterRepository = salesCenterRepository;
         }
-        public IEnumerable<SalesCenter> GetSalesCenter(int Id)
+        public IEnumerable<SalesCenter> GetSalesCenterForUser(int Id)
         {
             Expression<Func<SalesCenterUserMapping, bool>> predicate = (mapping => mapping.UserId == Id);
             return _salesCenterRepository.GetSalesCenter(predicate);
         }
-        public List<SalesCenterModel> GetAllCenters()
+        public List<SalesCenterModel> GetAllSalesCenters()
         {
-            var salesCenters = _salesCenterRepository.GetSalesCenterDetails();
+            IEnumerable<SalesCenter> salesCenters = _salesCenterRepository.GetSalesCenterDetails();
             List<SalesCenterModel> salesCenterModel= new List<SalesCenterModel>();
             foreach(var centers in salesCenters)
             {
                 salesCenterModel.Add(
                     new SalesCenterModel
                     {
-                        CenterName = centers.SalesCenterName,
-                        CenterUid = centers.SalesCenterUid.ToString(),
+                        SalesCenterName = centers.SalesCenterName,
+                        SalesCenterUid = centers.SalesCenterUid.ToString(),
                         Country = Enum.GetName(typeof(Country),centers.CountryId),
                         City = centers.City,
-                        CenterId = centers.ID
+                        SalesCenterId = centers.ID
                     });
             }
             return salesCenterModel;
