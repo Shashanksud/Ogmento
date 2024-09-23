@@ -1,4 +1,5 @@
 ﻿using OgmentoAPI.Domain.Authorization.Abstractions.DataContext;
+using OgmentoAPI.Domain.Authorization.Abstractions.Enums;
 using OgmentoAPI.Domain.Authorization.Abstractions.Models;
 using OgmentoAPI.Domain.Authorization.Abstractions.Repository;
 using OgmentoAPI.Web.DataContext;
@@ -14,7 +15,7 @@ namespace OgmentoAPI.Domain.Authorization.Infrastructure.Repository
         }
         public RolesMaster GetUserRole(int userId)
         {
-            var roleID = _context.UsersMaster.Find(userId).RoleId;
+            UserRoles roleID = _context.UsersMaster.Find(userId).RoleId;
             RolesMaster roleMaster = _context.RolesMaster.FirstOrDefault(x => x.RoleId == roleID);
             return roleMaster;
         }

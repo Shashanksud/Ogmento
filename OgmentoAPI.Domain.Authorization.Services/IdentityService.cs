@@ -18,7 +18,7 @@ namespace OgmentoAPI.Domain.Authorization.Services
         private readonly IAuthorizationRepository _contextRepository;
         private readonly ICookieService _cookieService;
 
-        public IdentityService(IOptions<ServiceConfiguration> settings, 
+        public IdentityService(IOptions<ServiceConfiguration> settings,
             TokenValidationParameters tokenValidationParameters, IAuthorizationRepository contextRepository, ICookieService cookieService)
         {
             _appSettings = settings.Value;
@@ -44,9 +44,9 @@ namespace OgmentoAPI.Domain.Authorization.Services
                 }
                 return response;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -76,12 +76,12 @@ namespace OgmentoAPI.Domain.Authorization.Services
                     {
                     new Claim(CustomClaimTypes.UserId, user.UserId.ToString()),
                     new Claim(CustomClaimTypes.UserUid,user.UserUid.ToString()),
-                    new Claim(CustomClaimTypes.EmailId,user.Email==null?"":user.Email),
-                    new Claim(CustomClaimTypes.UserName,user.UserName==null?"":user.UserName),
+                    new Claim(CustomClaimTypes.EmailId,user.Email ?? ""),
+                    new Claim(CustomClaimTypes.UserName,user.UserName ?? ""),
                     new Claim(CustomClaimTypes.Jti, Guid.NewGuid().ToString()),
                     new Claim(CustomClaimTypes.Role, GetUserRole(user.UserId).RoleName),
                     });
-               
+
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = Subject,
@@ -100,8 +100,9 @@ namespace OgmentoAPI.Domain.Authorization.Services
                     CreationDate = DateTime.UtcNow,
                     ExpiryDate = DateTime.UtcNow.AddMonths(6)
                 };
+                //Commenting it as refresh token functionality is not is use as of now but can be considered in future
                 // await _context.RefreshToken.AddAsync(refreshToken);
-            //    await _context.SaveChangesAsync();
+                //    await _context.SaveChangesAsync();
                 //     authenticationResult.RefreshToken = refreshToken.Token;
                 authenticationResult.Success = true;
                 return authenticationResult;
