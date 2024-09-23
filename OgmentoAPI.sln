@@ -39,11 +39,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI.Domain.Common.In
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI.Domain.Client.Services", "OgmentoAPI.Domain.Client.Services\OgmentoAPI.Domain.Client.Services.csproj", "{10D1F084-ABC6-46C4-89A9-860A917A0C72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OgmentoAPI.Domain.Client.Api", "OgmentoAPI.Domain.Client.Api\OgmentoAPI.Domain.Client.Api.csproj", "{00BB9A3F-1E95-4F4E-B78A-7CAF09B9075B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI.Domain.Client.Api", "OgmentoAPI.Domain.Client.Api\OgmentoAPI.Domain.Client.Api.csproj", "{00BB9A3F-1E95-4F4E-B78A-7CAF09B9075B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OgmentoAPI.Domain.Common.Api", "OgmentoAPI.Domain.Common.Api\OgmentoAPI.Domain.Common.Api.csproj", "{24A32B1D-86FA-4387-A6F5-03F7B6078AEA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI.Domain.Common.Api", "OgmentoAPI.Domain.Common.Api\OgmentoAPI.Domain.Common.Api.csproj", "{24A32B1D-86FA-4387-A6F5-03F7B6078AEA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OgmentoAPI.Domain.Common.Services", "OgmentoAPI.Domain.Common.Services\OgmentoAPI.Domain.Common.Services.csproj", "{4D6EDF5E-6011-451A-9741-456D51B6CF55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI.Domain.Common.Services", "OgmentoAPI.Domain.Common.Services\OgmentoAPI.Domain.Common.Services.csproj", "{4D6EDF5E-6011-451A-9741-456D51B6CF55}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AB941F59-6846-4731-9DD6-3DF60117510F}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
