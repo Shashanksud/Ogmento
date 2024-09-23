@@ -1,10 +1,11 @@
 ﻿
 namespace OgmentoAPI.Domain.Authorization.Abstractions.Enums
 {
+    //Should match with the RolesMaster table
     public enum UserRoles
     {
-        Admin = 0,
-        Support = 1,
-        MarketingTeam = 2
+        Admin = 1,
+        Support = 2,
+        MarketingTeam = 3
     }
 }

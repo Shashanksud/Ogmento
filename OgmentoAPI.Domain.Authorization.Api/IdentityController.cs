@@ -16,7 +16,7 @@ namespace OgmentoAPI.Domain.Authorization.Api
         private int GetUserId()
         {
             int userId = 0;
-            string strUserId = User == null ? string.Empty : User.FindFirst(c => c.Type == CustomClaimTypes.UserId)?.Value;
+            string? strUserId = User == null ? string.Empty : User.FindFirst(c => c.Type == CustomClaimTypes.UserId)?.Value;
             int.TryParse(strUserId, out userId);
             if(userId == 0)
             {

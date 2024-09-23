@@ -10,6 +10,9 @@ using OgmentoAPI.Domain.Common.Services;
 using System.Text;
 using OgmentoAPI.Domain.Authorization.Abstractions.Enums;
 using OgmentoAPI.Domain.Authorization.Abstractions.Models;
+using System.Security.Claims;
+using OgmentoAPI.Domain.Common.Abstractions;
+using OgmentoAPI.Domain.Common.Abstractions.Helpers;
 
 
 namespace OgmentoAPI.Web
@@ -26,18 +29,17 @@ namespace OgmentoAPI.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-      
+
             services.AddMvc();
-      
-            //services.AddDbContext<UserAuthorization>(opts => opts.UseSqlServer(Configuration["ConnectionString:DefaultConnection"]));
-            
+
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("ServiceConfiguration");
             services.Configure<ServiceConfiguration>(appSettingsSection);
 
-            services.AddAuth(Configuration["ConnectionString:DefaultConnection"])
-                    .AddClient(Configuration["ConnectionString:DefaultConnection"])
-                    .AddCommon(Configuration["ConnectionString:DefaultConnection"]);
+            string dbConnectionString = Configuration["ConnectionString:DefaultConnection"];
+            services.AddAuth(dbConnectionString)
+                    .AddClient(dbConnectionString)
+                    .AddCommon(dbConnectionString);
 
             // configure jwt authentication
             var serviceConfiguration = appSettingsSection.Get<ServiceConfiguration>();
@@ -66,12 +68,10 @@ namespace OgmentoAPI.Web
                 x.TokenValidationParameters = tokenValidationParameters;
 
             });
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("AdminPolicy", policy => policy.RequireClaim("Role", UserRoles.Admin.ToString()));
-                options.AddPolicy("SupportPolicy", policy => policy.RequireClaim("Role", UserRoles.Support.ToString()));
-                options.AddPolicy("MarketingTeamPolicy", policy => policy.RequireClaim("Role", UserRoles.MarketingTeam.ToString()));
-            });
+            services.AddAuthorizationBuilder()
+                .AddPolicy(PolicyNames.Administrator, policy => policy.RequireClaim(CustomClaimTypes.Role, UserRoles.Admin.ToString()))
+                .AddPolicy(PolicyNames.Support, policy => policy.RequireClaim(CustomClaimTypes.Role, UserRoles.Support.ToString()))
+                .AddPolicy(PolicyNames.Marketing, policy => policy.RequireClaim(CustomClaimTypes.Role, UserRoles.MarketingTeam.ToString()));
             services.AddHttpContextAccessor();
 
             services.AddCors(options =>
