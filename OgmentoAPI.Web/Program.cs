@@ -10,9 +10,16 @@ namespace OgmentoAPI.Web
     {
         public static void Main(string[] args)
         {
-            var configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .Build();
+            var configurationBuilder = new ConfigurationBuilder();
+
+        #if DEBUG
+            configurationBuilder.AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true);
+        #else
+            configurationBuilder.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+        #endif
+
+            var configuration = configurationBuilder.Build();
+
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(configuration)
                 .CreateLogger();
