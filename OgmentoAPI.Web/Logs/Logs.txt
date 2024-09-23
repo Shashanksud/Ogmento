@@ -1,0 +1,9 @@
+﻿Application starting up
+The WebRootPath was not found: "C:\Users\user\Desktop\Ogmento\OgmentoAPI.Web\wwwroot". Static files may be unavailable.
+Now listening on: "http://localhost:5002"
+Now listening on: "http://localhost:5003"
+Application started. Press Ctrl+C to shut down.
+Hosting environment: "Development"
+Content root path: "C:\Users\user\Desktop\Ogmento\OgmentoAPI.Web"
+Failed to determine the https port for redirect.
+HTTP "GET" "/weatherforecast" responded 200 in 90.0704 ms
