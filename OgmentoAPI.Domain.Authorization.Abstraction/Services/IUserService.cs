@@ -5,5 +5,7 @@ namespace OgmentoAPI.Domain.Authorization.Abstractions.Services
     public interface IUserService
     {
         UserModel GetUserDetails(int UserId);
+
+        int? UpdateUser(UserModel user);
     }
 }

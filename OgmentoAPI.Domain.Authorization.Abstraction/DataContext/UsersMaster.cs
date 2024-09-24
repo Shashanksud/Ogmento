@@ -16,6 +16,7 @@ namespace OgmentoAPI.Domain.Authorization.Abstractions.DataContext
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public int CountryId {  get; set; }
+        public string City {  get; set; }
         public UserRoles RoleId {  get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime UpdatedOn { get; set; }
