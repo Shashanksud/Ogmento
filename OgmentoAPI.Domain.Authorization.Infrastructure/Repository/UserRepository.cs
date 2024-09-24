@@ -40,7 +40,7 @@ namespace OgmentoAPI.Domain.Authorization.Infrastructure.Repository
         }
         public UsersMaster GetUserDetail(LoginModel login)
         {
-            return _context.UsersMaster.FirstOrDefault(c => c.UserName == login.UserName && c.Password == login.Password);
+            return _context.UsersMaster.FirstOrDefault(c => c.Email== login.Email && c.Password == login.Password);
         }
         
     }

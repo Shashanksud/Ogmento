@@ -13,6 +13,7 @@ using OgmentoAPI.Domain.Authorization.Abstractions.Models;
 using System.Security.Claims;
 using OgmentoAPI.Domain.Common.Abstractions;
 using OgmentoAPI.Domain.Common.Abstractions.Helpers;
+using Serilog;
 
 
 namespace OgmentoAPI.Web
@@ -93,6 +94,7 @@ namespace OgmentoAPI.Web
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseStaticFiles();
+            app.UseSerilogRequestLogging();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

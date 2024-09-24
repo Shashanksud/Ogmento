@@ -76,7 +76,7 @@ namespace OgmentoAPI.Domain.Authorization.Services
                     {
                     new Claim(CustomClaimTypes.UserId, user.UserId.ToString()),
                     new Claim(CustomClaimTypes.UserUid,user.UserUid.ToString()),
-                    new Claim(CustomClaimTypes.EmailId,user.Email ?? ""),
+                    new Claim(CustomClaimTypes.EmailId,user.Email),
                     new Claim(CustomClaimTypes.UserName,user.UserName ?? ""),
                     new Claim(CustomClaimTypes.Jti, Guid.NewGuid().ToString()),
                     new Claim(CustomClaimTypes.Role, GetUserRole(user.UserId).RoleName),
