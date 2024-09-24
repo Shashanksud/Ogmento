@@ -10,10 +10,11 @@ using OgmentoAPI.Domain.Common.Services;
 using System.Text;
 using OgmentoAPI.Domain.Authorization.Abstractions.Enums;
 using OgmentoAPI.Domain.Authorization.Abstractions.Models;
-using System.Security.Claims;
 using OgmentoAPI.Domain.Common.Abstractions;
 using OgmentoAPI.Domain.Common.Abstractions.Helpers;
 using Serilog;
+using OgmentoAPI.Middlewares;
+using Microsoft.Extensions.Hosting;
 
 
 namespace OgmentoAPI.Web
@@ -41,7 +42,7 @@ namespace OgmentoAPI.Web
             services.AddAuth(dbConnectionString)
                     .AddClient(dbConnectionString)
                     .AddCommon(dbConnectionString);
-
+            
             // configure jwt authentication
             var serviceConfiguration = appSettingsSection.Get<ServiceConfiguration>();
             var JwtSecretkey = Encoding.ASCII.GetBytes(serviceConfiguration.JwtSettings.Secret);
@@ -88,6 +89,11 @@ namespace OgmentoAPI.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            if (!env.IsDevelopment())
+            {
+                app.UseHsts();
+            }
+            app.UseMiddleware<ExceptionHandler>();
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors("CorsPolicy");
