@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using OgmentoAPI.Domain.Authorization.Abstractions.Models;
 using OgmentoAPI.Domain.Authorization.Abstractions.Services;
 using OgmentoAPI.Domain.Common.Abstractions;
@@ -8,9 +9,11 @@ namespace OgmentoAPI.Domain.Authorization.Api
     public class IdentityController: ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly ILogger<IdentityController> _logger;
         private UserModel _user;
-        public IdentityController(IUserService userService)
+        public IdentityController(IUserService userService, ILogger<IdentityController> logger)
         {
+            _logger = logger;
             _userService = userService;
         }
         private int GetUserId()
@@ -35,8 +38,9 @@ namespace OgmentoAPI.Domain.Authorization.Api
 
                         _user = _userService.GetUserDetails(GetUserId());
                     }
-                    catch
+                    catch(Exception ex)
                     {
+                        _logger.LogError(ex, "User is null");
                         throw new InvalidOperationException();
                     }
                 }
