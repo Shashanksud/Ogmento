@@ -8,6 +8,8 @@ namespace OgmentoAPI.Domain.Authorization.Abstractions.Repository
         UsersMaster GetUserDetail(LoginModel login);
         RolesMaster GetUserRole(int userId);
         UserModel GetUserByID(int userId);
+
+        int? UpdateUser(UserModel user);
         string GetRoleName(int userId);
     }
 

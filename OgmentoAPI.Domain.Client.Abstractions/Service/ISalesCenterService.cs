@@ -7,5 +7,13 @@ namespace OgmentoAPI.Domain.Client.Abstractions.Service
     {
         IEnumerable<SalesCenter> GetSalesCenterForUser(int Id);
         List<SalesCenterModel> GetAllSalesCenters();
+
+        int? UpdateSalesCenters(int userId, List<Guid> guids);
+
+        int? UpdateMainSalesCenter(SalesCenterModel salesCenterModel);
+        int? DeleteSalesCenter(Guid salesCenterUid);
+
+       
+
     }
 }

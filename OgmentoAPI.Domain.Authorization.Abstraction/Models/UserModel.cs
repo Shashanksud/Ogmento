@@ -5,22 +5,24 @@ namespace OgmentoAPI.Domain.Authorization.Abstractions.Models
 {
     public class UserModel
     {
-        [JsonProperty("userId")]
+
         public int UserId { get; set; }
-        [JsonProperty("userUid")]
         public Guid UserUid { get; set; }
-        [JsonProperty("userName")]
+        
+
         public string UserName { get; set; }
-        [JsonProperty("email")]
+      
         public string Email { get; set; }
-        [JsonProperty("phoneNumber")]
+      
         public string PhoneNumber { get; set; }
 
-        [JsonProperty("userRole")]
+       
         public string UserRole { get; set; }
-        [JsonProperty("validityDays")]
+        public string City { get; set; }
+
+        public Dictionary<Guid, string> SalesCenters { get; set; }
         public int? ValidityDays {  get; set; }
-        [JsonProperty("salesCenter")]
-        public List<string> UserSalesCenter { get; set; }
+       
+    
     }
 }

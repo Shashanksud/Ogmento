@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\OgmentoAPI.Domain.Authorization.Abstraction\OgmentoAPI.Domain.Authorization.Abstractions.csproj" />
     <ProjectReference Include="..\OgmentoAPI.Domain.Authorization.Infrastructure\OgmentoAPI.Domain.Authorization.Infrastructure.csproj" />
+    <ProjectReference Include="..\OgmentoAPI.Domain.Client.Abstractions\OgmentoAPI.Domain.Client.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,9 +2,7 @@
 using OgmentoAPI.Domain.Client.Abstractions.Models;
 using OgmentoAPI.Domain.Client.Abstractions.Repositories;
 using OgmentoAPI.Domain.Client.Abstractions.Service;
-using OgmentoAPI.Domain.Common.Abstractions.Helpers;
 using System.Linq.Expressions;
-using static OgmentoAPI.Domain.Common.Abstractions.Helpers.Enums;
 
 namespace OgmentoAPI.Domain.Client.Services
 {
@@ -22,21 +20,67 @@ namespace OgmentoAPI.Domain.Client.Services
         }
         public List<SalesCenterModel> GetAllSalesCenters()
         {
-            IEnumerable<SalesCenter> salesCenters = _salesCenterRepository.GetSalesCenterDetails();
-            List<SalesCenterModel> salesCenterModel = new List<SalesCenterModel>();
-            foreach (var centers in salesCenters)
-            {
-                salesCenterModel.Add(
-                    new SalesCenterModel
-                    {
-                        SalesCenterName = centers.SalesCenterName,
-                        SalesCenterUid = centers.SalesCenterUid.ToString(),
-                        Country = EnumHelper.GetEnumName<Country>(centers.CountryId),
-                        City = centers.City,
-                        SalesCenterId = centers.ID
-                    });
-            }
-            return salesCenterModel;
+            IEnumerable<SalesCenterModel> salesCenters = _salesCenterRepository.GetSalesCenterDetails();
+            return salesCenters.ToList();
+
         }
+
+        public int? UpdateSalesCenters(int userId, List<Guid> guids)
+        {
+
+            try
+            {
+                return _salesCenterRepository.UpdateSalesCentersForUser(userId, guids);
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public int? UpdateMainSalesCenter(SalesCenterModel salesCenterModel)
+        {
+            try
+            {
+                return _salesCenterRepository.UpdateMainSalesCenter(salesCenterModel);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+
+            }
+        }
+
+        public int? DeleteSalesCenter(Guid salesCenterUid)
+        {
+            try
+            {
+           int salesCenterUserCount=  _salesCenterRepository.GetUserSalesCenterMappingId(salesCenterUid);
+                if(salesCenterUserCount>0)
+                {
+                    throw new Exception("CannotDelete");
+                }
+                return _salesCenterRepository.DeleteSalesCenter(salesCenterUid);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        //public int GetUserSalesCenterMappingId(Guid salesCenterUid)
+        //{
+        //    {
+        //        try
+        //        {
+        //         return   _salesCenterRepository.GetUserSalesCenterMappingId(salesCenterUid);
+        //        }
+        //        catch (Exception ex)
+
+        //        {
+        //            throw ex;
+        //        }
+        //    }
+        //}
     }
 }

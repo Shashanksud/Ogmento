@@ -23,18 +23,34 @@ namespace OgmentoAPI.Domain.Authorization.Services
             {
                 user = _context.GetUserByID(UserId);
                 string userRole = _context.GetRoleName(UserId);
-                var salesCenterNames = _salesCenterService.GetSalesCenterForUser(UserId).Select(x => x.SalesCenterName).ToList();
+                var salesCenterNames = _salesCenterService.GetSalesCenterForUser(UserId).ToList();
+
+                Dictionary<Guid, string> salesCenterDictionary = salesCenterNames.ToDictionary(sc => sc.SalesCenterUid, sc => sc.SalesCenterName);
 
                 if (user != null)
                 {
                     user.UserRole = userRole;
-                    user.UserSalesCenter =salesCenterNames;
+                    user.SalesCenters = salesCenterDictionary;
                     return user;
                 }
                 else
                 {
                     return user;
                 }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public int? UpdateUser(UserModel user)
+        {
+            try
+            {
+                List<Guid> guidList = new List<Guid>(user.SalesCenters.Keys);
+                _salesCenterService.UpdateSalesCenters(user.UserId, guidList);
+                return _context.UpdateUser(user);
             }
             catch (Exception ex)
             {

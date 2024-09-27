@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OgmentoAPI.Domain.Client.Abstractions.DataContext;
+using OgmentoAPI.Domain.Client.Abstractions.Models;
 using OgmentoAPI.Domain.Client.Abstractions.Repositories;
 using System.Linq.Expressions;
 
@@ -30,9 +31,88 @@ namespace OgmentoAPI.Domain.Client.Infrastructure.Repository
                 .Where(x => salesCenterIds.Contains(x.ID))
                 .ToList();
         }
-        public IEnumerable<SalesCenter> GetSalesCenterDetails()
+
+        public List<SalesCenterModel> GetSalesCenterDetails()
         {
-            return _context.SalesCenter.ToList();
+            List<SalesCenter> allDetail = _context.SalesCenter.ToList();
+
+            List<SalesCenterModel> salesCenterModel = allDetail.Select(x => new SalesCenterModel
+            {
+                City = x.City,
+                CountryId = x.CountryId,
+                SalesCenterName = x.SalesCenterName,
+                SalesCenterUid = x.SalesCenterUid,
+                SalesCenterId = x.ID,
+
+
+            }).ToList();
+            return salesCenterModel;
+
+
+        }
+
+        public int? UpdateSalesCentersForUser(int userId, List<Guid> guids)
+        {
+            List<int> salesCenterIds = _context.SalesCenter.Where(x => guids.Contains(x.SalesCenterUid)).
+                Select(y => y.ID).ToList();
+
+            List<SalesCenterUserMapping> userIdsToBeDeleted = _context.SalesCenterUserMapping.Where(x => x.UserId == userId).ToList();
+
+            _context.SalesCenterUserMapping.RemoveRange(userIdsToBeDeleted);
+            List<SalesCenterUserMapping> userMappings = GetSalesCenterUserMappingDetails(userId, salesCenterIds);
+            _context.SalesCenterUserMapping.AddRange(userMappings);
+            return _context.SaveChanges();
+
+        }
+
+        private static List<SalesCenterUserMapping> GetSalesCenterUserMappingDetails(int userId, List<int> salesCenterIds)
+        {
+            return salesCenterIds.Select(x => new SalesCenterUserMapping
+            {
+                UserId = userId,
+                SalesCenterId = x
+            }).ToList();
+        }
+
+        public int? UpdateMainSalesCenter(SalesCenterModel salesCenterModel)
+        {
+            SalesCenter salesCenter = _context.SalesCenter.FirstOrDefault(x => x.SalesCenterUid == salesCenterModel.SalesCenterUid);
+
+            if (salesCenter == null)
+            {
+                return null;
+            }
+            salesCenter.SalesCenterName = salesCenterModel.SalesCenterName;
+            salesCenter.CountryId = salesCenterModel.CountryId;
+            salesCenter.City = salesCenterModel.City;
+            _context.SalesCenter.Update(salesCenter);
+            return _context.SaveChanges();
+
+        }
+
+        public int? DeleteSalesCenter(Guid salesCenterUid)
+        {
+            SalesCenter salesCenter = _context.SalesCenter.FirstOrDefault(x => x.SalesCenterUid == salesCenterUid);
+
+            if (salesCenter == null)
+            {
+                return null;
+            }
+
+            _context.Remove(salesCenter);
+            return _context.SaveChanges();
+        }
+
+        public int GetUserSalesCenterMappingId(Guid salesCenterUid)
+        {
+
+            int salesCenterId = _context.SalesCenter.FirstOrDefault(x => x.SalesCenterUid == salesCenterUid).ID;
+
+            return _context.SalesCenterUserMapping.Count(x => x.SalesCenterId == salesCenterId);
+
+
+
+
         }
     }
 }

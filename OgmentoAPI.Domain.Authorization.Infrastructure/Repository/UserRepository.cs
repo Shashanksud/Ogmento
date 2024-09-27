@@ -30,18 +30,46 @@ namespace OgmentoAPI.Domain.Authorization.Infrastructure.Repository
                     where UM.UserId == userId
                     select new UserModel
                     {
-                        UserId = UM.UserId,
-                        UserUid= UM.UserUid,
+                        UserId=UM.UserId,
+                        UserUid = UM.UserUid,
                         UserName = UM.UserName,
                         Email = UM.Email,
                         PhoneNumber = UM.PhoneNumber,
-                        ValidityDays= UM.ValidityDays,
+                        //UserRole=UM.UserRole,
+                        City=UM.City,
+
+                        ValidityDays = UM.ValidityDays,
                     }).FirstOrDefault();
         }
         public UsersMaster GetUserDetail(LoginModel login)
         {
             return _context.UsersMaster.FirstOrDefault(c => c.Email== login.Email && c.Password == login.Password);
         }
-        
+
+        public int? UpdateUser(UserModel user)
+        {
+            UsersMaster userMaster = _context.UsersMaster.FirstOrDefault(x => x.UserUid == user.UserUid);
+            if (user == null)
+            {
+                return null;
+            }
+            userMaster.UpdatedOn = DateTime.UtcNow;
+            userMaster.UserName = user.UserName;
+            userMaster.Email = user.Email;
+            userMaster.PhoneNumber = user.PhoneNumber;
+            userMaster.ValidityDays = user.ValidityDays;
+            userMaster.City = user.City;
+
+            var role = _context.RolesMaster.First(x => x.RoleName == user.UserRole);
+            userMaster.RoleId = role.RoleId;
+
+            _context.Update(userMaster);
+            return _context.SaveChanges();
+        }
+     
+
     }
 }
+
+
+
