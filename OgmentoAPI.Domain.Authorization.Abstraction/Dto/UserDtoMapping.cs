@@ -13,29 +13,35 @@ namespace OgmentoAPI.Domain.Authorization.Abstractions.Dto
                 UserRole = user.UserRole,
                 EmailId = user.Email,
                 UserUId = user.UserUid,
-                SalesCenters = string.Join(",", user.UserSalesCenter)
+                City = user.City,
+                PhoneNumber = user.PhoneNumber,
+                ValidityDays = user.ValidityDays,
+                SalesCenters = user.SalesCenters,
             };
 
             return dto;
 
         }
 
-        public static UserModel ToModel(this UserDetailsDto dto)
+        public static UserModel ToModel(this UserDetailsDto dto, int userId)
         {
             UserModel userModel = new UserModel()
             {
+                UserId = userId,
                 UserName = dto.UserName,
                 UserRole = dto.UserRole,
                 Email = dto.EmailId,
                 UserUid = dto.UserUId,
-                UserSalesCenter = dto.SalesCenters?.Split(',')
-                          .Select(s => s.Trim()) // Trim any whitespace
-                          .ToList() ?? new List<string>()
+                City = dto.City,
+                PhoneNumber = dto.PhoneNumber,
+                ValidityDays = dto.ValidityDays,
+                SalesCenters = dto.SalesCenters
             };
 
             return userModel;
 
         }
+       
     }
 }
 

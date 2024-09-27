@@ -17,7 +17,7 @@ namespace OgmentoAPI.Domain.Authorization.Api
         private readonly IUserService _userService;
         public UsersController(IUserService _userService, ILogger<UsersController> logger): base(_userService,logger)//, contextAccessor)
         {
-            _userService = userService; 
+            _userService = userService;
         }
         [Route("getCurrentUser")]
         [HttpGet]
@@ -42,10 +42,13 @@ namespace OgmentoAPI.Domain.Authorization.Api
         [Produces(typeof(bool))]
         public IActionResult UpdateUser(UserDetailsDto userDetails)
         {
-
-            UserModel model = userDetails.ToModel();
-           var result = _userService.UpdateUser(model);
+       
+            UserModel model = userDetails.ToModel(Self.UserId);
+            var result = _userService.UpdateUser(model);
             return Ok(result);
         }
+
+
+
     }
 }

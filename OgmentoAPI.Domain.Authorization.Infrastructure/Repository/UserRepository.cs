@@ -30,6 +30,7 @@ namespace OgmentoAPI.Domain.Authorization.Infrastructure.Repository
                     where UM.UserId == userId
                     select new UserModel
                     {
+                        UserId=UM.UserId,
                         UserUid = UM.UserUid,
                         UserName = UM.UserName,
                         Email = UM.Email,
