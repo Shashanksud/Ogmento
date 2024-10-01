@@ -40,12 +40,13 @@ namespace OgmentoAPI.Middlewares
             {
                 ApplicationException _ => new ExceptionResponse(HttpStatusCode.BadRequest, "Application exception occurred."),
                 KeyNotFoundException _ => new ExceptionResponse(HttpStatusCode.NotFound, "The request key not found."),
-                UnauthorizedAccessException _ => new ExceptionResponse(HttpStatusCode.Unauthorized, "Unauthorized."),
+                UnauthorizedAccessException _ => new ExceptionResponse(HttpStatusCode.Unauthorized, "Unauthorized user."),
                 _ => new ExceptionResponse(HttpStatusCode.InternalServerError, "Internal server error. Please retry later.")
             };
 
             context.Response.ContentType = "application/problem+json";
             context.Response.StatusCode = (int)response.StatusCode;
+			
             await context.Response.WriteAsJsonAsync(response);
         }
     }
