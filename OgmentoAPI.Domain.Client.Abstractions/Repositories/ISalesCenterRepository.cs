@@ -18,6 +18,7 @@ namespace OgmentoAPI.Domain.Client.Abstractions.Repositories
         int? DeleteSalesCenter(Guid salesCenterUid);
 
         int GetUserSalesCenterMappingId(Guid salesCenterUid);
+        SalesCenter GetSalesCenterDetail(Guid salesCenterUid);
 
 
 

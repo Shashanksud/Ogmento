@@ -15,15 +15,15 @@ namespace OgmentoAPI.Domain.Authorization.Services
             _salesCenterService = salesCenterService;
         }
 
-        public UserModel GetUserDetails(int UserId)
+        public UserModel GetUserDetails(int userId)
         {
             UserModel user = new UserModel();
 
             try
             {
-                user = _context.GetUserByID(UserId);
-                string userRole = _context.GetRoleName(UserId);
-                var salesCenterNames = _salesCenterService.GetSalesCenterForUser(UserId).ToList();
+                user = _context.GetUserByID(userId);
+                string userRole = _context.GetRoleName(userId);
+                var salesCenterNames = _salesCenterService.GetSalesCenterForUser(userId).ToList();
 
                 Dictionary<Guid, string> salesCenterDictionary = salesCenterNames.ToDictionary(sc => sc.SalesCenterUid, sc => sc.SalesCenterName);
 

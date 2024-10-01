@@ -13,7 +13,7 @@ namespace OgmentoAPI.Domain.Client.Abstractions.Service
         int? UpdateMainSalesCenter(SalesCenterModel salesCenterModel);
         int? DeleteSalesCenter(Guid salesCenterUid);
 
-       
+        SalesCenter GetSalesCenterDetail(Guid salesCenterUid);
 
     }
 }

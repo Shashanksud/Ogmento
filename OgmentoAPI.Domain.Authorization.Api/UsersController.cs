@@ -15,7 +15,7 @@ namespace OgmentoAPI.Domain.Authorization.Api
     public class UsersController : IdentityController
     {
         private readonly IUserService _userService;
-        public UsersController(IUserService _userService, ILogger<UsersController> logger): base(_userService,logger)//, contextAccessor)
+        public UsersController(IUserService userService, ILogger<UsersController> logger): base(userService,logger)//, contextAccessor)
         {
             _userService = userService;
         }
