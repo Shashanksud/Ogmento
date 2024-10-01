@@ -105,14 +105,13 @@ namespace OgmentoAPI.Domain.Client.Infrastructure.Repository
 
         public int GetUserSalesCenterMappingId(Guid salesCenterUid)
         {
-
-            int salesCenterId = _context.SalesCenter.FirstOrDefault(x => x.SalesCenterUid == salesCenterUid).ID;
-
+            int salesCenterId = GetSalesCenterDetail(salesCenterUid).ID;
             return _context.SalesCenterUserMapping.Count(x => x.SalesCenterId == salesCenterId);
+        }
 
-
-
-
+        public SalesCenter GetSalesCenterDetail(Guid salesCenterUid)
+        {
+            return _context.SalesCenter.AsNoTracking().FirstOrDefault(x => x.SalesCenterUid == salesCenterUid);
         }
     }
 }

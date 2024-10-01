@@ -68,6 +68,11 @@ namespace OgmentoAPI.Domain.Client.Services
                 throw ex;
             }
         }
+
+        public SalesCenter GetSalesCenterDetail(Guid salesCenterUid)
+        {
+            return _salesCenterRepository.GetSalesCenterDetail(salesCenterUid);
+        }
         //public int GetUserSalesCenterMappingId(Guid salesCenterUid)
         //{
         //    {

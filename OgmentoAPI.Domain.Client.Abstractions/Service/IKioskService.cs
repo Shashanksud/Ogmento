@@ -5,11 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OgmentoAPI.Domain.Client.Abstractions.Repositories
+namespace OgmentoAPI.Domain.Client.Abstractions.Service
 {
-    public interface IKioskRepository
+    public interface IKioskService
     {
         List<KioskModel> GetKioskDetails();
-        int? UpdateKioskDetails(string kioskName, int salesCenterId);
+        int? UpdateKioskDetails(string kioskName, Guid salesCenterId);
     }
+
 }
