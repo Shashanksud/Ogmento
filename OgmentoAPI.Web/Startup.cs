@@ -92,11 +92,21 @@ namespace OgmentoAPI.Web
 
 			services.AddCors(options =>
 			{
+#if DEBUG
+				options.AddPolicy("CorsPolicy", builder =>
+						builder.AllowAnyOrigin()
+						.WithOrigins("http://localhost:5173")
+						.AllowAnyMethod()
+						.AllowAnyHeader()
+						.AllowCredentials()
+						);
+#else
 				options.AddPolicy("CorsPolicy", builder =>
 				builder.AllowAnyOrigin()
 					   .AllowAnyMethod()
 					   .AllowAnyHeader()
 				);
+#endif
 			});
 		}
 
