@@ -42,9 +42,11 @@ namespace OgmentoAPI.Web
 			services.Configure<ServiceConfiguration>(appSettingsSection);
 
 			string dbConnectionString = Configuration["ConnectionString:DefaultConnection"];
-			services.AddAuth(dbConnectionString)
+			services.AddCatalog(dbConnectionString)
+					.AddAuth(dbConnectionString)
 					.AddClient(dbConnectionString)
 					.AddCommon(dbConnectionString);
+
 
 			// configure jwt authentication
 			var serviceConfiguration = appSettingsSection.Get<ServiceConfiguration>();
