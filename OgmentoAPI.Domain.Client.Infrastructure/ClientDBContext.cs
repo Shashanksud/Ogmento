@@ -8,8 +8,7 @@ namespace OgmentoAPI.Domain.Client.Infrastructure
         public ClientDBContext(DbContextOptions<ClientDBContext>options): base(options) { }
         public DbSet<SalesCenter> SalesCenter{ get; set; }
         public DbSet<SalesCenterUserMapping> SalesCenterUserMapping { get; set; }
-
-
+		
         public DbSet<Kiosk> Kiosk { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -21,7 +20,7 @@ namespace OgmentoAPI.Domain.Client.Infrastructure
             modelBuilder.Entity<SalesCenterUserMapping>()
                 .HasKey(sc => new { sc.UserId, sc.SalesCenterId });
 
-            base.OnModelCreating(modelBuilder);
+			base.OnModelCreating(modelBuilder);
         }
     }
 }
