@@ -42,7 +42,7 @@ namespace OgmentoAPI.Web
 			services.Configure<ServiceConfiguration>(appSettingsSection);
 
 			string dbConnectionString = Configuration["ConnectionString:DefaultConnection"];
-			services.AddCatalog(dbConnectionString)
+			services//.AddCatalog(dbConnectionString)
 					.AddAuth(dbConnectionString)
 					.AddClient(dbConnectionString)
 					.AddCommon(dbConnectionString);
