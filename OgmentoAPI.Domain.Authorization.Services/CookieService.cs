@@ -18,12 +18,20 @@ namespace OgmentoAPI.Domain.Authorization.Services
             var context = _httpContextAccessor.HttpContext;
             if (context != null)
             {
+
                 context.Response.Cookies.Append("Auth", token, new CookieOptions
                 {
-                    HttpOnly = true,
+#if DEBUG
+					HttpOnly = false,
+					//Secure = false,
+					SameSite = SameSiteMode.Lax,
+					Expires = DateTime.UtcNow.Add(_appSettings.JwtSettings.TokenLifetime)
+#else
+					HttpOnly = true,
                     Secure = true,
                     SameSite = SameSiteMode.Strict,
                     Expires = DateTime.UtcNow.Add(_appSettings.JwtSettings.TokenLifetime)
+#endif
                 });
             }
         }
