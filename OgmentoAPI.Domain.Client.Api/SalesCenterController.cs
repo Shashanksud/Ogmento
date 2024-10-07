@@ -47,12 +47,12 @@ namespace OgmentoAPI.Domain.Client.Api
 
 
 
-        //[Route("delete/{salesCenterUid}")]
-        //[HttpDelete]
-        //public IActionResult DeleteSalesCenter(Guid salesCenterUid)
-        //{
-        //    int? Response = _salesCenterService.DeleteSalesCenter(salesCenterUid);
-        //    return Ok(Response);
-        //}
+        [Route("delete/{salesCenterUid}")]
+        [HttpDelete]
+        public IActionResult DeleteSalesCenter(Guid salesCenterUid)
+        {
+            int? Response = _salesCenterService.DeleteSalesCenter(salesCenterUid);
+            return Ok(Response);
+        }
     }
 }
