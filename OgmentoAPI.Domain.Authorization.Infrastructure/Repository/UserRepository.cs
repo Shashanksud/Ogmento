@@ -43,8 +43,23 @@ namespace OgmentoAPI.Domain.Authorization.Infrastructure.Repository
         }
         public UsersMaster GetUserDetail(LoginModel login)
         {
-            return _context.UsersMaster.FirstOrDefault(c => c.Email== login.Email && c.Password == login.Password);
+            return _context.UsersMaster.FirstOrDefault(c => c.Email == login.Email && c.Password == login.Password);
         }
+
+        public List<UserModel> GetUserDetails()
+        {
+            return  _context.UsersMaster.Select(UM=> new UserModel
+                     {
+                        UserId = UM.UserId,
+                        UserUid = UM.UserUid,
+                        UserName = UM.UserName,
+                        Email = UM.Email,
+                        PhoneNumber = UM.PhoneNumber,
+                        City = UM.City,
+                        ValidityDays = UM.ValidityDays,
+                    }).ToList();
+        }
+
 
         public int? UpdateUser(UserModel user)
         {
@@ -66,7 +81,43 @@ namespace OgmentoAPI.Domain.Authorization.Infrastructure.Repository
             _context.Update(userMaster);
             return _context.SaveChanges();
         }
-     
+        public int? AddUser(UserModel user)
+        {
+            UsersMaster userMaster = new UsersMaster()
+            {
+             //   UserUid = Guid.NewGuid(),
+                UpdatedOn = DateTime.UtcNow,
+                CreatedOn = DateTime.UtcNow,
+                UserName = user.UserName,
+                Password = user.Password,
+                Email = user.Email,
+                City = user.City,
+                ValidityDays = user.ValidityDays,
+                PhoneNumber = user.PhoneNumber,
+                CountryId = 1
+            };
+            RolesMaster role = _context.RolesMaster.First(x => x.RoleName == user.UserRole);
+            userMaster.RoleId = role.RoleId;
+            var entity = _context.UsersMaster.Add(userMaster);
+            _context.SaveChanges();
+            return entity.Entity.UserId;
+        }
+        public bool DeleteUserDetails(Guid userUId)
+        {
+            int noOfRowsDeleted = 0;
+            UsersMaster usersMaster = _context.UsersMaster.FirstOrDefault(user => user.UserUid == userUId);
+            if (usersMaster != null)
+            {
+                _context.UsersMaster.Remove(usersMaster);
+                noOfRowsDeleted = _context.SaveChanges();
+
+            }
+            if (noOfRowsDeleted > 0)
+            {
+                return true;
+            }
+            return false;
+        }
 
     }
 }

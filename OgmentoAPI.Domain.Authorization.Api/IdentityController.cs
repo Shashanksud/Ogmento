@@ -36,7 +36,7 @@ namespace OgmentoAPI.Domain.Authorization.Api
                     try
                     {
 
-                        _user = _userService.GetUserDetails(GetUserId());
+                        _user = _userService.GetUserDetail(GetUserId());
                     }
                     catch(Exception ex)
                     {

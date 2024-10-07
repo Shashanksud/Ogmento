@@ -51,6 +51,18 @@ namespace OgmentoAPI.Domain.Client.Services
 
             }
         }
+        public int? AddSalesCenter(SalesCenterModel salesCenterModel)
+        {
+            try
+            {
+                return _salesCenterRepository.AddSalesCenter(salesCenterModel);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
         public int? DeleteSalesCenter(Guid salesCenterUid)
         {

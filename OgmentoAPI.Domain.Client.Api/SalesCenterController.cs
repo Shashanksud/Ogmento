@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OgmentoAPI.Domain.Client.Abstractions.Dto;
+using OgmentoAPI.Domain.Client.Abstractions.Models;
 using OgmentoAPI.Domain.Client.Abstractions.Service;
 
 namespace OgmentoAPI.Domain.Client.Api
@@ -32,13 +33,26 @@ namespace OgmentoAPI.Domain.Client.Api
             return Ok(response);
         }
 
-
-        [Route("delete/{salesCenterUid}")]
-        [HttpDelete]
-        public IActionResult DeleteSalesCenter(Guid salesCenterUid)
+        [HttpPost]
+      [Route("AddSalesCenter")]
+        public IActionResult AddSalesCenter(SalesCenterModel salesCenterModel)
         {
-            int? Response = _salesCenterService.DeleteSalesCenter(salesCenterUid);
-            return Ok(Response);
+            var result = _salesCenterService.AddSalesCenter(salesCenterModel);
+            if (result.HasValue)
+            {
+                return Ok(result);
+            }
+            return BadRequest("Sales center already exists");
         }
+
+
+
+        //[Route("delete/{salesCenterUid}")]
+        //[HttpDelete]
+        //public IActionResult DeleteSalesCenter(Guid salesCenterUid)
+        //{
+        //    int? Response = _salesCenterService.DeleteSalesCenter(salesCenterUid);
+        //    return Ok(Response);
+        //}
     }
 }

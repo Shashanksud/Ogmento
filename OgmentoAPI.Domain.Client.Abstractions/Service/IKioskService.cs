@@ -11,6 +11,8 @@ namespace OgmentoAPI.Domain.Client.Abstractions.Service
     {
         List<KioskModel> GetKioskDetails();
         int? UpdateKioskDetails(string kioskName, Guid salesCenterId);
+
+        bool DeleteKioskByName(string kioskName);
     }
 
 }

@@ -36,7 +36,13 @@ namespace OgmentoAPI.Domain.Client.Services
             SalesCenter salesCenter = _salesCenterService.GetSalesCenterDetail(salesCenterUid);
             return _kioskRepository.UpdateKioskDetails(kioskName, salesCenter.ID);
         }
+        public bool DeleteKioskByName(string kioskName)
+        {
+            //todo need to delete sales center linked with kioskpzs
 
+            return _kioskRepository.DeleteKioskByName(kioskName);
+        }
+        
 
     }
 }

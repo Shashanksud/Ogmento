@@ -41,7 +41,38 @@ namespace OgmentoAPI.Domain.Authorization.Abstractions.Dto
             return userModel;
 
         }
-       
+
+        public static List<UserDetailsDto> ToDto(this List<UserModel> userModels)
+        {
+            List<UserDetailsDto> userDetails = userModels.Select(x =>
+             x.ToDto()
+            ).ToList();
+            return userDetails;
+
+        }
+
+        public static UserModel ToModel(this AddUserDto dto, int userId)
+        {
+            UserModel userModel = new UserModel()
+            {
+                UserId = userId,
+                UserName = dto.UserName,
+                UserRole = dto.UserRole,
+                Email = dto.EmailId,
+                UserUid = dto.UserUId,
+                City = dto.City,
+                PhoneNumber = dto.PhoneNumber,
+                ValidityDays = dto.ValidityDays,
+                SalesCenters = dto.SalesCenters,
+                Password = dto.Password
+            };
+
+            return userModel;
+
+        }
+
+
     }
 }
+
 

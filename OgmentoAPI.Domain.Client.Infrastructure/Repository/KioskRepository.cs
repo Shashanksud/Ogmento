@@ -47,5 +47,21 @@ namespace OgmentoAPI.Domain.Client.Infrastructure.Repository
             return _context.SaveChanges();
 
         }
+        public bool DeleteKioskByName(string kioskName)
+        {
+            int noOfRowsDeleted = 0;
+            Kiosk? kiosk = _context.Kiosk.FirstOrDefault(x => x.KioskName == kioskName);
+            if (kiosk == null)
+            {
+                _context.Kiosk.Remove(kiosk);
+                noOfRowsDeleted = _context.SaveChanges();
+            }
+            if (noOfRowsDeleted > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+     
     }
 }

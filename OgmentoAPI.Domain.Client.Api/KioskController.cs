@@ -42,8 +42,14 @@ namespace OgmentoAPI.Domain.Client.Api
             return Ok(name);
         }
 
-
+        [Route("delete/{kioskName}")]
+        [HttpDelete]
+        public IActionResult DeleteKiosk(string kioskName)
+        {
+            bool response = _kioskService.DeleteKioskByName(kioskName);
+            return Ok(response);
+        }
     }
-
 }
+
 

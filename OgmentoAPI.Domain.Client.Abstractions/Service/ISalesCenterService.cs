@@ -15,5 +15,7 @@ namespace OgmentoAPI.Domain.Client.Abstractions.Service
 
         SalesCenter GetSalesCenterDetail(Guid salesCenterUid);
 
+        int? AddSalesCenter(SalesCenterModel salesCenterModel);
+
     }
 }

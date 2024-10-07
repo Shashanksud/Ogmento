@@ -90,6 +90,28 @@ namespace OgmentoAPI.Domain.Client.Infrastructure.Repository
 
         }
 
+        public int? AddSalesCenter(SalesCenterModel salesCenterModel)
+        {
+            bool isExists = _context.SalesCenter.Any(x => x.SalesCenterName == salesCenterModel.SalesCenterName
+      && x.City == salesCenterModel.City
+      && x.CountryId == salesCenterModel.CountryId);
+            if (!isExists)
+            {
+                SalesCenter salesCenter = new SalesCenter()
+                {
+                    SalesCenterUid = Guid.NewGuid(),
+                    SalesCenterName = salesCenterModel.SalesCenterName,
+                    City = salesCenterModel.City,
+                    CountryId = salesCenterModel.CountryId,
+                };
+                _context.SalesCenter.Add(salesCenter);
+                return _context.SaveChanges();
+            }
+            return null;
+
+        }
+
+
         public int? DeleteSalesCenter(Guid salesCenterUid)
         {
             SalesCenter salesCenter = _context.SalesCenter.FirstOrDefault(x => x.SalesCenterUid == salesCenterUid);

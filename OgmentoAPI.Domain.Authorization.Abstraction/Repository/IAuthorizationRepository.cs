@@ -11,6 +11,12 @@ namespace OgmentoAPI.Domain.Authorization.Abstractions.Repository
 
         int? UpdateUser(UserModel user);
         string GetRoleName(int userId);
+        List<UserModel> GetUserDetails();
+
+        int? AddUser(UserModel user);
+
+        bool DeleteUserDetails(Guid userUId);
+
     }
 
 }
