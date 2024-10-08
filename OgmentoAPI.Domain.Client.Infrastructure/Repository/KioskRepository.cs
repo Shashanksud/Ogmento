@@ -51,7 +51,7 @@ namespace OgmentoAPI.Domain.Client.Infrastructure.Repository
         {
             int noOfRowsDeleted = 0;
             Kiosk? kiosk = _context.Kiosk.FirstOrDefault(x => x.KioskName == kioskName);
-            if (kiosk == null)
+            if (kiosk != null)
             {
                 _context.Kiosk.Remove(kiosk);
                 noOfRowsDeleted = _context.SaveChanges();

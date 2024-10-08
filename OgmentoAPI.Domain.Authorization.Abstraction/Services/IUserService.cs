@@ -1,9 +1,8 @@
-﻿using OgmentoAPI.Domain.Authorization.Abstractions.DataContext;
-using OgmentoAPI.Domain.Authorization.Abstractions.Models;
+﻿using OgmentoAPI.Domain.Authorization.Abstractions.Models;
 
 namespace OgmentoAPI.Domain.Authorization.Abstractions.Services
 {
-    public interface IUserService
+	public interface IUserService
     {
         UserModel GetUserDetail(int userId);
         List<UserModel> GetUserDetails();

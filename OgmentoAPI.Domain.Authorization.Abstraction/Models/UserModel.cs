@@ -7,8 +7,7 @@ namespace OgmentoAPI.Domain.Authorization.Abstractions.Models
     {
 
         public int UserId { get; set; }
-        public Guid UserUid { get; set; }
-        
+        public Guid UserUid { get; set; } 
 
         public string UserName { get; set; }
       

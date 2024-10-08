@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OgmentoAPI.Domain.Authorization.Abstractions.Dto;
@@ -10,7 +9,7 @@ using OgmentoAPI.Domain.Common.Abstractions.Helpers;
 
 namespace OgmentoAPI.Domain.Authorization.Api
 {
-    [Route("api/[controller]")]
+	[Route("api/[controller]")]
     [ApiController]
     public class UsersController : IdentityController
     {
