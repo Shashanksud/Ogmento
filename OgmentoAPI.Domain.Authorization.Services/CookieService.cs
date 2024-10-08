@@ -15,25 +15,26 @@ namespace OgmentoAPI.Domain.Authorization.Services
             this._httpContextAccessor = _httpContextAccessor; 
         }
         public void SetAuthToken(string token) {
-            var context = _httpContextAccessor.HttpContext;
-            if (context != null)
-            {
+//            var context = _httpContextAccessor.HttpContext;
+//            if (context != null)
+//            {
 
-                context.Response.Cookies.Append("Auth", token, new CookieOptions
-                {
-#if DEBUG
-					HttpOnly = false,
-					//Secure = false,
-					SameSite = SameSiteMode.Lax,
-					Expires = DateTime.UtcNow.Add(_appSettings.JwtSettings.TokenLifetime)
-#else
-					HttpOnly = true,
-                    Secure = true,
-                    SameSite = SameSiteMode.Strict,
-                    Expires = DateTime.UtcNow.Add(_appSettings.JwtSettings.TokenLifetime)
-#endif
-                });
-            }
+//                context.Response.Cookies.Append("Auth", token, new CookieOptions
+//                {
+//#if DEBUG
+//					HttpOnly = false,
+//					//Secure = false,
+//					SameSite = SameSiteMode.Lax,
+//					Expires = DateTime.UtcNow.Add(_appSettings.JwtSettings.TokenLifetime)
+//#else
+//					HttpOnly = false,
+//                    Secure = true,
+//                    SameSite = SameSiteMode.None,
+//                    Expires = DateTime.UtcNow.Add(_appSettings.JwtSettings.TokenLifetime),
+//					Path = "/",
+//#endif
+//				});
+//            }
         }
     }
 }
