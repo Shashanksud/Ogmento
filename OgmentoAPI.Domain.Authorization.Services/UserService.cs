@@ -56,6 +56,7 @@ namespace OgmentoAPI.Domain.Authorization.Services
                     string userRole = _context.GetRoleName(userModel.UserId);
                     List<SalesCenter> salesCenterNames = _salesCenterService.GetSalesCenterForUser(userModel.UserId).ToList();
                     Dictionary<Guid, string> salesCenterDictionary = salesCenterNames.ToDictionary(sc => sc.SalesCenterUid, sc => sc.SalesCenterName);
+
                     userModel.UserRole = userRole;
                     userModel.SalesCenters = salesCenterDictionary;
                 });

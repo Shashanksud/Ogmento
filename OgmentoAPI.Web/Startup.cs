@@ -74,12 +74,17 @@ namespace OgmentoAPI.Web
 				x.TokenValidationParameters = tokenValidationParameters;
 				x.Events = new JwtBearerEvents
 				{
+					//OnMessageReceived = context =>
+					//{
+					//	context.Token = context.Request.Cookies["Auth"];
+					//	return Task.CompletedTask;
+					//},
 					OnAuthenticationFailed = context =>
 					{
 						context.NoResult();
 						context.Response.StatusCode = StatusCodes.Status401Unauthorized;
 						context.Response.ContentType = "application/json";
-						return context.Response.WriteAsync(new ExceptionResponse(HttpStatusCode.Unauthorized,context.Exception.Message).ToString());
+						return context.Response.WriteAsync(new ExceptionResponse(HttpStatusCode.Unauthorized, context.Exception.Message).ToString());
 					}
 				};
 
@@ -102,9 +107,10 @@ namespace OgmentoAPI.Web
 						);
 #else
 				options.AddPolicy("CorsPolicy", builder =>
-				builder.AllowAnyOrigin()
-					   .AllowAnyMethod()
-					   .AllowAnyHeader()
+				builder.WithOrigins("https://localhost:5174")
+						.AllowAnyMethod()
+						.AllowAnyHeader()
+						.AllowCredentials()
 				);
 #endif
 			});
@@ -113,13 +119,14 @@ namespace OgmentoAPI.Web
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
+			app.UseCors("CorsPolicy");
 			if (!env.IsDevelopment())
 			{
 				app.UseHsts();
 			}
 			app.UseHttpsRedirection();
 			app.UseRouting();
-			app.UseCors("CorsPolicy");
+		
 			app.UseAuthentication();
 			app.UseAuthorization();
 			app.UseStaticFiles();
