@@ -10,9 +10,4 @@
     <ProjectReference Include="..\OgmentoAPI.Domain.Common.Abstractions\OgmentoAPI.Domain.Common.Abstractions.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Dto\" />
-    <Folder Include="Models\" />
-  </ItemGroup>
-
 </Project>

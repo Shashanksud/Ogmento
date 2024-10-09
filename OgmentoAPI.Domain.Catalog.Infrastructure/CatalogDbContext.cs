@@ -9,10 +9,10 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure
 		public CatalogDbContext(DbContextOptions<CatalogDbContext> options):base(options)
 		{
 		}
-		public DbSet<Product> Products { get; set; }
-		public DbSet<Category> Categories { get; set; }
-		public DbSet<ProductCategoryMapping> productCategories { get; set; }
-		public DbSet<ProductImageMapping> productImageMappings { get; set; }
+		public DbSet<Product> Product { get; set; }
+		public DbSet<Category> Category { get; set; }
+		public DbSet<ProductCategoryMapping> ProductCategoryMapping { get; set; }
+		public DbSet<ProductImageMapping> ProductImageMapping { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
