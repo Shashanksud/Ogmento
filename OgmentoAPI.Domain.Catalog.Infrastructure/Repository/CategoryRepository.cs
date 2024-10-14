@@ -140,6 +140,10 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			await _dbContext.SaveChangesAsync();
 			categoryModel.ID = entity.Entity.ID;
 			categoryModel.CategoryUid = entity.Entity.CategoryUid;
+			if (categoryModel.ParentCategoryId == 1)
+			{
+				categoryModel.ParentCategoryUid = new Guid();
+			}
 			return categoryModel;
 		}
 		private async Task AddSubCategories(List<CategoryModel> subCategories, int parentId)

@@ -25,7 +25,7 @@ namespace OgmentoAPI.Domain.Catalog.Services
 				ID = x.ID,
 				ParentCategoryId = x.ParentCategoryId,
 				CategoryUid = x.CategoryUid,
-				ParentCategoryUid = _categoryRepository.GetParentGuidFromParentId(x.ParentCategoryId).Result,
+				ParentCategoryUid = new Guid(),
 				SubCategories = _categoryRepository.GetSubCategoriesByCategoryId(x.ID),
 
 			}).ToList();
@@ -39,6 +39,7 @@ namespace OgmentoAPI.Domain.Catalog.Services
 				throw new InvalidOperationException("Category doesn't exist in database.");
 			}
 			CategoryModel category = _categoryRepository.GetCategoryByCategoryId(categoryId);
+			category.ParentCategoryUid = new Guid();
 			return category;
 		}
 
