@@ -7,36 +7,34 @@ namespace OgmentoAPI.Domain.Catalog.Abstractions.Dto
 	{
 		public static ProductDto ToDto(this ProductModel product)
 		{
-			ProductDto productDto = new ProductDto()
+			return new ProductDto()
 			{
 				ProductName = product.ProductName,
 				ProductDescription = product.ProductDescription,
 				Price = product.Price,
 				Weight = product.Weight,
 				LoyaltyPoints = product.LoyaltyPoints,
-				ProductExpiry = product.ProductExpiry,
+				ProductExpiry = product.ExpiryDate,
 				SkuCode = product.SkuCode,
-				Categories = product.Categories.Select(CategoryDtoMapping.ToDto).ToList(),
-				Images = product.Images != null ? product.Images.Select(PictureDtoMapping.ToDto).ToList() : [],
+				Categories = product.Categories?.Select(x => x.ToDto()).ToList() ?? [],
+				Images = product.Images?.Select(x=>x.ToDto()).ToList() ?? [],
 			};
-			return productDto;
 		}
 		public static ProductModel ToModel(this ProductDto product, int productId)
 		{
-			ProductModel productModel = new ProductModel()
+			return new ProductModel()
 			{
-				ID = productId,
+				ProductId = productId,
 				ProductName = product.ProductName,
 				ProductDescription = product.ProductDescription,
 				Price = product.Price,
 				Weight = product.Weight,
 				LoyaltyPoints = product.LoyaltyPoints,
-				ProductExpiry = product.ProductExpiry,
+				ExpiryDate = product.ProductExpiry,
 				SkuCode = product.SkuCode,
-				Categories = product.Categories.Select(CategoryDtoMapping.ToModel).ToList(),
-				Images = product.Images.Select(PictureDtoMapping.ToModel).ToList(),
+				Categories = product.Categories?.Select(x=> x.ToModel()).ToList() ?? [],
+				Images = product.Images?.Select(x => x.ToModel()).ToList() ?? [],
 			};
-			return productModel;
 		}
 	}
 }

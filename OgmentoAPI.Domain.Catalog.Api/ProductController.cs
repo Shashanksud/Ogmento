@@ -18,7 +18,7 @@ namespace OgmentoAPI.Domain.Catalog.Api
 		[Route("GetAllProducts")]
 		public IActionResult GetAllProducts()
 		{
-			return Ok(_productServices.GetAllProducts().Select(x=>x.ToDto()).ToList());
+			return Ok(_productServices.GetAllProducts().Select(x=>x.ToDto()));
 		}
 		[HttpGet]
 		[Route("GetProductDetails")]

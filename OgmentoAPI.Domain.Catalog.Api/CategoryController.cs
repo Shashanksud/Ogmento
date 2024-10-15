@@ -16,45 +16,41 @@ namespace OgmentoAPI.Domain.Catalog.Api
 		}
 
 		[HttpGet]
-		[Route("GetAllCategories")]
 		public IActionResult GetAllCategories()
 		{
 
-			return Ok(_categoryServices.GetAllCategories().Select(x=>x.ToDto()).ToList());
+			return Ok(_categoryServices.GetAllCategories().ToDto());
 		}
 		[HttpGet]
-		[Route("GetCategory/{uid}")]
-		public IActionResult GetCategory(Guid uid)
+		[Route("{categoryUid}")]
+		public IActionResult GetCategory(Guid categoryUid)
 		{
-			return Ok(_categoryServices.GetCategory(uid).ToDto());
+			return Ok(_categoryServices.GetCategory(categoryUid).ToDto());
 		}
 		[HttpPut]
-		[Route("UpdateCategory")]
-		public IActionResult UpdateCategory(Guid uid, string categoryName)
+		public async Task<IActionResult> UpdateCategory(Guid categoryUid, string categoryName)
 		{
-			_categoryServices.UpdateCategory(uid, categoryName);
-			return Ok("Updated Successfully");
+			await _categoryServices.UpdateCategory(categoryUid, categoryName);
+			return Ok();
 		}
 		[HttpDelete]
-		[Route("DeleteCategory/{uid}")]
-		public IActionResult DeleteCategory(Guid uid)
+		[Route("{categoryUid}")]
+		public async Task<IActionResult> DeleteCategory(Guid categoryUid)
 		{
-			_categoryServices.DeleteCategory(uid);
-			return Ok("DeletedSuccessfully");
+			await _categoryServices.DeleteCategory(categoryUid);
+			return Ok();
 		}
 		[HttpPost]
-		[Route("AddNewCategories")]
-		public IActionResult AddCategories(List<CategoryDto> categories)
+		[Route("upload")]
+		public async Task<IActionResult> AddCategories(List<CategoryDto> categories)
 		{
-			return Ok(_categoryServices.AddCategories
-				(categories.Select(category => category.ToModel()).ToList())
-				.Result.Select(category => category.ToDto()).ToList());
+			return Ok((await _categoryServices.AddCategories
+				(categories.ToModel())).ToDto());
 		}
 		[HttpPost]
-		[Route("AddNewCategory")]
-		public IActionResult AddNewCategory(CategoryDto categoryDto)
+		public async Task<IActionResult> AddNewCategory(CategoryDto categoryDto)
 		{
-			return Ok(_categoryServices.AddNewCategory(categoryDto.ToModel()).Result.ToDto());
+			return Ok((await _categoryServices.AddNewCategory(categoryDto.ToModel())).ToDto());
 		}
 	}
 }

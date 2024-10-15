@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OgmentoAPI.Domain.Catalog.Abstractions.DataContext;
 
-
 namespace OgmentoAPI.Domain.Catalog.Infrastructure
 {
     public class CatalogDbContext: DbContext
@@ -18,15 +17,18 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure
 		{
 			modelBuilder.Entity<Product>(entity =>
 			{
-				entity.HasKey(e => e.ID);
-
-				entity.HasMany(e => e.productCategories)
+				entity.HasKey(e => e.ProductID);
+				entity.Property(e => e.ProductID)
+						.HasColumnName("ID").UseIdentityColumn();
+				entity.HasMany(e => e.ProductCategories)
 					.WithOne(e => e.Product)
 					.HasForeignKey(e => e.ProductId);
 			});
 			modelBuilder.Entity<Category>(entity =>
 			{
-				entity.HasKey(e => e.ID);
+				entity.HasKey(e => e.CategoryID);
+				entity.Property(e => e.CategoryID)
+						.HasColumnName("ID").UseIdentityColumn();
 
 				entity.HasOne(e => e.ParentCategory)
 					.WithMany(e => e.SubCategories)
@@ -37,7 +39,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure
 					.WithOne(e => e.ParentCategory)
 					.HasForeignKey(e => e.ParentCategoryId);
 
-				entity.HasMany(e => e.productCategories)
+				entity.HasMany(e => e.ProductCategories)
 					.WithOne(e => e.Category)
 					.HasForeignKey(e => e.CategoryId);
 			});
@@ -47,11 +49,11 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure
 				entity.HasKey(e => new { e.ProductId, e.CategoryId });
 
 				entity.HasOne(e => e.Product)
-					.WithMany(e => e.productCategories)
+					.WithMany(e => e.ProductCategories)
 					.HasForeignKey(e => e.ProductId);
 
 				entity.HasOne(e => e.Category)
-					.WithMany(e => e.productCategories)
+					.WithMany(e => e.ProductCategories)
 					.HasForeignKey(e => e.CategoryId);
 			});
 			modelBuilder.Entity<ProductImageMapping>(entity =>

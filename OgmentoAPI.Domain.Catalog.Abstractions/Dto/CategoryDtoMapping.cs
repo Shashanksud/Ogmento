@@ -8,28 +8,31 @@ namespace OgmentoAPI.Domain.Catalog.Abstractions.Dto
 		
 		public static CategoryDto ToDto(this CategoryModel category)
 		{
-			CategoryDto categoryDto = new CategoryDto()
+			return new CategoryDto()
 			{
 				CategoryUid = category.CategoryUid,
 				CategoryName = category.CategoryName,
-				ParentCategoryUid = category.ParentCategoryUid,
-				SubCategories = category.SubCategories != null
-									? category.SubCategories.Select(ToDto).ToList()
-									: [],
+				ParentCategoryUid = category.ParentCategoryId!=1? category.ParentCategoryUid : new Guid(),
+				SubCategories = category.SubCategories?.Select(ToDto).ToList() ?? [],
 			};
-			return categoryDto;
-
 		}
 		public static CategoryModel ToModel(this CategoryDto category)
 		{
-			CategoryModel categoryModel = new CategoryModel()
+			return new CategoryModel()
 			{
 				ParentCategoryUid = category.ParentCategoryUid,
 				CategoryName = category.CategoryName,
 				CategoryUid = category.CategoryUid,
-				SubCategories = category.SubCategories.Select(ToModel).ToList()
+				SubCategories = category.SubCategories?.Select(ToModel).ToList() ?? [],
 			};
-			return categoryModel;
+		}
+		public static List<CategoryDto> ToDto(this List<CategoryModel> categories)
+		{
+			return categories.Select(x=>x.ToDto()).ToList();
+		}
+		public static List<CategoryModel> ToModel(this List<CategoryDto> categories)
+		{
+			return categories.Select(x=>x.ToModel()).ToList();
 		}
 	}
 }

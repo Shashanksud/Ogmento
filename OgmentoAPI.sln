@@ -52,13 +52,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Catalog", "Catalog", "{EA7B9EB0-8C1A-4D65-BB2D-88B1A040467A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OgmentoAPI.Domain.Catalog.Abstractions", "OgmentoAPI.Domain.Catalog.Abstractions\OgmentoAPI.Domain.Catalog.Abstractions.csproj", "{7E3AD710-DEDE-4671-A327-A8A8A495552F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI.Domain.Catalog.Abstractions", "OgmentoAPI.Domain.Catalog.Abstractions\OgmentoAPI.Domain.Catalog.Abstractions.csproj", "{7E3AD710-DEDE-4671-A327-A8A8A495552F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OgmentoAPI.Domain.Catalog.Api", "OgmentoAPI.Domain.Catalog.Api\OgmentoAPI.Domain.Catalog.Api.csproj", "{6B4A9CB3-0329-4E1C-87E6-E2F6308C4833}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI.Domain.Catalog.Api", "OgmentoAPI.Domain.Catalog.Api\OgmentoAPI.Domain.Catalog.Api.csproj", "{6B4A9CB3-0329-4E1C-87E6-E2F6308C4833}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OgmentoAPI.Domain.Catalog.Infrastructure", "OgmentoAPI.Domain.Catalog.Infrastructure\OgmentoAPI.Domain.Catalog.Infrastructure.csproj", "{A0E47ADB-9865-4F47-86A5-BA15F55542C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI.Domain.Catalog.Infrastructure", "OgmentoAPI.Domain.Catalog.Infrastructure\OgmentoAPI.Domain.Catalog.Infrastructure.csproj", "{A0E47ADB-9865-4F47-86A5-BA15F55542C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OgmentoAPI.Domain.Catalog.Services", "OgmentoAPI.Domain.Catalog.Services\OgmentoAPI.Domain.Catalog.Services.csproj", "{2C386431-2551-477F-80D4-F8C7452E3E1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OgmentoAPI.Domain.Catalog.Services", "OgmentoAPI.Domain.Catalog.Services\OgmentoAPI.Domain.Catalog.Services.csproj", "{2C386431-2551-477F-80D4-F8C7452E3E1E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

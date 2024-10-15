@@ -6,6 +6,6 @@ namespace OgmentoAPI.Domain.Catalog.Abstractions.Repository
 	public interface IProductRepository
 	{
 		public List<ProductModel> GetAllProducts();
-		public List<PictureModel> GetImagesByProductId(int Id);
+		public List<PictureModel> GetImages(int productId);
 	}
 }
