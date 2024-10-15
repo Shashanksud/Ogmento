@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OgmentoAPI.Domain.Catalog.Abstractions.Dto;
 using OgmentoAPI.Domain.Catalog.Abstractions.Services;
 
@@ -6,7 +7,9 @@ using OgmentoAPI.Domain.Catalog.Abstractions.Services;
 namespace OgmentoAPI.Domain.Catalog.Api
 {
 	[ApiController]
+	[Authorize]
 	[Route("api/[controller]")]
+
 	public class CategoryController: ControllerBase
 	{
 		private readonly ICategoryServices _categoryServices;
