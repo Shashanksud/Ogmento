@@ -41,16 +41,16 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 				CategoryUid = x.CategoryUid,
 				ParentCategoryId = x.ParentCategoryId,
 				ParentCategoryUid = GetParentGuid(x.ParentCategoryId).Result,
-				SubCategories = SubCategoriesCount(x.CategoryID)? GetSubCategories(x.CategoryID) : null,
+				SubCategories = CheckSubCategoriesExists(x.CategoryID)? GetSubCategories(x.CategoryID) : null,
 
 			}).ToList();
 			return categoryModel;
 
 		}
 		
-		private bool SubCategoriesCount(int categoryId)
+		private bool CheckSubCategoriesExists(int categoryId)
 		{
-			return _dbContext.Category.Count(x => x.ParentCategoryId == categoryId)!=0 ? true : false;
+			return _dbContext.Category.Any(x => x.ParentCategoryId == categoryId);
 		}
 
 		public List<CategoryModel> GetCategoriesByProductId(int productId)
@@ -65,7 +65,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 				CategoryUid = x.CategoryUid,
 				ParentCategoryId = x.ParentCategoryId,
 				ParentCategoryUid = GetParentGuid(x.ParentCategoryId).Result,
-				SubCategories = SubCategoriesCount(x.CategoryID)? GetSubCategories(x.CategoryID) : null,
+				SubCategories = CheckSubCategoriesExists(x.CategoryID)? GetSubCategories(x.CategoryID) : null,
 			}).ToList();
 			return categoryModels;
 
@@ -100,7 +100,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			{
 				throw new InvalidOperationException($"Category with Id: {category.CategoryID} cannot be deleted as it is mapped with a product");
 			}
-			if (SubCategoriesCount(category.CategoryID))
+			if (CheckSubCategoriesExists(category.CategoryID))
 			{
 				List<int> subCategoryIds = _dbContext.Category.Where(x => x.ParentCategoryId == categoryId).Select(x => x.CategoryID).ToList();
 				foreach (int subCategoryId in subCategoryIds)
