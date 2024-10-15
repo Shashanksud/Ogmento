@@ -12,9 +12,9 @@ namespace OgmentoAPI.Domain.Catalog.Services
 		{
 			_categoryRepository = categoryRepository;
 		}
-		public async Task<int?> GetCategoryIdFromUid(Guid categoryUid)
+		public async Task<int?> GetCategoryId(Guid categoryUid)
 		{
-			return await _categoryRepository.GetCategoryIdFromUid(categoryUid);
+			return await _categoryRepository.GetCategoryId(categoryUid);
 		}
 		public List<CategoryModel> GetAllCategories()
 		{
@@ -25,7 +25,7 @@ namespace OgmentoAPI.Domain.Catalog.Services
 				CategoryId = x.CategoryID,
 				ParentCategoryId = x.ParentCategoryId,
 				CategoryUid = x.CategoryUid,
-				ParentCategoryUid = _categoryRepository.GetParentGuid(x.ParentCategoryId).Result,
+				ParentCategoryUid = _categoryRepository.GetParentUid(x.ParentCategoryId).Result,
 				SubCategories = _categoryRepository.GetSubCategories(x.CategoryID),
 
 			}).ToList();
@@ -33,7 +33,7 @@ namespace OgmentoAPI.Domain.Catalog.Services
 		}
 		public CategoryModel GetCategory(Guid categoryUid)
 		{
-			int? categoryId = GetCategoryIdFromUid(categoryUid).Result;
+			int? categoryId = GetCategoryId(categoryUid).Result;
 			if (categoryId == null)
 			{
 				throw new InvalidOperationException("Category doesn't exist in database.");
@@ -45,7 +45,7 @@ namespace OgmentoAPI.Domain.Catalog.Services
 
 		public async Task DeleteCategory(Guid categoryUid)
 		{
-			int? categoryId = GetCategoryIdFromUid(categoryUid).Result;
+			int? categoryId = GetCategoryId(categoryUid).Result;
 			if (categoryId == null)
 			{
 				throw new InvalidOperationException("Category doens't exist.");

@@ -14,7 +14,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 		{
 			_dbContext = dbContext;
 		}
-		public async Task<int?> GetCategoryIdFromUid(Guid Uid)
+		public async Task<int?> GetCategoryId(Guid Uid)
 		{
 			Category category = await _dbContext.Category.FirstOrDefaultAsync(x => x.CategoryUid == Uid);
 			return category.CategoryID;
@@ -23,7 +23,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 		{
 			return _dbContext.Category.AsNoTracking().Where(x => x.ParentCategoryId == 1).ToList();
 		}
-		public async Task<Guid> GetParentGuid(int? parentId) { 
+		public async Task<Guid> GetParentUid(int? parentId) { 
 			if(parentId == null)
 			{
 				return _dbContext.Category.AsNoTracking().FirstOrDefault(x => x.CategoryName == "All Products").CategoryUid;
@@ -40,7 +40,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 				CategoryId = x.CategoryID,
 				CategoryUid = x.CategoryUid,
 				ParentCategoryId = x.ParentCategoryId,
-				ParentCategoryUid = GetParentGuid(x.ParentCategoryId).Result,
+				ParentCategoryUid = GetParentUid(x.ParentCategoryId).Result,
 				SubCategories = CheckSubCategoriesExists(x.CategoryID)? GetSubCategories(x.CategoryID) : null,
 
 			}).ToList();
@@ -64,7 +64,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 				CategoryName = x.CategoryName,
 				CategoryUid = x.CategoryUid,
 				ParentCategoryId = x.ParentCategoryId,
-				ParentCategoryUid = GetParentGuid(x.ParentCategoryId).Result,
+				ParentCategoryUid = GetParentUid(x.ParentCategoryId).Result,
 				SubCategories = CheckSubCategoriesExists(x.CategoryID)? GetSubCategories(x.CategoryID) : null,
 			}).ToList();
 			return categoryModels;
@@ -79,7 +79,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 				CategoryName = category.CategoryName,
 				CategoryUid = category.CategoryUid,
 				ParentCategoryId = category.ParentCategoryId,
-				ParentCategoryUid = GetParentGuid(category.ParentCategoryId).Result,
+				ParentCategoryUid = GetParentUid(category.ParentCategoryId).Result,
 				SubCategories = GetSubCategories(category.CategoryID),
 			};
 			return categoryModel;
@@ -115,7 +115,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 
 		public async Task UpdateCategory(Guid categoryUid, String categoryName)
 		{
-			int? categoryId = GetCategoryIdFromUid(categoryUid).Result;
+			int? categoryId = GetCategoryId(categoryUid).Result;
 			if (categoryId == null)
 			{
 				throw new InvalidOperationException("Category Cannot be found");
@@ -172,7 +172,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			if(categoryModel.CategoryUid == Guid.Empty)
 			{
 				categoryModel.ParentCategoryId = 1;
-				categoryModel.ParentCategoryUid = await GetParentGuid(categoryModel.ParentCategoryId);
+				categoryModel.ParentCategoryUid = await GetParentUid(categoryModel.ParentCategoryId);
 				categoryModel = await AddCategoryToDatabase(categoryModel);
 			}
 			if (categoryModel.SubCategories != null)
@@ -190,7 +190,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			if(categoryModel.ParentCategoryUid == Guid.Empty)
 			{
 				categoryModel.ParentCategoryId = 1;
-				categoryModel.ParentCategoryUid = GetParentGuid(categoryModel.ParentCategoryId).Result;
+				categoryModel.ParentCategoryUid = GetParentUid(categoryModel.ParentCategoryId).Result;
 			}
 			else
 			{

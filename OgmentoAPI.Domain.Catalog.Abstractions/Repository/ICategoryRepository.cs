@@ -5,7 +5,7 @@ namespace OgmentoAPI.Domain.Catalog.Abstractions.Repository
 {
 	public interface ICategoryRepository
 	{
-		public Task<int?> GetCategoryIdFromUid(Guid Uid);
+		public Task<int?> GetCategoryId(Guid Uid);
 		public List<Category> GetAllParentCategories();
 		public List<CategoryModel> GetSubCategories(int categoryId);
 		public List<CategoryModel> GetCategoriesByProductId(int productId);
@@ -13,7 +13,7 @@ namespace OgmentoAPI.Domain.Catalog.Abstractions.Repository
 		public Task DeleteCategory(int? categoryId);
 		public Task UpdateCategory(Guid uid, string categoryName);
 		public Task<CategoryModel> AddCategory(CategoryModel categoryModel);
-		public Task<Guid> GetParentGuid(int? parentId);
+		public Task<Guid> GetParentUid(int? parentId);
 		public Task<CategoryModel> AddNewCategory(CategoryModel categoryModel);
 	}
 }
