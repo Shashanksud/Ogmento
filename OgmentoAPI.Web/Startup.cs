@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using OgmentoAPI.Domain.Authorization.Services;
 using OgmentoAPI.Domain.Client.Services;
 using OgmentoAPI.Domain.Common.Services;
+using OgmentoAPI.Domain.Catalog.Services;
 using System.Text;
 using OgmentoAPI.Domain.Authorization.Abstractions.Enums;
 using OgmentoAPI.Domain.Authorization.Abstractions.Models;
@@ -44,7 +45,9 @@ namespace OgmentoAPI.Web
 			string dbConnectionString = Configuration["ConnectionString:DefaultConnection"];
 			services.AddAuth(dbConnectionString)
 					.AddClient(dbConnectionString)
-					.AddCommon(dbConnectionString);
+					.AddCommon(dbConnectionString)
+					.AddCatalog(dbConnectionString);
+
 
 			// configure jwt authentication
 			var serviceConfiguration = appSettingsSection.Get<ServiceConfiguration>();

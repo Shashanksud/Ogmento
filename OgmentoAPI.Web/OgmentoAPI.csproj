@@ -33,12 +33,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
-     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
+     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -60,6 +60,8 @@
   <ItemGroup>
     <ProjectReference Include="..\OgmentoAPI.Domain.Authorization.Api\OgmentoAPI.Domain.Authorization.Api.csproj" />
     <ProjectReference Include="..\OgmentoAPI.Domain.Authorization.Services\OgmentoAPI.Domain.Authorization.Services.csproj" />
+    <ProjectReference Include="..\OgmentoAPI.Domain.Catalog.Api\OgmentoAPI.Domain.Catalog.Api.csproj" />
+    <ProjectReference Include="..\OgmentoAPI.Domain.Catalog.Services\OgmentoAPI.Domain.Catalog.Services.csproj" />
     <ProjectReference Include="..\OgmentoAPI.Domain.Client.Api\OgmentoAPI.Domain.Client.Api.csproj" />
     <ProjectReference Include="..\OgmentoAPI.Domain.Client.Services\OgmentoAPI.Domain.Client.Services.csproj" />
     <ProjectReference Include="..\OgmentoAPI.Domain.Common.Services\OgmentoAPI.Domain.Common.Services.csproj" />
