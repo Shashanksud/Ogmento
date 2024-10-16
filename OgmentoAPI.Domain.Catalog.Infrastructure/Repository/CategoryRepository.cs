@@ -131,6 +131,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			{
 				CategoryName = categoryModel.CategoryName,
 				ParentCategoryId = categoryModel.ParentCategoryId,
+				CategoryUid = new Guid()
 			};
 			EntityEntry<Category> entity = _dbContext.Category.Add(category);
 			await _dbContext.SaveChangesAsync();
@@ -161,7 +162,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			}
 		}
 		private bool CategoryAlreadyExists(string categoryName) {
-			return _dbContext.Category.Any(x => x.CategoryName.Equals(categoryName, StringComparison.OrdinalIgnoreCase));
+			return _dbContext.Category.Any(x => x.CategoryName.ToLower().Equals(categoryName.ToLower()));
 		}
 		public async Task<CategoryModel> AddCategory(CategoryModel categoryModel)
 		{
