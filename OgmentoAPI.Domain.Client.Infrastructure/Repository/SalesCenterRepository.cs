@@ -55,11 +55,8 @@ namespace OgmentoAPI.Domain.Client.Infrastructure.Repository
         {
             List<int> salesCenterIds = _context.SalesCenter.Where(x => guids.Contains(x.SalesCenterUid)).
                 Select(y => y.ID).ToList();
-
-            List<SalesCenterUserMapping> userIdsToBeDeleted = _context.SalesCenterUserMapping.Where(x => x.UserId == userId).ToList();
-
-            _context.SalesCenterUserMapping.RemoveRange(userIdsToBeDeleted);
-            List<SalesCenterUserMapping> userMappings = GetSalesCenterUserMappingDetails(userId, salesCenterIds);
+			_context.SalesCenterUserMapping.Where(x => x.UserId == userId).ExecuteDelete();
+			List<SalesCenterUserMapping> userMappings = GetSalesCenterUserMappingDetails(userId, salesCenterIds);
             _context.SalesCenterUserMapping.AddRange(userMappings);
             return _context.SaveChanges();
 

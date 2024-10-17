@@ -17,15 +17,15 @@ namespace OgmentoAPI.Domain.Catalog.Api
 			_productServices = productServices;
 		}
 		[HttpGet]
-		public IActionResult GetAllProducts()
+		public async Task<IActionResult> GetAllProducts()
 		{
-			return Ok(_productServices.GetAllProducts().ToDto());
+			return Ok((await _productServices.GetAllProducts()).ToDto());
 		}
 		[HttpGet]
 		[Route("{sku}")]
-		public IActionResult GetProduct(string sku)
+		public async Task<IActionResult> GetProduct(string sku)
 		{
-			return Ok(_productServices.GetProduct(sku).ToDto());
+			return Ok((await _productServices.GetProduct(sku)).ToDto());
 		}
 		[HttpPut]
 		public async Task<IActionResult> UpdateProduct(ProductDto productDto)

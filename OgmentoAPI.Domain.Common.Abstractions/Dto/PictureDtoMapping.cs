@@ -12,7 +12,7 @@ namespace OgmentoAPI.Domain.Common.Abstractions.Dto
 				FileName = picture.FileName,
 				MimeType = picture.MimeType,
 				Hash = picture.Hash,
-				IsDeleted = picture.IsDeleted,
+				ToBeDeleted = picture.ToBeDeleted,
 				IsNew = picture.IsNew,
 			};
 		}
@@ -24,7 +24,7 @@ namespace OgmentoAPI.Domain.Common.Abstractions.Dto
 				FileName = picture.FileName,
 				MimeType = picture.MimeType,
 				Hash = picture.Hash,
-				IsDeleted= picture.IsDeleted,
+				ToBeDeleted= picture.ToBeDeleted,
 				IsNew= picture.IsNew,
 			};
 		}

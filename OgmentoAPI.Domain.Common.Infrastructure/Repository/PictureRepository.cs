@@ -14,19 +14,18 @@ namespace OgmentoAPI.Domain.Common.Infrastructure.Repository
 		{
 			_dbContext = dbContext;
 		}
-		public async Task<int?> GetPictureId(string hash)
+		public async Task<int> GetPictureId(string hash)
 		{
 			PictureBinary pictureBinary = await _dbContext.PictureBinary.FirstOrDefaultAsync(x => x.Hash == hash);
-			if (pictureBinary != null) {
-				Picture picture = await _dbContext.Picture.FirstOrDefaultAsync(x => x.PictureID == pictureBinary.PictureId);
-				return picture.PictureID;
+			if (pictureBinary == null) {
+				throw new InvalidOperationException("Picture not found.");
 			}
-			return null;
+			return pictureBinary.PictureId;
 		}
-		public List<PictureModel> GetPictures(List<int> pictureIds)
+		public async Task<List<PictureModel>> GetPictures(List<int> pictureIds)
 		{
-			List<Picture> pictures = _dbContext.Picture.Where(x=>pictureIds.Contains(x.PictureID)).ToList();
-			List<PictureModel> pictureModels = pictures.Select(x => new PictureModel
+			List<Picture> pictures = _dbContext.Pictures.Where(x=>pictureIds.Contains(x.PictureID)).ToList();
+			return pictures.Select(x => new PictureModel
 			{
 				Id = x.PictureID,
 				FileName = x.FileName,
@@ -34,10 +33,9 @@ namespace OgmentoAPI.Domain.Common.Infrastructure.Repository
 				Hash = _dbContext.PictureBinary.FirstOrDefault(b => b.PictureId==x.PictureID).Hash,
 				BinaryData = _dbContext.PictureBinary.FirstOrDefault(b => b.PictureId == x.PictureID).BinaryData,
 			}).ToList();
-			return pictureModels;
 
 		}
-		public PictureModel AddPicture(PictureModel pictureModel)
+		public async Task<PictureModel> AddPicture(PictureModel pictureModel)
 		{
 			Picture picture = new Picture()
 			{
@@ -46,31 +44,18 @@ namespace OgmentoAPI.Domain.Common.Infrastructure.Repository
 				AltAttribute = pictureModel.FileName,
 				TitleAttribute = pictureModel.FileName
 			};
-			EntityEntry<Picture> pictureEntity = _dbContext.Picture.Add(picture);
-			_dbContext.SaveChanges();
+			EntityEntry<Picture> pictureEntity = _dbContext.Pictures.Add(picture);
+			await _dbContext.SaveChangesAsync();
 			PictureBinary pictureBinary = new PictureBinary()
 			{
 				PictureId = pictureEntity.Entity.PictureID,
 				BinaryData =pictureModel.BinaryData,
 			};
 			EntityEntry<PictureBinary> pictureBinaryEntity = _dbContext.PictureBinary.Add(pictureBinary);
-			_dbContext.SaveChanges();
+			await _dbContext.SaveChangesAsync();
 			pictureModel.Hash = pictureBinaryEntity.Entity.Hash;
 			pictureModel.Id = pictureEntity.Entity.PictureID;
 			return pictureModel;
-		}
-		private async Task<int> DeletePictureAsync(int? pictureId)
-		{
-			if (pictureId == null)
-			{
-				throw new InvalidOperationException("Image cannot be found.");
-			}
-			Picture picture = _dbContext.Picture.First(x => x.PictureID == pictureId);
-			PictureBinary pictureBinary = _dbContext.PictureBinary.First(x => x.PictureId == pictureId);
-			_dbContext.PictureBinary.Remove(pictureBinary);
-			_dbContext.Picture.Remove(picture);
-			int response = await _dbContext.SaveChangesAsync();
-			return response;
 		}
 		public async Task<int> DeletePicture(string? hash)
 		{
@@ -79,15 +64,21 @@ namespace OgmentoAPI.Domain.Common.Infrastructure.Repository
 				throw new InvalidOperationException("hash cannot be null");
 			}
 			int? pictureId = await GetPictureId(hash);
-			
-			return await DeletePictureAsync(pictureId);
+			if (pictureId == null)
+			{
+				throw new InvalidOperationException("Image cannot be found.");
+			}
+			Picture picture = _dbContext.Pictures.First(x => x.PictureID == pictureId);
+			PictureBinary pictureBinary = _dbContext.PictureBinary.First(x => x.PictureId == pictureId);
+			_dbContext.PictureBinary.Remove(pictureBinary);
+			_dbContext.Pictures.Remove(picture);
+			int response = await _dbContext.SaveChangesAsync();
+			return response;
 		}
 
 		public async Task DeletePictures(List<int> pictureIds)
 		{
-			foreach (int pictureId in pictureIds) { 
-			     await DeletePictureAsync(pictureId);
-			}
+			await _dbContext.Pictures.Where(x => pictureIds.Contains(x.PictureID)).ExecuteDeleteAsync();
 		}
 	}
 }

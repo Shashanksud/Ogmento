@@ -5,9 +5,9 @@ namespace OgmentoAPI.Domain.Catalog.Abstractions.Repository
 {
 	public interface IProductRepository
 	{
-		public List<ProductModel> GetAllProducts();
-		public List<PictureModel> GetImages(int productId);
-		public ProductModel GetProduct(string sku);
+		public Task<List<ProductModel>> GetAllProducts();
+		public Task<List<PictureModel>> GetImages(int productId);
+		public Task<ProductModel> GetProduct(string sku);
 		public Task<ProductModel> UpdateProduct(ProductModel productModel);
 		public Task DeleteProduct(string sku);
 		public Task<ProductModel> AddProduct(ProductModel productModel);

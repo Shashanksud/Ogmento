@@ -23,14 +23,14 @@ namespace OgmentoAPI.Domain.Catalog.Services
 			await _productRepository.DeleteProduct(sku);
 		}
 
-		public List<ProductModel> GetAllProducts()
+		public async Task<List<ProductModel>> GetAllProducts()
 		{
-			return _productRepository.GetAllProducts();
+			return await _productRepository.GetAllProducts();
 		}
 
-		public ProductModel GetProduct(string sku)
+		public async Task<ProductModel> GetProduct(string sku)
 		{
-			return _productRepository.GetProduct(sku);
+			return await _productRepository.GetProduct(sku);
 		}
 
 		public async Task<ProductModel> UpdateProduct(ProductModel product)

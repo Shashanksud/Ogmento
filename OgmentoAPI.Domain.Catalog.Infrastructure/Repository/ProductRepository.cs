@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using OgmentoAPI.Domain.Catalog.Abstractions.DataContext;
 using OgmentoAPI.Domain.Catalog.Abstractions.Models;
 using OgmentoAPI.Domain.Catalog.Abstractions.Repository;
@@ -19,20 +20,16 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			_dbContext = dbContext;
 			_pictureService = pictureService;
 		}
-		public List<PictureModel> GetImages(int productId)
+		public async Task<List<PictureModel>> GetImages(int productId)
 		{
 			List<int> pictureIds = _dbContext.ProductImageMapping.Where(x => x.ProductId == productId).Select(x => x.ImageId).ToList();
-			List<PictureModel> pictureModels = _pictureService.GetPictures(pictureIds);
+			List<PictureModel> pictureModels = await _pictureService.GetPictures(pictureIds);
 			return pictureModels;
 		}
 		private CategoryModel GetCategory(int productId) {
-			List<ProductCategoryMapping> productCategoryMappings = _dbContext.ProductCategoryMapping.Where(x => x.ProductId == productId ).ToList();
-			List<CategoryModel> productCategories = new List<CategoryModel>();
-			foreach(ProductCategoryMapping productCategory in productCategoryMappings)
-			{
-				productCategories.Add(_categoryRepository.GetCategory(productCategory.CategoryId));
-			}
-			CategoryModel category = productCategories.First(x => x.ParentCategoryId == 1);
+			List<int> productCategoryIds = _dbContext.ProductCategoryMapping.Where(x => x.ProductId == productId ).Select(x=>x.CategoryId).ToList();
+			List<CategoryModel> productCategories = productCategoryIds.Select(x=> _categoryRepository.GetCategory(x)).ToList();
+			CategoryModel category = productCategories.Single(x => x.ParentCategoryId == 1);
 			category.SubCategories = productCategories.Where(x=>x.ParentCategoryId==category.CategoryId).ToList();
 			foreach(CategoryModel subCategory in category.SubCategories)
 			{
@@ -41,7 +38,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			return category;
 		}
 
-		public List<ProductModel> GetAllProducts()
+		public async Task<List<ProductModel>> GetAllProducts()
 		{
 			List<Product> products = _dbContext.Product.ToList();
 			List<ProductModel> productModel = products.Select(x => new ProductModel
@@ -53,14 +50,13 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 				Price = x.Price,
 				ExpiryDate = x.ExpiryDate,
 				ProductDescription = x.ProductDescription,
-				Images = GetImages(x.ProductID),
+				Images = GetImages(x.ProductID).Result,
 				Category = GetCategory(x.ProductID)
-
 			}).ToList();
 			return productModel;
 		}
 
-		public ProductModel GetProduct(string sku)
+		public async Task<ProductModel> GetProduct(string sku)
 		{
 			Product product = _dbContext.Product.FirstOrDefault(x => x.SkuCode == sku);
 			if (product == null) {
@@ -71,7 +67,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 				ProductId= product.ProductID,
 				ProductName= product.ProductName,
 				SkuCode= sku,
-				Images = GetImages(product.ProductID),
+				Images = GetImages(product.ProductID).Result,
 				Category = GetCategory(product.ProductID),
 				Price = product.Price,
 				ExpiryDate = product.ExpiryDate,
@@ -83,24 +79,24 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 		private async Task AddProductCategoryMapping(CategoryModel categoryModel, int productId)
 		{
 			List<int> categoryIds = new List<int>();
-			int? primaryId = await _categoryRepository.GetCategoryId(categoryModel.CategoryUid);
-			if (primaryId == null) {
+			int? primaryCategoryId = await _categoryRepository.GetCategoryId(categoryModel.CategoryUid);
+			if (primaryCategoryId == null) {
 				throw new InvalidOperationException("category not found.");
 			}
-			categoryIds.Add(primaryId.GetValueOrDefault());
+			categoryIds.Add(primaryCategoryId.Value);
 			foreach(CategoryModel subCategory in categoryModel.SubCategories)
 			{
 				int? subCategoryId = await _categoryRepository.GetCategoryId(subCategory.CategoryUid);
 				if (subCategoryId != null)
 				{
-					categoryIds.Add(subCategoryId.GetValueOrDefault());
+					categoryIds.Add(subCategoryId.Value);
 				}
 				foreach (CategoryModel subSubCategory in subCategory.SubCategories)
 				{
 					int? subSubCategoryId = await _categoryRepository.GetCategoryId(subSubCategory.CategoryUid);
 					if (subSubCategoryId != null)
 					{
-						categoryIds.Add(subSubCategoryId.GetValueOrDefault());
+						categoryIds.Add(subSubCategoryId.Value);
 					}
 				}
 			}
@@ -118,7 +114,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 		private async Task UpdateProductImageMapping(List<PictureModel> pictures, int productId)
 		{
 			foreach (PictureModel picture in pictures) {
-				if (picture.IsDeleted)
+				if (picture.ToBeDeleted)
 				{
 					ProductImageMapping productImage = _dbContext.ProductImageMapping.First(x => x.ImageId == picture.Id);
 					_dbContext.ProductImageMapping.Remove(productImage);
@@ -131,7 +127,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 				}
 				if (picture.IsNew)
 				{
-					PictureModel pictureModel = _pictureService.AddPicture(picture);
+					PictureModel pictureModel = await _pictureService.AddPicture(picture);
 					ProductImageMapping productImageMapping = new ProductImageMapping()
 					{
 						ProductId = productId,
@@ -156,8 +152,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			product.LoyaltyPoints = productModel.LoyaltyPoints;
 			_dbContext.Product.Update(product);
 			await _dbContext.SaveChangesAsync();
-			List<ProductCategoryMapping> productCategoryMappings = _dbContext.ProductCategoryMapping.Where(x => x.ProductId == product.ProductID).ToList();
-			_dbContext.ProductCategoryMapping.RemoveRange(productCategoryMappings);
+			await _dbContext.ProductCategoryMapping.Where(x => x.ProductId == product.ProductID).ExecuteDeleteAsync();
 			await _dbContext.SaveChangesAsync();
 			await AddProductCategoryMapping(productModel.Category,product.ProductID);
 			await UpdateProductImageMapping(productModel.Images, product.ProductID);
@@ -171,11 +166,9 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			{
 				throw new InvalidOperationException("Product cannot be found.");
 			}
-			List<ProductCategoryMapping> productCategoryMappings = _dbContext.ProductCategoryMapping.Where(x => x.ProductId == product.ProductID).ToList();
-			_dbContext.ProductCategoryMapping.RemoveRange(productCategoryMappings);
-			List<ProductImageMapping> productImageMappings = _dbContext.ProductImageMapping.Where(x => x.ProductId == product.ProductID).ToList();
-			List<int> pictureIds = productImageMappings.Select(x=>x.ImageId).ToList();
-			_dbContext.ProductImageMapping.RemoveRange(productImageMappings);
+			await _dbContext.ProductCategoryMapping.Where(x => x.ProductId == product.ProductID).ExecuteDeleteAsync();
+			List<int> pictureIds = _dbContext.ProductImageMapping.Where(x => x.ProductId == product.ProductID).Select(x=>x.ImageId).ToList();
+			await _dbContext.ProductImageMapping.Where(x => x.ProductId == product.ProductID).ExecuteDeleteAsync();
 			_dbContext.Product.Remove(product);
 			await _dbContext.SaveChangesAsync();
 			await _pictureService.DeletePictures(pictureIds);
@@ -183,8 +176,8 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 
 		public async Task<ProductModel> AddProduct(ProductModel productModel)
 		{
-			bool SkuExists = _dbContext.Product.Any(x => x.SkuCode == productModel.SkuCode);
-			if (SkuExists)
+			bool skuExists = _dbContext.Product.Any(x => x.SkuCode == productModel.SkuCode);
+			if (skuExists)
 			{
 				throw new InvalidOperationException($"Product with skucode: {productModel.SkuCode} already exists. Please give different code.");
 			}
