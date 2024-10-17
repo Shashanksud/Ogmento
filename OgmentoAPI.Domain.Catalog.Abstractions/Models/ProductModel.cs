@@ -15,6 +15,6 @@ namespace OgmentoAPI.Domain.Catalog.Abstractions.Models
 
 		public List<PictureModel> Images { get; set; }
 
-		public List<CategoryModel> Categories { get; set; }
+		public CategoryModel Category { get; set; }
 	}
 }
