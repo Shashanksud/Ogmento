@@ -14,9 +14,9 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 		{
 			_dbContext = dbContext;
 		}
-		public async Task<int?> GetCategoryId(Guid Uid)
+		public async Task<int?> GetCategoryId(Guid categoryUid)
 		{
-			Category category = await _dbContext.Category.FirstOrDefaultAsync(x => x.CategoryUid == Uid);
+			Category category = await _dbContext.Category.FirstOrDefaultAsync(x => x.CategoryUid == categoryUid);
 			return category.CategoryID;
 		}
 		public List<Category> GetAllParentCategories()
