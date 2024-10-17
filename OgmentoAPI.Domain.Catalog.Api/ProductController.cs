@@ -15,34 +15,39 @@ namespace OgmentoAPI.Domain.Catalog.Api
 			_productServices = productServices;
 		}
 		[HttpGet]
-		[Route("GetAllProducts")]
 		public IActionResult GetAllProducts()
 		{
-			return Ok(_productServices.GetAllProducts().Select(x=>x.ToDto()));
+			return Ok(_productServices.GetAllProducts().ToDto());
 		}
 		[HttpGet]
-		[Route("GetProductDetails")]
+		[Route("{sku}")]
 		public IActionResult GetProduct(string sku)
 		{
-			return Ok();
+			return Ok(_productServices.GetProduct(sku).ToDto());
 		}
 		[HttpPut]
-		[Route("UpdateProductDetails")]
-		public IActionResult UpdateProduct(ProductDto productDto)
+		public async Task<IActionResult> UpdateProduct(ProductDto productDto)
 		{
-			return Ok();
+			return Ok((await _productServices.UpdateProduct(productDto.ToModel())).ToDto());
 		}
 		[HttpDelete]
-		[Route("DeleteProduct")]
-		public IActionResult DeleteProduct(string sku)
+		[Route("{sku}")]
+		public async Task<IActionResult> DeleteProduct(string sku)
 		{
+			await _productServices.DeleteProduct(sku);
 			return Ok();
 		}
 		[HttpPost]
-		[Route("AddNewProduct")]
-		public IActionResult PostProduct(ProductDto productDto)
+		public async Task<IActionResult> PostProduct(ProductDto productDto)
 		{
-			return Ok();
+			return Ok((await _productServices.AddProduct(productDto.ToModel())).ToDto());
+		}
+		[HttpPost]
+		[Route("upload")]
+		public async Task<IActionResult> UploadProducts(List<ProductDto> products)
+		{
+			
+			return Ok((await _productServices.UploadProducts(products.ToModel())).ToDto());
 		}
 	}
 }
