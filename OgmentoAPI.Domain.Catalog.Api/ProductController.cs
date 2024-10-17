@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OgmentoAPI.Domain.Catalog.Abstractions.Dto;
 using OgmentoAPI.Domain.Catalog.Abstractions.Services;
 
@@ -7,6 +8,7 @@ namespace OgmentoAPI.Domain.Catalog.Api
 {
 	[ApiController]
 	[Route("api/[controller]")]
+	[Authorize]
 	public class ProductController:ControllerBase
 	{
 		private readonly IProductServices _productServices;
