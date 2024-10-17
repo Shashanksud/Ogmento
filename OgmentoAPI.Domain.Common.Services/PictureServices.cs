@@ -12,15 +12,28 @@ namespace OgmentoAPI.Domain.Common.Services
 		{
 			_pictureRepository = pictureRepository;
 		}
-		public async Task<int?> GetProductIdFromHash(string hash)
+		public async Task<int?> GetPictureId(string hash)
 		{
-			return await _pictureRepository.GetPictureIdFromHash(hash);
+			return await _pictureRepository.GetPictureId(hash);
 		}
 
-		public List<PictureModel> GetImagesByPictureId(List<int> pictureIds)
+		public List<PictureModel> GetPictures(List<int> pictureIds)
 		{
-			List<PictureModel> pictures = _pictureRepository.GetImagesByPictureIds(pictureIds);
+			List<PictureModel> pictures = _pictureRepository.GetPictures(pictureIds);
 			return pictures;
+		}
+		public PictureModel AddPicture(PictureModel picture) { 
+			return _pictureRepository.AddPicture(picture);
+		}
+
+		public async Task<int> DeletePicture(string? hash)
+		{
+			 return await _pictureRepository.DeletePicture(hash);
+		}
+
+		public async Task DeletePictures(List<int> pictureIds)
+		{
+			await _pictureRepository.DeletePictures(pictureIds);
 		}
 	}
 }

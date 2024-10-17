@@ -12,6 +12,8 @@ namespace OgmentoAPI.Domain.Common.Abstractions.Dto
 				FileName = picture.FileName,
 				MimeType = picture.MimeType,
 				Hash = picture.Hash,
+				IsDeleted = picture.IsDeleted,
+				IsNew = picture.IsNew,
 			};
 		}
 		public static PictureModel ToModel(this PictureDto picture)
@@ -22,6 +24,8 @@ namespace OgmentoAPI.Domain.Common.Abstractions.Dto
 				FileName = picture.FileName,
 				MimeType = picture.MimeType,
 				Hash = picture.Hash,
+				IsDeleted= picture.IsDeleted,
+				IsNew= picture.IsNew,
 			};
 		}
 	}

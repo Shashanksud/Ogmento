@@ -53,23 +53,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			return _dbContext.Category.Any(x => x.ParentCategoryId == categoryId);
 		}
 
-		public List<CategoryModel> GetCategoriesByProductId(int productId)
-		{
-			//I will change this. I know this has issues.
-			List<int> categoryIds = _dbContext.ProductCategoryMapping.Where(x => x.ProductId == productId).Select(x => x.CategoryId).ToList();
-			List<Category> categories = _dbContext.Category.Where(x => categoryIds.Contains(x.CategoryID)).ToList();
-			List<CategoryModel> categoryModels = categories.Select(x => new CategoryModel
-			{
-				CategoryId = x.CategoryID,
-				CategoryName = x.CategoryName,
-				CategoryUid = x.CategoryUid,
-				ParentCategoryId = x.ParentCategoryId,
-				ParentCategoryUid = GetParentUid(x.ParentCategoryId).Result,
-				SubCategories = CheckSubCategoriesExists(x.CategoryID)? GetSubCategories(x.CategoryID) : null,
-			}).ToList();
-			return categoryModels;
-
-		}
+		
 		public CategoryModel GetCategory(int? categoryId)
 		{
 			Category category = _dbContext.Category.FirstOrDefault(x => x.CategoryID == categoryId);
@@ -122,7 +106,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			}
 			Category category = _dbContext.Category.FirstOrDefault(x => x.CategoryID == categoryId.Value);
 			category.CategoryName = categoryName;
-			_dbContext.Update(category);
+			_dbContext.Category.Update(category);
 			await _dbContext.SaveChangesAsync();
 		}
 		private async Task<CategoryModel> AddCategoryToDatabase(CategoryModel categoryModel)
@@ -131,6 +115,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			{
 				CategoryName = categoryModel.CategoryName,
 				ParentCategoryId = categoryModel.ParentCategoryId,
+				CategoryUid = Guid.NewGuid()
 			};
 			EntityEntry<Category> entity = _dbContext.Category.Add(category);
 			await _dbContext.SaveChangesAsync();
@@ -161,7 +146,12 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			}
 		}
 		private bool CategoryAlreadyExists(string categoryName) {
-			return _dbContext.Category.Any(x => x.CategoryName.Equals(categoryName, StringComparison.OrdinalIgnoreCase));
+			Category category = _dbContext.Category.FirstOrDefault(x => x.CategoryName.ToLower() == categoryName.ToLower());
+            if(category == null)
+            {
+                return false;
+            }
+            return true;
 		}
 		public async Task<CategoryModel> AddCategory(CategoryModel categoryModel)
 		{
@@ -184,7 +174,11 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 		}
 		public Task<CategoryModel> AddNewCategory(CategoryModel categoryModel)
 		{
-			if (CategoryAlreadyExists(categoryModel.CategoryName)) {
+            if (categoryModel == null || string.IsNullOrEmpty(categoryModel.CategoryName))
+            {
+                throw new ArgumentNullException(nameof(categoryModel.CategoryName), "Category name cannot be null or empty.");
+            }
+            if (CategoryAlreadyExists(categoryModel.CategoryName)) {
 				throw new InvalidOperationException("Category Already exists.");
 			}
 			if(categoryModel.ParentCategoryUid == Guid.Empty)

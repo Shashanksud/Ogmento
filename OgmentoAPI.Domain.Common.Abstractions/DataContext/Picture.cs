@@ -6,7 +6,7 @@ namespace OgmentoAPI.Domain.Common.Abstractions.DataContext
     public class Picture
     {
 		[Key]
-		public int Id { get; set; }
+		public int PictureID { get; set; }
 		public string FileName { get; set; }
 		public string MimeType { get; set; }
 		public string AltAttribute {  get; set; }

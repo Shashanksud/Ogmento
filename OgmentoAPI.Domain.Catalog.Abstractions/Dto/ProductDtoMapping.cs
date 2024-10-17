@@ -16,15 +16,14 @@ namespace OgmentoAPI.Domain.Catalog.Abstractions.Dto
 				LoyaltyPoints = product.LoyaltyPoints,
 				ProductExpiry = product.ExpiryDate,
 				SkuCode = product.SkuCode,
-				Categories = product.Categories?.Select(x => x.ToDto()).ToList() ?? [],
+				Category = product.Category.ToDto() ,
 				Images = product.Images?.Select(x=>x.ToDto()).ToList() ?? [],
 			};
 		}
-		public static ProductModel ToModel(this ProductDto product, int productId)
+		public static ProductModel ToModel(this ProductDto product)
 		{
 			return new ProductModel()
 			{
-				ProductId = productId,
 				ProductName = product.ProductName,
 				ProductDescription = product.ProductDescription,
 				Price = product.Price,
@@ -32,9 +31,17 @@ namespace OgmentoAPI.Domain.Catalog.Abstractions.Dto
 				LoyaltyPoints = product.LoyaltyPoints,
 				ExpiryDate = product.ProductExpiry,
 				SkuCode = product.SkuCode,
-				Categories = product.Categories?.Select(x=> x.ToModel()).ToList() ?? [],
+				Category = product.Category.ToModel(),
 				Images = product.Images?.Select(x => x.ToModel()).ToList() ?? [],
 			};
+		}
+		public static List<ProductDto> ToDto(this List<ProductModel> products)
+		{
+			return products.Select(x => x.ToDto()).ToList();
+		}
+		public static List<ProductModel> ToModel(this List<ProductDto> products)
+		{
+			return products.Select(x => x.ToModel()).ToList();
 		}
 	}
 }
