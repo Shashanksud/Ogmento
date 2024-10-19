@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using OgmentoAPI.Domain.Catalog.Abstractions.DataContext;
 using OgmentoAPI.Domain.Catalog.Abstractions.Models;
 using OgmentoAPI.Domain.Catalog.Abstractions.Repository;
+using OgmentoAPI.Domain.Common.Abstractions.CustomExceptions;
 
 namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 {
@@ -14,21 +15,35 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 		{
 			_dbContext = dbContext;
 		}
-		public async Task<int?> GetCategoryId(Guid categoryUid)
+		public async Task<List<CategoryModel>> GetAllCategories()
+		{
+			List<Category> parentCategories = await _dbContext.Category.AsNoTracking().Where(x => x.ParentCategoryId == 1).ToListAsync();
+			List<CategoryModel> categoryModel =  parentCategories.Select( x => new CategoryModel
+			{
+				CategoryName = x.CategoryName,
+				CategoryId = x.CategoryID,
+				ParentCategoryId = x.ParentCategoryId,
+				CategoryUid = x.CategoryUid,
+				ParentCategoryUid = GetCategoryUid(x.ParentCategoryId),
+				SubCategories = GetSubCategories(x.CategoryID),
+			}).ToList();
+			return categoryModel;
+		}
+		public async Task<int> GetCategoryIdAsync(Guid categoryUid)
 		{
 			Category category = await _dbContext.Category.FirstOrDefaultAsync(x => x.CategoryUid == categoryUid);
+			if (category == null) {
+				throw new EntityNotFoundException($"No Category found with Uid: {categoryUid}.");
+			}
 			return category.CategoryID;
 		}
-		public List<Category> GetAllParentCategories()
+		public Guid GetCategoryUid(int? categoryId)
 		{
-			return _dbContext.Category.AsNoTracking().Where(x => x.ParentCategoryId == 1).ToList();
-		}
-		public async Task<Guid> GetParentUid(int? parentId) { 
-			if(parentId == null)
+			if (categoryId == null)
 			{
-				return _dbContext.Category.AsNoTracking().FirstOrDefault(x => x.CategoryName == "All Products").CategoryUid;
+				return _dbContext.Category.AsNoTracking().Single(x => x.CategoryName == "All Products").CategoryUid;
 			}
-			return _dbContext.Category.AsNoTracking().FirstOrDefault(x => x.CategoryID == parentId).CategoryUid;
+			return  _dbContext.Category.AsNoTracking().Single(x => x.CategoryID == categoryId).CategoryUid;
 		}
 		public List<CategoryModel> GetSubCategories(int categoryId)
 		{
@@ -40,7 +55,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 				CategoryId = x.CategoryID,
 				CategoryUid = x.CategoryUid,
 				ParentCategoryId = x.ParentCategoryId,
-				ParentCategoryUid = GetParentUid(x.ParentCategoryId).Result,
+				ParentCategoryUid = GetCategoryUid(x.ParentCategoryId),
 				SubCategories = CheckSubCategoriesExists(x.CategoryID)? GetSubCategories(x.CategoryID) : null,
 
 			}).ToList();
@@ -52,18 +67,17 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 		{
 			return _dbContext.Category.Any(x => x.ParentCategoryId == categoryId);
 		}
-
-		
-		public CategoryModel GetCategory(int? categoryId)
+		public async Task<CategoryModel> GetCategory(Guid categoryUid)
 		{
-			Category category = _dbContext.Category.FirstOrDefault(x => x.CategoryID == categoryId);
+			int categoryId = await GetCategoryIdAsync(categoryUid);
+			Category category = _dbContext.Category.Single(x => x.CategoryID == categoryId);
 			CategoryModel categoryModel = new CategoryModel()
 			{
 				CategoryId = category.CategoryID,
 				CategoryName = category.CategoryName,
 				CategoryUid = category.CategoryUid,
 				ParentCategoryId = category.ParentCategoryId,
-				ParentCategoryUid = GetParentUid(category.ParentCategoryId).Result,
+				ParentCategoryUid = new Guid(),
 				SubCategories = GetSubCategories(category.CategoryID),
 			};
 			return categoryModel;
@@ -73,41 +87,42 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			return !_dbContext.ProductCategoryMapping.Any(x => x.CategoryId == categoryId);
 			
 		}
-		public async Task DeleteCategory(int? categoryId)
+		public async Task DeleteCategory(Guid categoryUid)
 		{
-			Category category = _dbContext.Category.FirstOrDefault(x => x.CategoryID == categoryId);
-			if(category == null)
+			int categoryId = await GetCategoryIdAsync(categoryUid);
+			List<int> categoryIds = new List<int> { categoryId};
+			if (!IsSafeDelete(categoryId))
 			{
-				throw new InvalidOperationException($"Category with Id: {category.CategoryID} cannot be found");
+				throw new DatabaseOperationException($"Category cannot be deleted as it is mapped with a product");
 			}
-			if (!IsSafeDelete(category.CategoryID))
-			{
-				throw new InvalidOperationException($"Category with Id: {category.CategoryID} cannot be deleted as it is mapped with a product");
-			}
-			if (CheckSubCategoriesExists(category.CategoryID))
+			if (CheckSubCategoriesExists(categoryId))
 			{
 				List<int> subCategoryIds = _dbContext.Category.Where(x => x.ParentCategoryId == categoryId).Select(x => x.CategoryID).ToList();
+				categoryIds.AddRange(subCategoryIds);
 				foreach (int subCategoryId in subCategoryIds)
 				{
-					DeleteCategory(subCategoryId);
-
+					if (CheckSubCategoriesExists(subCategoryId))
+					{
+						categoryIds.AddRange(_dbContext.Category.Where(x => x.ParentCategoryId == subCategoryId).Select(x => x.CategoryID));
+					}
 				}
 			}
-			_dbContext.Category.Remove(category);
-			_dbContext.SaveChanges();
+			int rowsDeleted = await _dbContext.Category.Where(x => categoryIds.Contains(x.CategoryID)).ExecuteDeleteAsync();
+			if (rowsDeleted == 0) {
+				throw new DatabaseOperationException("Unable to delete the category.");
+			}
 		}
-
 		public async Task UpdateCategory(Guid categoryUid, String categoryName)
 		{
-			int? categoryId = GetCategoryId(categoryUid).Result;
-			if (categoryId == null)
-			{
-				throw new InvalidOperationException("Category Cannot be found");
-			}
-			Category category = _dbContext.Category.FirstOrDefault(x => x.CategoryID == categoryId.Value);
+			int categoryId = GetCategoryIdAsync(categoryUid).Result;
+			Category category = _dbContext.Category.Single(x => x.CategoryID == categoryId);
 			category.CategoryName = categoryName;
 			_dbContext.Category.Update(category);
-			await _dbContext.SaveChangesAsync();
+			int rowsUpdated = await _dbContext.SaveChangesAsync();
+			if (rowsUpdated == 0)
+			{
+				throw new DatabaseOperationException("Unable to Update the category.");
+			}
 		}
 		private async Task<CategoryModel> AddCategoryToDatabase(CategoryModel categoryModel)
 		{
@@ -118,7 +133,11 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 				CategoryUid = Guid.NewGuid()
 			};
 			EntityEntry<Category> entity = _dbContext.Category.Add(category);
-			await _dbContext.SaveChangesAsync();
+			int rowsAdded = await _dbContext.SaveChangesAsync();
+			if (rowsAdded == 0)
+			{
+				throw new DatabaseOperationException($"Unable to Add the category with Uid: {categoryModel.CategoryUid}.");
+			}
 			categoryModel.CategoryId = entity.Entity.CategoryID;
 			categoryModel.CategoryUid = entity.Entity.CategoryUid;
 			return categoryModel;
@@ -137,7 +156,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 					CategoryModel model = await AddCategoryToDatabase(subCategory);
 					subCategory.CategoryId = model.CategoryId;
 					subCategory.CategoryUid = model.CategoryUid;
-					subCategory.ParentCategoryUid = GetCategory(parentId).CategoryUid;
+					subCategory.ParentCategoryUid = GetCategoryUid(parentId);
 				}
 				if (subCategory.SubCategories != null)
 				{
@@ -157,12 +176,12 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 		{
 			if (CategoryAlreadyExists(categoryModel.CategoryName))
 			{
-				throw new InvalidOperationException($"{categoryModel.CategoryName} Already Exists.");
+				throw new InvalidDataException($"{categoryModel.CategoryName} Already Exists.");
 			}
 			if(categoryModel.CategoryUid == Guid.Empty)
 			{
 				categoryModel.ParentCategoryId = 1;
-				categoryModel.ParentCategoryUid = await GetParentUid(categoryModel.ParentCategoryId);
+				categoryModel.ParentCategoryUid = GetCategoryUid(categoryModel.ParentCategoryId);
 				categoryModel = await AddCategoryToDatabase(categoryModel);
 			}
 			if (categoryModel.SubCategories != null)
@@ -176,15 +195,15 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 		{
             if (categoryModel == null || string.IsNullOrEmpty(categoryModel.CategoryName))
             {
-                throw new ArgumentNullException(nameof(categoryModel.CategoryName), "Category name cannot be null or empty.");
+                throw new InvalidDataException("Category name cannot be null or empty.");
             }
             if (CategoryAlreadyExists(categoryModel.CategoryName)) {
-				throw new InvalidOperationException("Category Already exists.");
+				throw new InvalidDataException($"{categoryModel.CategoryName} Already Exists.");
 			}
 			if(categoryModel.ParentCategoryUid == Guid.Empty)
 			{
 				categoryModel.ParentCategoryId = 1;
-				categoryModel.ParentCategoryUid = GetParentUid(categoryModel.ParentCategoryId).Result;
+				categoryModel.ParentCategoryUid = GetCategoryUid(categoryModel.ParentCategoryId);
 			}
 			else
 			{

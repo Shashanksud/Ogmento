@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using OgmentoAPI.Domain.Catalog.Abstractions.DataContext;
 using OgmentoAPI.Domain.Catalog.Abstractions.Models;
 using OgmentoAPI.Domain.Catalog.Abstractions.Repository;
+using OgmentoAPI.Domain.Catalog.Abstractions.Services;
+using OgmentoAPI.Domain.Common.Abstractions.CustomExceptions;
 using OgmentoAPI.Domain.Common.Abstractions.Models;
 using OgmentoAPI.Domain.Common.Abstractions.Services;
 
@@ -13,10 +15,10 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 	
 		private readonly CatalogDbContext _dbContext;
 		private readonly IPictureService _pictureService;
-		private readonly ICategoryRepository _categoryRepository;
-		public ProductRepository(ICategoryRepository categoryRepository, CatalogDbContext dbContext, IPictureService pictureService)
+		private readonly ICategoryServices _categoryServices;
+		public ProductRepository(ICategoryServices categoryServices, CatalogDbContext dbContext, IPictureService pictureService)
 		{
-			_categoryRepository = categoryRepository;
+			_categoryServices = categoryServices;
 			_dbContext = dbContext;
 			_pictureService = pictureService;
 		}
@@ -26,9 +28,14 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			List<PictureModel> pictureModels = await _pictureService.GetPictures(pictureIds);
 			return pictureModels;
 		}
-		private CategoryModel GetCategory(int productId) {
+		private async Task<CategoryModel> GetCategory(int productId) {
 			List<int> productCategoryIds = _dbContext.ProductCategoryMapping.Where(x => x.ProductId == productId ).Select(x=>x.CategoryId).ToList();
-			List<CategoryModel> productCategories = productCategoryIds.Select(x=> _categoryRepository.GetCategory(x)).ToList();
+			List<Guid> productCategoryUids = productCategoryIds.Select(x => _categoryServices.GetCategoryUid(x)).ToList();
+			List<CategoryModel> productCategories = new List<CategoryModel>();
+			foreach (Guid productCategoryUid in productCategoryUids)
+			{
+				productCategories.Add(await _categoryServices.GetCategory(productCategoryUid));
+			}
 			CategoryModel category = productCategories.Single(x => x.ParentCategoryId == 1);
 			category.SubCategories = productCategories.Where(x=>x.ParentCategoryId==category.CategoryId).ToList();
 			foreach(CategoryModel subCategory in category.SubCategories)
@@ -50,8 +57,8 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 				Price = x.Price,
 				ExpiryDate = x.ExpiryDate,
 				ProductDescription = x.ProductDescription,
-				Images = GetImages(x.ProductID).Result,
-				Category = GetCategory(x.ProductID)
+				Images = GetImages(x.ProductID).GetAwaiter().GetResult(),
+				Category = GetCategory(x.ProductID).GetAwaiter().GetResult(),
 			}).ToList();
 			return productModel;
 		}
@@ -60,15 +67,15 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 		{
 			Product product = _dbContext.Product.FirstOrDefault(x => x.SkuCode == sku);
 			if (product == null) {
-				throw new InvalidOperationException("Product not found.");
+				throw new EntityNotFoundException($"Product {sku} not found.");
 			}
 			ProductModel productModel = new ProductModel()
 			{
 				ProductId= product.ProductID,
 				ProductName= product.ProductName,
 				SkuCode= sku,
-				Images = GetImages(product.ProductID).Result,
-				Category = GetCategory(product.ProductID),
+				Images = GetImages(product.ProductID).GetAwaiter().GetResult(),
+				Category = GetCategory(product.ProductID).GetAwaiter().GetResult(),
 				Price = product.Price,
 				ExpiryDate = product.ExpiryDate,
 				ProductDescription = product.ProductDescription,
@@ -79,25 +86,16 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 		private async Task AddProductCategoryMapping(CategoryModel categoryModel, int productId)
 		{
 			List<int> categoryIds = new List<int>();
-			int? primaryCategoryId = await _categoryRepository.GetCategoryId(categoryModel.CategoryUid);
-			if (primaryCategoryId == null) {
-				throw new InvalidOperationException("category not found.");
-			}
-			categoryIds.Add(primaryCategoryId.Value);
+			int primaryCategoryId = await _categoryServices.GetCategoryId(categoryModel.CategoryUid);
+			categoryIds.Add(primaryCategoryId);
 			foreach(CategoryModel subCategory in categoryModel.SubCategories)
 			{
-				int? subCategoryId = await _categoryRepository.GetCategoryId(subCategory.CategoryUid);
-				if (subCategoryId != null)
-				{
-					categoryIds.Add(subCategoryId.Value);
-				}
+				int subCategoryId = await _categoryServices.GetCategoryId(subCategory.CategoryUid);
+				categoryIds.Add(subCategoryId);
 				foreach (CategoryModel subSubCategory in subCategory.SubCategories)
 				{
-					int? subSubCategoryId = await _categoryRepository.GetCategoryId(subSubCategory.CategoryUid);
-					if (subSubCategoryId != null)
-					{
-						categoryIds.Add(subSubCategoryId.Value);
-					}
+					int subSubCategoryId = await _categoryServices.GetCategoryId(subSubCategory.CategoryUid);
+					categoryIds.Add(subSubCategoryId);
 				}
 			}
 			foreach( int categoryId in categoryIds)
@@ -109,7 +107,11 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 				};
 				_dbContext.ProductCategoryMapping.Add(productCategory);
 			}
-			await _dbContext.SaveChangesAsync();
+			int rowsAdded = await _dbContext.SaveChangesAsync();
+			if (rowsAdded == 0)
+			{
+				throw new DatabaseOperationException($"Product Category Mappings not added.");
+			}
 		} 
 		private async Task UpdateProductImageMapping(List<PictureModel> pictures, int productId)
 		{
@@ -118,12 +120,12 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 				{
 					ProductImageMapping productImage = _dbContext.ProductImageMapping.First(x => x.ImageId == picture.Id);
 					_dbContext.ProductImageMapping.Remove(productImage);
-					await _dbContext.SaveChangesAsync();
-					int response = await _pictureService.DeletePicture(picture.Hash);
-					if (response == 0)
+					int rowsDeleted = await _dbContext.SaveChangesAsync();
+					if (rowsDeleted == 0)
 					{
-						throw new InvalidOperationException("Picture cannot be deleted.");
+						throw new DatabaseOperationException($"Unable to Delete the image.");
 					}
+					await _pictureService.DeletePicture(picture.Hash);
 				}
 				if (picture.IsNew)
 				{
@@ -134,7 +136,11 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 						ImageId = pictureModel.Id
 					};
 					_dbContext.ProductImageMapping.Add(productImageMapping);
-					await _dbContext.SaveChangesAsync();
+					int rowsAdded = await _dbContext.SaveChangesAsync();
+					if (rowsAdded == 0)
+					{
+						throw new DatabaseOperationException($"Unable to Add the Product Image mapping.");
+					}
 				}
 			}
 		}
@@ -143,7 +149,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			Product product = _dbContext.Product.FirstOrDefault(x => x.SkuCode == productModel.SkuCode);
 			if(product == null)
 			{
-				throw new InvalidOperationException("Product not found.");
+				throw new EntityNotFoundException($"Product {productModel.SkuCode} not found.");
 			}
 			product.ProductName = productModel.ProductName;
 			product.ProductDescription = productModel.ProductDescription;
@@ -151,9 +157,12 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			product.ExpiryDate = productModel.ExpiryDate;
 			product.LoyaltyPoints = productModel.LoyaltyPoints;
 			_dbContext.Product.Update(product);
-			await _dbContext.SaveChangesAsync();
+			int productRowsUpdated = await _dbContext.SaveChangesAsync();
+			if(productRowsUpdated == 0)
+			{
+				throw new DatabaseOperationException($"Unable to Update Product {productModel.SkuCode}.");
+			}
 			await _dbContext.ProductCategoryMapping.Where(x => x.ProductId == product.ProductID).ExecuteDeleteAsync();
-			await _dbContext.SaveChangesAsync();
 			await AddProductCategoryMapping(productModel.Category,product.ProductID);
 			await UpdateProductImageMapping(productModel.Images, product.ProductID);
 			return productModel;
@@ -164,13 +173,17 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			Product product = _dbContext.Product.FirstOrDefault(x => x.SkuCode == sku);
 			if(product == null)
 			{
-				throw new InvalidOperationException("Product cannot be found.");
+				throw new EntityNotFoundException($"Product {sku} cannot be found.");
 			}
 			await _dbContext.ProductCategoryMapping.Where(x => x.ProductId == product.ProductID).ExecuteDeleteAsync();
 			List<int> pictureIds = _dbContext.ProductImageMapping.Where(x => x.ProductId == product.ProductID).Select(x=>x.ImageId).ToList();
 			await _dbContext.ProductImageMapping.Where(x => x.ProductId == product.ProductID).ExecuteDeleteAsync();
 			_dbContext.Product.Remove(product);
-			await _dbContext.SaveChangesAsync();
+			int rowsDeleted = await _dbContext.SaveChangesAsync();
+			if (rowsDeleted == 0)
+			{
+				throw new DatabaseOperationException($"Unable to Delete Product {sku}.");
+			}
 			await _pictureService.DeletePictures(pictureIds);
 		}
 
@@ -179,7 +192,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			bool skuExists = _dbContext.Product.Any(x => x.SkuCode == productModel.SkuCode);
 			if (skuExists)
 			{
-				throw new InvalidOperationException($"Product with skucode: {productModel.SkuCode} already exists. Please give different code.");
+				throw new InvalidDataException($"Product with skucode: {productModel.SkuCode} already exists. Please give different code.");
 			}
 			Product product = new Product()
 			{
@@ -192,7 +205,11 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 				Weight = productModel.Weight,
 			};
 			EntityEntry<Product> productEntry = _dbContext.Product.Add(product);
-			await _dbContext.SaveChangesAsync();
+			int rowsAdded = await _dbContext.SaveChangesAsync();
+			if(rowsAdded == 0)
+			{
+				throw new DatabaseOperationException($"Product {productModel.SkuCode} not Added.");
+			}
 			productModel.ProductId = productEntry.Entity.ProductID;
 			await UpdateProductImageMapping(productModel.Images, productModel.ProductId);
 			await AddProductCategoryMapping(productModel.Category, productModel.ProductId);

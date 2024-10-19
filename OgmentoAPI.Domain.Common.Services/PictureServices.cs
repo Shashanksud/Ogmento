@@ -26,9 +26,9 @@ namespace OgmentoAPI.Domain.Common.Services
 			return await _pictureRepository.AddPicture(picture);
 		}
 
-		public async Task<int> DeletePicture(string? hash)
+		public async Task DeletePicture(string? hash)
 		{
-			 return await _pictureRepository.DeletePicture(hash);
+			await _pictureRepository.DeletePicture(hash);
 		}
 
 		public async Task DeletePictures(List<int> pictureIds)
