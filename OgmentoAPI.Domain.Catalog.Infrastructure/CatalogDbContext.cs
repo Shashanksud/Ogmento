@@ -20,6 +20,8 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure
 				entity.HasKey(e => e.ProductID);
 				entity.Property(e => e.ProductID)
 						.HasColumnName("ID").UseIdentityColumn();
+				entity.Property(e => e.ExpiryDate)
+						.HasColumnName("ProductExpiry");
 				entity.HasMany(e => e.ProductCategories)
 					.WithOne(e => e.Product)
 					.HasForeignKey(e => e.ProductId);
@@ -59,6 +61,8 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure
 			modelBuilder.Entity<ProductImageMapping>(entity =>
 			{
 				entity.HasKey(e => new {e.ProductId, e.ImageId });
+				entity.Property(e => e.ImageId)
+						.HasColumnName("PictureId");
 			});
 
 			base.OnModelCreating(modelBuilder);

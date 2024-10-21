@@ -1,5 +1,4 @@
-﻿using OgmentoAPI.Domain.Catalog.Abstractions.DataContext;
-using OgmentoAPI.Domain.Catalog.Abstractions.Models;
+﻿using OgmentoAPI.Domain.Catalog.Abstractions.Models;
 using OgmentoAPI.Domain.Catalog.Abstractions.Repository;
 using OgmentoAPI.Domain.Catalog.Abstractions.Services;
 
@@ -12,49 +11,31 @@ namespace OgmentoAPI.Domain.Catalog.Services
 		{
 			_categoryRepository = categoryRepository;
 		}
-		public async Task<int?> GetCategoryId(Guid categoryUid)
+		public Guid GetCategoryUid(int? categoryId)
 		{
-			return await _categoryRepository.GetCategoryId(categoryUid);
+			return _categoryRepository.GetCategoryUid(categoryId);
 		}
-		public List<CategoryModel> GetAllCategories()
+		public async Task<int> GetCategoryId(Guid categoryUid)
 		{
-			List<Category> parentCategories = _categoryRepository.GetAllParentCategories();
-			List<CategoryModel> categoryModel = parentCategories.Select(x => new CategoryModel
-			{
-				CategoryName = x.CategoryName,
-				CategoryId = x.CategoryID,
-				ParentCategoryId = x.ParentCategoryId,
-				CategoryUid = x.CategoryUid,
-				ParentCategoryUid = _categoryRepository.GetParentUid(x.ParentCategoryId).Result,
-				SubCategories = _categoryRepository.GetSubCategories(x.CategoryID),
-
-			}).ToList();
-			return categoryModel;
+			return await _categoryRepository.GetCategoryIdAsync(categoryUid);
 		}
-		public CategoryModel GetCategory(Guid categoryUid)
+		public async Task<List<CategoryModel>> GetAllCategories()
 		{
-			int? categoryId = GetCategoryId(categoryUid).Result;
-			if (categoryId == null)
-			{
-				throw new InvalidOperationException("Category doesn't exist in database.");
-			}
-			CategoryModel category = _categoryRepository.GetCategory(categoryId);
-			category.ParentCategoryUid = new Guid();
-			return category;
+			return await _categoryRepository.GetAllCategories();
+		}
+		public async Task<CategoryModel> GetCategory(Guid categoryUid)
+		{
+			return await _categoryRepository.GetCategory(categoryUid);
+			
 		}
 
 		public async Task DeleteCategory(Guid categoryUid)
-		{
-			int? categoryId = GetCategoryId(categoryUid).Result;
-			if (categoryId == null)
-			{
-				throw new InvalidOperationException("Category doens't exist.");
-			}
-			await _categoryRepository.DeleteCategory(categoryId);
+		{	
+			await _categoryRepository.DeleteCategory(categoryUid);
 		}
-		public Task UpdateCategory(Guid categoryUid, string categoryName)
+		public async Task UpdateCategory(Guid categoryUid, string categoryName)
 		{
-			return _categoryRepository.UpdateCategory(categoryUid, categoryName);
+			await _categoryRepository.UpdateCategory(categoryUid, categoryName);
 		}
 
 		public async Task<List<CategoryModel>> AddCategories(List<CategoryModel> categories)

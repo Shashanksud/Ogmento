@@ -1,6 +1,7 @@
 ﻿using OgmentoAPI.Domain.Catalog.Abstractions.Models;
 using OgmentoAPI.Domain.Catalog.Abstractions.Repository;
 using OgmentoAPI.Domain.Catalog.Abstractions.Services;
+using System.Collections.Generic;
 
 namespace OgmentoAPI.Domain.Catalog.Services
 {
@@ -11,9 +12,34 @@ namespace OgmentoAPI.Domain.Catalog.Services
 		{
 			_productRepository = productRepository;
 		}
-		public List<ProductModel> GetAllProducts()
+
+		public async Task<ProductModel> AddProduct(ProductModel product)
 		{
-			return _productRepository.GetAllProducts();
+			return await _productRepository.AddProduct(product);
+		}
+
+		public async Task DeleteProduct(string sku)
+		{
+			await _productRepository.DeleteProduct(sku);
+		}
+
+		public async Task<List<ProductModel>> GetAllProducts()
+		{
+			return await _productRepository.GetAllProducts();
+		}
+
+		public async Task<ProductModel> GetProduct(string sku)
+		{
+			return await _productRepository.GetProduct(sku);
+		}
+
+		public async Task<ProductModel> UpdateProduct(ProductModel product)
+		{
+			return await _productRepository.UpdateProduct(product);
+		}
+		public async Task<List<ProductModel>> UploadProducts(List<ProductModel> products)
+		{
+			return await _productRepository.UploadProducts(products);
 		}
 	}
 }

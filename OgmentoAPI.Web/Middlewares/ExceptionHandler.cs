@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OgmentoAPI.Domain.Common.Abstractions;
+using OgmentoAPI.Domain.Common.Abstractions.CustomExceptions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -38,6 +41,10 @@ namespace OgmentoAPI.Middlewares
 
             ExceptionResponse response = exception switch
             {
+				DatabaseOperationException _ => new ExceptionResponse(HttpStatusCode.InternalServerError, exception.Message),
+				EntityNotFoundException _ => new ExceptionResponse(HttpStatusCode.NotFound, exception.Message),
+				InvalidOperationException _ => new ExceptionResponse(HttpStatusCode.BadRequest, exception.Message),
+				InvalidDataException _ => new ExceptionResponse(HttpStatusCode.BadRequest,exception.Message),
                 ApplicationException _ => new ExceptionResponse(HttpStatusCode.BadRequest, "Application exception occurred."),
                 KeyNotFoundException _ => new ExceptionResponse(HttpStatusCode.NotFound, "The request key not found."),
                 UnauthorizedAccessException _ => new ExceptionResponse(HttpStatusCode.Unauthorized, "Unauthorized user."),

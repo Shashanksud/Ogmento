@@ -12,9 +12,7 @@ namespace OgmentoAPI.Domain.Catalog.Abstractions.Dto
 		public int Weight { get; set; }
 		public int? LoyaltyPoints { get; set; }
 		public DateOnly ProductExpiry { get; set; }
-
 		public List<PictureDto> Images { get; set; }
-
-		public List<CategoryDto> Categories { get; set; }
+		public CategoryDto Category { get; set; }
 	}
 }

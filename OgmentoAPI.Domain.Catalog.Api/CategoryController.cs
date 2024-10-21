@@ -19,21 +19,21 @@ namespace OgmentoAPI.Domain.Catalog.Api
 		}
 
 		[HttpGet]
-		public IActionResult GetAllCategories()
+		public async Task<IActionResult> GetAllCategories()
 		{
 
-			return Ok(_categoryServices.GetAllCategories().ToDto());
+			return Ok((await _categoryServices.GetAllCategories()).ToDto());
 		}
 		[HttpGet]
 		[Route("{categoryUid}")]
-		public IActionResult GetCategory(Guid categoryUid)
+		public async Task<IActionResult> GetCategory(Guid categoryUid)
 		{
-			return Ok(_categoryServices.GetCategory(categoryUid).ToDto());
+			return Ok((await _categoryServices.GetCategory(categoryUid)).ToDto());
 		}
 		[HttpPut]
-		public async Task<IActionResult> UpdateCategory(Guid categoryUid, string categoryName)
+		public async Task<IActionResult> UpdateCategory(UpdateCategoryDto request)
 		{
-			await _categoryServices.UpdateCategory(categoryUid, categoryName);
+			await _categoryServices.UpdateCategory(request.CategoryUid, request.CategoryName);
 			return Ok();
 		}
 		[HttpDelete]

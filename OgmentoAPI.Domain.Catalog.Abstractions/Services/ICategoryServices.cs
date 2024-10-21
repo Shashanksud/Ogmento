@@ -4,12 +4,13 @@ namespace OgmentoAPI.Domain.Catalog.Abstractions.Services
 {
 	public interface ICategoryServices
 	{
-		public Task<int?> GetCategoryId(Guid categoryUid);
-		public List<CategoryModel> GetAllCategories();
-		public CategoryModel GetCategory(Guid categoryUid);
+		public Task<int> GetCategoryId(Guid categoryUid);
+		public Task<List<CategoryModel>> GetAllCategories();
+		public Task<CategoryModel> GetCategory(Guid categoryUid);
 		public Task DeleteCategory(Guid categoryUid);
 		public Task UpdateCategory(Guid categoryUid, string categoryName);
 		public Task<List<CategoryModel>> AddCategories(List<CategoryModel> categories);
 		public Task<CategoryModel> AddNewCategory(CategoryModel categoryModel);
+		public Guid GetCategoryUid(int? categoryId);
 	}
 }
