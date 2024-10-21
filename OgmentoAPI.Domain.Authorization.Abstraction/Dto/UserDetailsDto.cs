@@ -10,7 +10,7 @@ namespace OgmentoAPI.Domain.Authorization.Abstractions.Dto
         public string PhoneNumber { get; set; }
         public string City { get; set; }
         public int? ValidityDays { get; set; }
-        public Guid UserUId { get; set; }
+        public Guid UserUid { get; set; }
 
         public Dictionary<Guid, string> SalesCenters{ get; set; }
 

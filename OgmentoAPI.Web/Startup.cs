@@ -19,13 +19,15 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Http;
 using static OgmentoAPI.Middlewares.ExceptionHandler;
 using System.Net;
-using System;
+using Mapster;
+using OgmentoAPI.Domain.Authorization.Abstractions.Dto;
 
 
 namespace OgmentoAPI.Web
 {
 	public class Startup
 	{
+
 		public Startup(IConfiguration configuration)
 		{
 			Configuration = configuration;
@@ -38,6 +40,9 @@ namespace OgmentoAPI.Web
 		{
 
 			services.AddMvc();
+
+			UserMapsterConfig.RegisterUserMappings();
+
 
 			// configure strongly typed settings objects
 			var appSettingsSection = Configuration.GetSection("ServiceConfiguration");
@@ -97,7 +102,7 @@ namespace OgmentoAPI.Web
 				.AddPolicy(PolicyNames.Support, policy => policy.RequireClaim(CustomClaimTypes.Role, UserRoles.Support.ToString()))
 				.AddPolicy(PolicyNames.Marketing, policy => policy.RequireClaim(CustomClaimTypes.Role, UserRoles.MarketingTeam.ToString()));
 			services.AddHttpContextAccessor();
-
+		
 			services.AddCors(options =>
 			{
 #if DEBUG
@@ -117,7 +122,9 @@ namespace OgmentoAPI.Web
 				);
 #endif
 			});
+
 		}
+
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -140,6 +147,7 @@ namespace OgmentoAPI.Web
 			{
 				endpoints.MapControllers();
 			});
+			
 		}
 	}
 }
