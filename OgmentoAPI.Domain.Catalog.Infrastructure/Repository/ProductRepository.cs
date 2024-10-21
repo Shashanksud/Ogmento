@@ -185,7 +185,10 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			{
 				throw new DatabaseOperationException($"Unable to Delete Product {sku}.");
 			}
-			await _pictureService.DeletePictures(pictureIds);
+			if (pictureIds.Count > 0)
+			{
+				await _pictureService.DeletePictures(pictureIds);
+			}
 		}
 
 		public async Task<ProductModel> AddProduct(ProductModel productModel)
