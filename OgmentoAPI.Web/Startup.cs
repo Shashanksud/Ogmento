@@ -19,6 +19,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Http;
 using static OgmentoAPI.Middlewares.ExceptionHandler;
 using System.Net;
+using System;
 
 
 namespace OgmentoAPI.Web
@@ -87,7 +88,7 @@ namespace OgmentoAPI.Web
 						context.NoResult();
 						context.Response.StatusCode = StatusCodes.Status401Unauthorized;
 						context.Response.ContentType = "application/json";
-						return context.Response.WriteAsync(new ExceptionResponse(HttpStatusCode.Unauthorized, context.Exception.Message).ToString());
+						return context.Response.WriteAsync(new ExceptionResponse(nameof(UnauthorizedAccessException),HttpStatusCode.Unauthorized, context.Exception.Message).ToString());
 					}
 				};
 

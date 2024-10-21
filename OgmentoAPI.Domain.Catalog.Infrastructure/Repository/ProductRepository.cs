@@ -34,9 +34,10 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			List<CategoryModel> productCategories = new List<CategoryModel>();
 			foreach (Guid productCategoryUid in productCategoryUids)
 			{
-				productCategories.Add(await _categoryServices.GetCategory(productCategoryUid));
+				productCategories.Add(await _categoryServices.GetCategoryForProduct(productCategoryUid));
 			}
 			CategoryModel category = productCategories.Single(x => x.ParentCategoryId == 1);
+			category.ParentCategoryUid = new Guid();
 			category.SubCategories = productCategories.Where(x=>x.ParentCategoryId==category.CategoryId).ToList();
 			foreach(CategoryModel subCategory in category.SubCategories)
 			{

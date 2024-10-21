@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Build.Construction;
 using Microsoft.Extensions.Logging;
 using OgmentoAPI.Domain.Common.Abstractions;
 using OgmentoAPI.Domain.Common.Abstractions.CustomExceptions;
@@ -15,7 +16,7 @@ namespace OgmentoAPI.Middlewares
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionHandler> _logger;
-        public record ExceptionResponse(HttpStatusCode StatusCode, string Description);
+        public record ExceptionResponse(string exceptionType, HttpStatusCode StatusCode, string Description);
         public ExceptionHandler(RequestDelegate next, ILogger<ExceptionHandler> logger)
         {
             _next = next;
@@ -41,17 +42,17 @@ namespace OgmentoAPI.Middlewares
 
             ExceptionResponse response = exception switch
             {
-				DatabaseOperationException _ => new ExceptionResponse(HttpStatusCode.InternalServerError, exception.Message),
-				EntityNotFoundException _ => new ExceptionResponse(HttpStatusCode.NotFound, exception.Message),
-				InvalidOperationException _ => new ExceptionResponse(HttpStatusCode.BadRequest, exception.Message),
-				InvalidDataException _ => new ExceptionResponse(HttpStatusCode.BadRequest,exception.Message),
-                ApplicationException _ => new ExceptionResponse(HttpStatusCode.BadRequest, "Application exception occurred."),
-                KeyNotFoundException _ => new ExceptionResponse(HttpStatusCode.NotFound, "The request key not found."),
-                UnauthorizedAccessException _ => new ExceptionResponse(HttpStatusCode.Unauthorized, "Unauthorized user."),
-                _ => new ExceptionResponse(HttpStatusCode.InternalServerError, "Internal server error. Please retry later.")
+				DatabaseOperationException _ => new ExceptionResponse(nameof(DatabaseOperationException),HttpStatusCode.InternalServerError, exception.Message),
+				EntityNotFoundException _ => new ExceptionResponse(nameof(EntityNotFoundException), HttpStatusCode.NotFound, exception.Message),
+				InvalidOperationException _ => new ExceptionResponse(nameof(InvalidOperationException), HttpStatusCode.BadRequest, exception.Message),
+				InvalidDataException _ => new ExceptionResponse(nameof(InvalidDataException), HttpStatusCode.BadRequest,exception.Message),
+                ApplicationException _ => new ExceptionResponse(nameof(ApplicationException), HttpStatusCode.BadRequest, "Application exception occurred."),
+                KeyNotFoundException _ => new ExceptionResponse(nameof(KeyNotFoundException), HttpStatusCode.NotFound, exception.Message),
+                UnauthorizedAccessException _ => new ExceptionResponse(nameof(UnauthorizedAccessException), HttpStatusCode.Unauthorized, "Unauthorized user."),
+                _ => new ExceptionResponse("InternalException", HttpStatusCode.InternalServerError, "Internal server error. Please retry later.")
             };
 
-            context.Response.ContentType = "application/problem+json";
+            context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)response.StatusCode;
 			
             await context.Response.WriteAsJsonAsync(response);

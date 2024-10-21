@@ -54,5 +54,9 @@ namespace OgmentoAPI.Domain.Catalog.Services
 		{
 			return _categoryRepository.AddNewCategory(categoryModel);
 		}
+		public async Task<CategoryModel> GetCategoryForProduct(Guid categoryUid)
+		{
+			return await _categoryRepository.GetCategoryForProduct(categoryUid);
+		}
 	}
 }
