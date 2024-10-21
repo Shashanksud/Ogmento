@@ -12,5 +12,6 @@ namespace OgmentoAPI.Domain.Catalog.Abstractions.Services
 		public Task<List<CategoryModel>> AddCategories(List<CategoryModel> categories);
 		public Task<CategoryModel> AddNewCategory(CategoryModel categoryModel);
 		public Guid GetCategoryUid(int? categoryId);
+		public Task<CategoryModel> GetCategoryForProduct(Guid categoryUid);
 	}
 }

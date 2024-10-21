@@ -82,6 +82,21 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			};
 			return categoryModel;
 		}
+		public async Task<CategoryModel> GetCategoryForProduct(Guid categoryUid)
+		{
+			int categoryId = await GetCategoryIdAsync(categoryUid);
+			Category category = _dbContext.Category.Single(x => x.CategoryID == categoryId);
+			CategoryModel categoryModel = new CategoryModel()
+			{
+				CategoryId = category.CategoryID,
+				CategoryName = category.CategoryName,
+				CategoryUid = category.CategoryUid,
+				ParentCategoryId = category.ParentCategoryId,
+				ParentCategoryUid = GetCategoryUid(category.ParentCategoryId),
+				SubCategories = [],
+			};
+			return categoryModel;
+		}
 		private bool IsSafeDelete(int categoryId)
 		{
 			return !_dbContext.ProductCategoryMapping.Any(x => x.CategoryId == categoryId);
@@ -93,7 +108,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			List<int> categoryIds = new List<int> { categoryId};
 			if (!IsSafeDelete(categoryId))
 			{
-				throw new DatabaseOperationException($"Category cannot be deleted as it is mapped with a product");
+				throw new DatabaseOperationException($"Category:{categoryUid} cannot be deleted as it is mapped with a product");
 			}
 			if (CheckSubCategoriesExists(categoryId))
 			{

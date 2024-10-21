@@ -25,7 +25,7 @@ namespace OgmentoAPI.Domain.Common.Infrastructure.Repository
 		}
 		public async Task<List<PictureModel>> GetPictures(List<int> pictureIds)
 		{
-			List<Picture> pictures = _dbContext.Pictures.Where(x=>pictureIds.Contains(x.PictureID)).ToList();
+			List<Picture> pictures = _dbContext.Picture.Where(x=>pictureIds.Contains(x.PictureID)).ToList();
 			return pictures.Select(x => new PictureModel
 			{
 				Id = x.PictureID,
@@ -45,7 +45,7 @@ namespace OgmentoAPI.Domain.Common.Infrastructure.Repository
 				AltAttribute = pictureModel.FileName,
 				TitleAttribute = pictureModel.FileName
 			};
-			EntityEntry<Picture> pictureEntity = _dbContext.Pictures.Add(picture);
+			EntityEntry<Picture> pictureEntity = _dbContext.Picture.Add(picture);
 			await _dbContext.SaveChangesAsync();
 			PictureBinary pictureBinary = new PictureBinary()
 			{
@@ -69,10 +69,10 @@ namespace OgmentoAPI.Domain.Common.Infrastructure.Repository
 				throw new InvalidDataException("hash cannot be null");
 			}
 			int pictureId = await GetPictureId(hash);
-			Picture picture = _dbContext.Pictures.Single(x => x.PictureID == pictureId);
+			Picture picture = _dbContext.Picture.Single(x => x.PictureID == pictureId);
 			PictureBinary pictureBinary = _dbContext.PictureBinary.Single(x => x.PictureId == pictureId);
 			_dbContext.PictureBinary.Remove(pictureBinary);
-			_dbContext.Pictures.Remove(picture);
+			_dbContext.Picture.Remove(picture);
 			int rowsDeleted = await _dbContext.SaveChangesAsync();
 			if (rowsDeleted == 0) {
 				throw new DatabaseOperationException("Unable to delete the pictures.");
@@ -81,7 +81,7 @@ namespace OgmentoAPI.Domain.Common.Infrastructure.Repository
 
 		public async Task DeletePictures(List<int> pictureIds)
 		{
-			int rowsDeleted = await _dbContext.Pictures.Where(x => pictureIds.Contains(x.PictureID)).ExecuteDeleteAsync();
+			int rowsDeleted = await _dbContext.Picture.Where(x => pictureIds.Contains(x.PictureID)).ExecuteDeleteAsync();
 			if (rowsDeleted == 0)
 			{
 				throw new DatabaseOperationException("Unable to delete the pictures.");

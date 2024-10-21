@@ -7,7 +7,7 @@ namespace OgmentoAPI.Domain.Common.Infrastructure
 	{
 		public CommonDBContext(DbContextOptions<CommonDBContext> options) : base(options) { }
 		public DbSet<Country> Countries { get; set; }
-		public DbSet<Picture> Pictures { get; set; }
+		public DbSet<Picture> Picture { get; set; }
 		public DbSet<PictureBinary> PictureBinary { get; set; }
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
