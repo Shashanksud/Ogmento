@@ -98,7 +98,7 @@ namespace OgmentoAPI.Domain.Catalog.Api
 			string fileName = Path.GetFileName(_productSampleCsv);
 
 			return File(fileBytes, "text/csv", fileName);
-
 		}
+
 	}
 }

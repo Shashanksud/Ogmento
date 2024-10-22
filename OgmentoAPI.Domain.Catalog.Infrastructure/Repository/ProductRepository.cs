@@ -166,14 +166,18 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			{
 				throw new EntityNotFoundException($"Product {sku} cannot be found.");
 			}
-			await _dbContext.ProductCategoryMapping.Where(x => x.ProductId == product.ProductID).ExecuteDeleteAsync();
+			int rowsDeleted = await _dbContext.ProductCategoryMapping.Where(x => x.ProductId == product.ProductID).ExecuteDeleteAsync();
+			if (rowsDeleted == 0)
+			{
+				throw new DatabaseOperationException($"Unable to Delete Product {sku} Category Mappings.");
+			}
 			List<int> pictureIds = _dbContext.ProductImageMapping.Where(x => x.ProductId == product.ProductID).Select(x=>x.ImageId).ToList();
 			if (pictureIds.Count != 0)
 			{
 				await _dbContext.ProductImageMapping.Where(x => x.ProductId == product.ProductID).ExecuteDeleteAsync();
 			}
 			_dbContext.Product.Remove(product);
-			int rowsDeleted = await _dbContext.SaveChangesAsync();
+			rowsDeleted = await _dbContext.SaveChangesAsync();
 			if (rowsDeleted == 0)
 			{
 				throw new DatabaseOperationException($"Unable to Delete Product {sku}.");
@@ -249,7 +253,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			foreach (UploadPictureModel picture in pictures) {
 				PictureModel pictureModel = await _pictureService.AddPicture(new PictureModel
 				{
-					FileName = picture.PictureName,
+					FileName = picture.FileName,
 					MimeType = picture.MimeType,
 					BinaryData = Convert.FromBase64String(picture.Base64EncodedData)
 				});

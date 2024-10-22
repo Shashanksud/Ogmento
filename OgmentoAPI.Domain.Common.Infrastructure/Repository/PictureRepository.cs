@@ -4,6 +4,8 @@ using OgmentoAPI.Domain.Common.Abstractions.CustomExceptions;
 using OgmentoAPI.Domain.Common.Abstractions.DataContext;
 using OgmentoAPI.Domain.Common.Abstractions.Models;
 using OgmentoAPI.Domain.Common.Abstractions.Repository;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Security.Cryptography;
 
 
 namespace OgmentoAPI.Domain.Common.Infrastructure.Repository
@@ -52,6 +54,11 @@ namespace OgmentoAPI.Domain.Common.Infrastructure.Repository
 				PictureId = pictureEntity.Entity.PictureID,
 				BinaryData =pictureModel.BinaryData,
 			};
+			using (MD5 md5 = MD5.Create())
+			{
+				byte[] hashBytes = md5.ComputeHash(pictureModel.BinaryData);
+				pictureBinary.Hash = BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
+			}
 			EntityEntry<PictureBinary> pictureBinaryEntity = _dbContext.PictureBinary.Add(pictureBinary);
 			int rowsAdded = await _dbContext.SaveChangesAsync();
 			if (rowsAdded == 0)
@@ -81,7 +88,12 @@ namespace OgmentoAPI.Domain.Common.Infrastructure.Repository
 
 		public async Task DeletePictures(List<int> pictureIds)
 		{
-			int rowsDeleted = await _dbContext.Picture.Where(x => pictureIds.Contains(x.PictureID)).ExecuteDeleteAsync();
+			int rowsDeleted = await _dbContext.PictureBinary.Where(x => pictureIds.Contains(x.PictureId)).ExecuteDeleteAsync();
+			if (rowsDeleted == 0)
+			{
+				throw new DatabaseOperationException("Unable to delete the Picture Binary.");
+			}
+			rowsDeleted = await _dbContext.Picture.Where(x => pictureIds.Contains(x.PictureID)).ExecuteDeleteAsync();
 			if (rowsDeleted == 0)
 			{
 				throw new DatabaseOperationException("Unable to delete the pictures.");
