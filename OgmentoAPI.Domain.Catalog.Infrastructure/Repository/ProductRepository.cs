@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using OgmentoAPI.Domain.Catalog.Abstractions.DataContext;
+using OgmentoAPI.Domain.Catalog.Abstractions.Dto;
 using OgmentoAPI.Domain.Catalog.Abstractions.Models;
 using OgmentoAPI.Domain.Catalog.Abstractions.Repository;
 using OgmentoAPI.Domain.Catalog.Abstractions.Services;
@@ -54,7 +55,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 				ProductId = x.ProductID,
 				ProductName = x.ProductName,
 				SkuCode = x.SkuCode,
-				LoyaltyPoints = x.LoyaltyPoints,
+				LoyaltyPoints = x.LoyaltyPoints ?? 0,
 				Price = x.Price,
 				ExpiryDate = x.ExpiryDate,
 				ProductDescription = x.ProductDescription,
@@ -80,46 +81,31 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 				Price = product.Price,
 				ExpiryDate = product.ExpiryDate,
 				ProductDescription = product.ProductDescription,
-				LoyaltyPoints= product.LoyaltyPoints,
+				LoyaltyPoints= product.LoyaltyPoints ?? 0,
 			};
 			return productModel;
 		}
-		private async Task AddProductCategoryMapping(CategoryModel categoryModel, int productId)
+		private async Task AddProductCategoryMapping(List<int> CategoryIds, int productId)
 		{
-			List<int> categoryIds = new List<int>();
-			int primaryCategoryId = await _categoryServices.GetCategoryId(categoryModel.CategoryUid);
-			categoryIds.Add(primaryCategoryId);
-			foreach(CategoryModel subCategory in categoryModel.SubCategories)
+			List<ProductCategoryMapping> productCategories = CategoryIds.Select(x => new ProductCategoryMapping
 			{
-				int subCategoryId = await _categoryServices.GetCategoryId(subCategory.CategoryUid);
-				categoryIds.Add(subCategoryId);
-				foreach (CategoryModel subSubCategory in subCategory.SubCategories)
-				{
-					int subSubCategoryId = await _categoryServices.GetCategoryId(subSubCategory.CategoryUid);
-					categoryIds.Add(subSubCategoryId);
-				}
-			}
-			foreach( int categoryId in categoryIds)
-			{
-				ProductCategoryMapping productCategory = new ProductCategoryMapping()
-				{
-					CategoryId = categoryId,
-					ProductId = productId,
-				};
-				_dbContext.ProductCategoryMapping.Add(productCategory);
-			}
+				ProductId = productId,
+				CategoryId = x
+			}).ToList();
+			await _dbContext.ProductCategoryMapping.AddRangeAsync(productCategories);
 			int rowsAdded = await _dbContext.SaveChangesAsync();
 			if (rowsAdded == 0)
 			{
-				throw new DatabaseOperationException($"Product Category Mappings not added.");
+				throw new DatabaseOperationException($"Unable to Add the Product Category mapping.");
 			}
+
 		} 
 		private async Task UpdateProductImageMapping(List<PictureModel> pictures, int productId)
 		{
 			foreach (PictureModel picture in pictures) {
 				if (picture.ToBeDeleted)
 				{
-					ProductImageMapping productImage = _dbContext.ProductImageMapping.First(x => x.ImageId == picture.Id);
+					ProductImageMapping productImage = _dbContext.ProductImageMapping.First(x => x.ImageId == picture.PictureId);
 					_dbContext.ProductImageMapping.Remove(productImage);
 					int rowsDeleted = await _dbContext.SaveChangesAsync();
 					if (rowsDeleted == 0)
@@ -134,7 +120,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 					ProductImageMapping productImageMapping = new ProductImageMapping()
 					{
 						ProductId = productId,
-						ImageId = pictureModel.Id
+						ImageId = pictureModel.PictureId
 					};
 					_dbContext.ProductImageMapping.Add(productImageMapping);
 					int rowsAdded = await _dbContext.SaveChangesAsync();
@@ -145,7 +131,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 				}
 			}
 		}
-		public async Task<ProductModel> UpdateProduct(ProductModel productModel)
+		public async Task UpdateProduct(AddProductModel productModel)
 		{
 			Product product = _dbContext.Product.FirstOrDefault(x => x.SkuCode == productModel.SkuCode);
 			if(product == null)
@@ -164,9 +150,13 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 				throw new DatabaseOperationException($"Unable to Update Product {productModel.SkuCode}.");
 			}
 			await _dbContext.ProductCategoryMapping.Where(x => x.ProductId == product.ProductID).ExecuteDeleteAsync();
-			await AddProductCategoryMapping(productModel.Category,product.ProductID);
+			List<int> categoryIds = new List<int>();
+			foreach (Guid categoryGuid in productModel.Categories)
+			{
+				categoryIds.Add(await _categoryServices.GetCategoryId(categoryGuid));
+			}
+			await AddProductCategoryMapping(categoryIds,product.ProductID);
 			await UpdateProductImageMapping(productModel.Images, product.ProductID);
-			return productModel;
 		}
 
 		public async Task DeleteProduct(string sku)
@@ -176,22 +166,29 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			{
 				throw new EntityNotFoundException($"Product {sku} cannot be found.");
 			}
-			await _dbContext.ProductCategoryMapping.Where(x => x.ProductId == product.ProductID).ExecuteDeleteAsync();
+			int rowsDeleted = await _dbContext.ProductCategoryMapping.Where(x => x.ProductId == product.ProductID).ExecuteDeleteAsync();
+			if (rowsDeleted == 0)
+			{
+				throw new DatabaseOperationException($"Unable to Delete Product {sku} Category Mappings.");
+			}
 			List<int> pictureIds = _dbContext.ProductImageMapping.Where(x => x.ProductId == product.ProductID).Select(x=>x.ImageId).ToList();
-			await _dbContext.ProductImageMapping.Where(x => x.ProductId == product.ProductID).ExecuteDeleteAsync();
+			if (pictureIds.Count != 0)
+			{
+				await _dbContext.ProductImageMapping.Where(x => x.ProductId == product.ProductID).ExecuteDeleteAsync();
+			}
 			_dbContext.Product.Remove(product);
-			int rowsDeleted = await _dbContext.SaveChangesAsync();
+			rowsDeleted = await _dbContext.SaveChangesAsync();
 			if (rowsDeleted == 0)
 			{
 				throw new DatabaseOperationException($"Unable to Delete Product {sku}.");
 			}
-			if (pictureIds.Count > 0)
+			if (pictureIds.Count != 0)
 			{
 				await _pictureService.DeletePictures(pictureIds);
 			}
 		}
 
-		public async Task<ProductModel> AddProduct(ProductModel productModel)
+		public async Task AddProduct(AddProductModel productModel)
 		{
 			bool skuExists = _dbContext.Product.Any(x => x.SkuCode == productModel.SkuCode);
 			if (skuExists)
@@ -215,16 +212,67 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 				throw new DatabaseOperationException($"Product {productModel.SkuCode} not Added.");
 			}
 			productModel.ProductId = productEntry.Entity.ProductID;
-			await UpdateProductImageMapping(productModel.Images, productModel.ProductId);
-			await AddProductCategoryMapping(productModel.Category, productModel.ProductId);
-			return productModel;
-		}
-		public async Task<List<ProductModel>> UploadProducts(List<ProductModel> products)
-		{
-			foreach (ProductModel product in products) { 
-				 await AddProduct(product);
+			if (productModel.Images.Count != 0)
+			{
+				await UpdateProductImageMapping(productModel.Images, productModel.ProductId);
 			}
-			return products;
+			if (productModel.Categories.Count!=0)
+			{
+				List<int> categoryIds = new List<int>();
+				foreach(Guid categoryGuid in productModel.Categories)
+				{
+					categoryIds.Add(await _categoryServices.GetCategoryId(categoryGuid));
+				}
+				await AddProductCategoryMapping(categoryIds, productModel.ProductId);
+			}
+			
+		}
+		public async Task UploadProducts(List<UploadProductModel> products)
+		{
+			List<AddProductModel> productModels = products.Select(x => new AddProductModel {
+				ProductName = x.ProductName,
+				ProductDescription = x.ProductDescription,
+				Price = x.Price,
+				Weight = x.Weight,
+				ExpiryDate = x.ExpiryDate,
+				LoyaltyPoints = x.LoyaltyPoints,
+				SkuCode = x.SkuCode,
+			}).ToList();
+			foreach (AddProductModel productModel in productModels) {
+				await AddProduct(productModel);
+			}
+			foreach (UploadProductModel product in products)
+			{
+				int productId = _dbContext.Product.Single(x => x.SkuCode == product.SkuCode).ProductID;
+				await AddProductCategoryMapping(product.CategoryIds, productId);
+			}
+		}
+
+		public async Task UploadPictures(List<UploadPictureModel> pictures)
+		{
+			foreach (UploadPictureModel picture in pictures) {
+				PictureModel pictureModel = await _pictureService.AddPicture(new PictureModel
+				{
+					FileName = picture.FileName,
+					MimeType = picture.MimeType,
+					BinaryData = Convert.FromBase64String(picture.Base64EncodedData)
+				});
+				int? productId = _dbContext.Product.FirstOrDefault(x => x.SkuCode == picture.SkuCode).ProductID;
+				if (productId == null) {
+					throw new EntityNotFoundException($"Product {picture.SkuCode} doesn't exist");
+				}
+				_dbContext.ProductImageMapping.Add(new ProductImageMapping
+				{
+					ProductId = productId.Value,
+					ImageId = pictureModel.PictureId,
+				});
+				int rowsAdded = await _dbContext.SaveChangesAsync();
+				if (rowsAdded == 0)
+				{
+					throw new DatabaseOperationException($"Unable to add {pictureModel.FileName}.");
+				}
+			}
+			
 		}
 	}
 }

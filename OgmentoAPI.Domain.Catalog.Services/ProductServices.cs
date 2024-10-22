@@ -1,7 +1,12 @@
-﻿using OgmentoAPI.Domain.Catalog.Abstractions.Models;
+﻿using CsvHelper;
+using CsvHelper.Configuration;
+using Microsoft.AspNetCore.Http;
+using OgmentoAPI.Domain.Catalog.Abstractions.Dto;
+using OgmentoAPI.Domain.Catalog.Abstractions.Models;
 using OgmentoAPI.Domain.Catalog.Abstractions.Repository;
 using OgmentoAPI.Domain.Catalog.Abstractions.Services;
-using System.Collections.Generic;
+using OgmentoAPI.Domain.Catalog.Services.Shared;
+using System.Globalization;
 
 namespace OgmentoAPI.Domain.Catalog.Services
 {
@@ -12,34 +17,38 @@ namespace OgmentoAPI.Domain.Catalog.Services
 		{
 			_productRepository = productRepository;
 		}
-
-		public async Task<ProductModel> AddProduct(ProductModel product)
+		public async Task<ProductModel> AddProduct(AddProductModel product)
 		{
-			return await _productRepository.AddProduct(product);
+			await _productRepository.AddProduct(product);
+			return (await _productRepository.GetProduct(product.SkuCode));
 		}
-
 		public async Task DeleteProduct(string sku)
 		{
 			await _productRepository.DeleteProduct(sku);
 		}
-
 		public async Task<List<ProductModel>> GetAllProducts()
 		{
 			return await _productRepository.GetAllProducts();
 		}
-
 		public async Task<ProductModel> GetProduct(string sku)
 		{
 			return await _productRepository.GetProduct(sku);
 		}
-
-		public async Task<ProductModel> UpdateProduct(ProductModel product)
+		public async Task UpdateProduct(AddProductModel product)
 		{
-			return await _productRepository.UpdateProduct(product);
+			await _productRepository.UpdateProduct(product);
 		}
-		public async Task<List<ProductModel>> UploadProducts(List<ProductModel> products)
+
+		
+
+		public async Task UploadPictures(IFormFile csvFile)
 		{
-			return await _productRepository.UploadProducts(products);
+			await CatalogHelper.UploadCsvFile<UploadPictureModel, UploadPictureModelMap>(csvFile, _productRepository.UploadPictures);
+		}
+
+		public async Task UploadProducts(IFormFile csvFile)
+		{
+			await CatalogHelper.UploadCsvFile<UploadProductModel, UploadProductModelMap>(csvFile, _productRepository.UploadProducts);
 		}
 	}
 }

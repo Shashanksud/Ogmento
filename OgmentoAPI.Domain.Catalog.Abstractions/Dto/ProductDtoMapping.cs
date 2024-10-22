@@ -14,7 +14,7 @@ namespace OgmentoAPI.Domain.Catalog.Abstractions.Dto
 				Price = product.Price,
 				Weight = product.Weight,
 				LoyaltyPoints = product.LoyaltyPoints,
-				ProductExpiry = product.ExpiryDate,
+				ExpiryDate = product.ExpiryDate,
 				SkuCode = product.SkuCode,
 				Category = product.Category.ToDto() ,
 				Images = product.Images?.Select(x=>x.ToDto()).ToList() ?? [],
@@ -29,7 +29,7 @@ namespace OgmentoAPI.Domain.Catalog.Abstractions.Dto
 				Price = product.Price,
 				Weight = product.Weight,
 				LoyaltyPoints = product.LoyaltyPoints,
-				ExpiryDate = product.ProductExpiry,
+				ExpiryDate = product.ExpiryDate,
 				SkuCode = product.SkuCode,
 				Category = product.Category.ToModel(),
 				Images = product.Images?.Select(x => x.ToModel()).ToList() ?? [],
@@ -42,6 +42,19 @@ namespace OgmentoAPI.Domain.Catalog.Abstractions.Dto
 		public static List<ProductModel> ToModel(this List<ProductDto> products)
 		{
 			return products.Select(x => x.ToModel()).ToList();
+		}
+		public static AddProductModel ToModel(this AddProductDto product)
+		{
+			return new AddProductModel(){
+				SkuCode = product.SkuCode,
+				ProductName = product.ProductName,
+				ProductDescription = product.ProductDescription,
+				Price = product.Price,
+				LoyaltyPoints = product.LoyaltyPoints,
+				Weight = product.Weight,
+				Images = product.Images?.Select(x => x.ToModel()).ToList() ?? [],
+				Categories = product.Categories
+			};
 		}
 	}
 }

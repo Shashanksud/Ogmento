@@ -68,5 +68,11 @@
     <ProjectReference Include="..\OgmentoAPI.Domain.Common.Services\OgmentoAPI.Domain.Common.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Resources\SampleUploadProduct.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 
 </Project>
