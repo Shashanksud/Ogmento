@@ -28,7 +28,7 @@ namespace OgmentoAPI.Domain.Common.Infrastructure.Repository
 			List<Picture> pictures = _dbContext.Picture.Where(x=>pictureIds.Contains(x.PictureID)).ToList();
 			return pictures.Select(x => new PictureModel
 			{
-				Id = x.PictureID,
+				PictureId = x.PictureID,
 				FileName = x.FileName,
 				MimeType = x.MimeType,
 				Hash = _dbContext.PictureBinary.Single(b => b.PictureId==x.PictureID).Hash,
@@ -59,7 +59,7 @@ namespace OgmentoAPI.Domain.Common.Infrastructure.Repository
 				throw new DatabaseOperationException("Unable to add pictures.");
 			}
 			pictureModel.Hash = pictureBinaryEntity.Entity.Hash;
-			pictureModel.Id = pictureEntity.Entity.PictureID;
+			pictureModel.PictureId = pictureEntity.Entity.PictureID;
 			return pictureModel;
 		}
 		public async Task DeletePicture(string? hash)

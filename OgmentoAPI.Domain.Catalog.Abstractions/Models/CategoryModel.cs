@@ -1,7 +1,4 @@
-﻿
-using OgmentoAPI.Domain.Catalog.Abstractions.DataContext;
-
-namespace OgmentoAPI.Domain.Catalog.Abstractions.Models
+﻿namespace OgmentoAPI.Domain.Catalog.Abstractions.Models
 {
 	public class CategoryModel
 	{
@@ -11,6 +8,5 @@ namespace OgmentoAPI.Domain.Catalog.Abstractions.Models
 		public int? ParentCategoryId { get; set; }
 		public Guid ParentCategoryUid { get; set; }
 		public List<CategoryModel> SubCategories { get; set; }
-		
 	}
 }

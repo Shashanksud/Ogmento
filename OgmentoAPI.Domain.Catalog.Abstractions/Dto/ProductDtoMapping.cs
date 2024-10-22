@@ -43,5 +43,18 @@ namespace OgmentoAPI.Domain.Catalog.Abstractions.Dto
 		{
 			return products.Select(x => x.ToModel()).ToList();
 		}
+		public static AddProductModel ToModel(this AddProductDto product)
+		{
+			return new AddProductModel(){
+				SkuCode = product.SkuCode,
+				ProductName = product.ProductName,
+				ProductDescription = product.ProductDescription,
+				Price = product.Price,
+				LoyaltyPoints = product.LoyaltyPoints,
+				Weight = product.Weight,
+				Images = product.Images?.Select(x => x.ToModel()).ToList() ?? [],
+				Categories = product.Categories
+			};
+		}
 	}
 }

@@ -1,0 +1,4 @@
+SkuCode;ProductName;ProductDescription;Price;LoyaltyPoints;Weight;ExpiryDate;CategoryIds
+SKU006;Sample Product 1;This is a sample product description 1.;100;10;500;2024-12-31;2,6
+SKU007;Sample Product 2;This is a sample product description 2.;200;0;1000;2025-06-30;4,11,20
+
