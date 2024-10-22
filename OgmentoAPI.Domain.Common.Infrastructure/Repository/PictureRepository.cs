@@ -4,7 +4,6 @@ using OgmentoAPI.Domain.Common.Abstractions.CustomExceptions;
 using OgmentoAPI.Domain.Common.Abstractions.DataContext;
 using OgmentoAPI.Domain.Common.Abstractions.Models;
 using OgmentoAPI.Domain.Common.Abstractions.Repository;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Security.Cryptography;
 
 

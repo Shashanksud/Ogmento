@@ -12,14 +12,13 @@ namespace OgmentoAPI.Domain.Catalog.Api
 {
 	[ApiController]
 	[Route("api/[controller]")]
-	[Authorize]
 	public class ProductController:ControllerBase
 	{
 		private readonly IProductServices _productServices;
-		private readonly string _productSampleCsv;
+		private readonly string sampleCsvRelativePath;
 		public ProductController(IProductServices productServices, IOptions<FilePaths> filePaths)
 		{
-			_productSampleCsv = filePaths.Value.ProductSampleCsv;
+			sampleCsvRelativePath = filePaths.Value.ProductSampleCsv;
 			_productServices = productServices;
 		}
 		[HttpGet]
@@ -89,13 +88,14 @@ namespace OgmentoAPI.Domain.Catalog.Api
 		[Route("SampleCsv")]
 		public async Task<IActionResult> DownloadCsvProductSample()
 		{
-			if (!System.IO.File.Exists(_productSampleCsv))
+			string sampleCsvPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, sampleCsvRelativePath);
+			if (!System.IO.File.Exists(sampleCsvPath))
 			{
 				return NotFound("Sample Csv File not found");
 			}
 
-			byte[] fileBytes = await System.IO.File.ReadAllBytesAsync(_productSampleCsv);
-			string fileName = Path.GetFileName(_productSampleCsv);
+			byte[] fileBytes = await System.IO.File.ReadAllBytesAsync(sampleCsvPath);
+			string fileName = Path.GetFileName(sampleCsvPath);
 
 			return File(fileBytes, "text/csv", fileName);
 		}

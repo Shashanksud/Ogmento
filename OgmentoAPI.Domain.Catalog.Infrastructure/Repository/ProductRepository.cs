@@ -55,7 +55,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 				ProductId = x.ProductID,
 				ProductName = x.ProductName,
 				SkuCode = x.SkuCode,
-				LoyaltyPoints = x.LoyaltyPoints,
+				LoyaltyPoints = x.LoyaltyPoints ?? 0,
 				Price = x.Price,
 				ExpiryDate = x.ExpiryDate,
 				ProductDescription = x.ProductDescription,
@@ -81,7 +81,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 				Price = product.Price,
 				ExpiryDate = product.ExpiryDate,
 				ProductDescription = product.ProductDescription,
-				LoyaltyPoints= product.LoyaltyPoints,
+				LoyaltyPoints= product.LoyaltyPoints ?? 0,
 			};
 			return productModel;
 		}
@@ -141,7 +141,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			product.ProductName = productModel.ProductName;
 			product.ProductDescription = productModel.ProductDescription;
 			product.Price = productModel.Price;
-			product.ExpiryDate = productModel.ProductExpiry;
+			product.ExpiryDate = productModel.ExpiryDate;
 			product.LoyaltyPoints = productModel.LoyaltyPoints;
 			_dbContext.Product.Update(product);
 			int productRowsUpdated = await _dbContext.SaveChangesAsync();
@@ -202,7 +202,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 				ProductDescription = productModel.ProductDescription,
 				ProductName = productModel.ProductName,
 				LoyaltyPoints = productModel.LoyaltyPoints,
-				ExpiryDate = productModel.ProductExpiry,
+				ExpiryDate = productModel.ExpiryDate,
 				Weight = productModel.Weight,
 			};
 			EntityEntry<Product> productEntry = _dbContext.Product.Add(product);
@@ -234,7 +234,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 				ProductDescription = x.ProductDescription,
 				Price = x.Price,
 				Weight = x.Weight,
-				ProductExpiry = x.ExpiryDate,
+				ExpiryDate = x.ExpiryDate,
 				LoyaltyPoints = x.LoyaltyPoints,
 				SkuCode = x.SkuCode,
 			}).ToList();

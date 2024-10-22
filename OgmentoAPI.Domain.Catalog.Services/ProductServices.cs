@@ -5,6 +5,7 @@ using OgmentoAPI.Domain.Catalog.Abstractions.Dto;
 using OgmentoAPI.Domain.Catalog.Abstractions.Models;
 using OgmentoAPI.Domain.Catalog.Abstractions.Repository;
 using OgmentoAPI.Domain.Catalog.Abstractions.Services;
+using OgmentoAPI.Domain.Catalog.Services.Shared;
 using System.Globalization;
 
 namespace OgmentoAPI.Domain.Catalog.Services
@@ -38,34 +39,16 @@ namespace OgmentoAPI.Domain.Catalog.Services
 			await _productRepository.UpdateProduct(product);
 		}
 
+		
+
 		public async Task UploadPictures(IFormFile csvFile)
 		{
-			CsvConfiguration csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
-			{
-				Delimiter = ","
-			};
-			using (StreamReader csvStreamReader = new StreamReader(csvFile.OpenReadStream()))
-			using (CsvReader csvReader = new CsvReader(csvStreamReader, csvConfig))
-			{
-				csvReader.Context.RegisterClassMap<UploadPictureModelMap>();
-				List<UploadPictureModel> pictures = csvReader.GetRecords<UploadPictureModel>().ToList();
-				await _productRepository.UploadPictures(pictures);
-			}
+			await CatalogHelper.UploadCsvFile<UploadPictureModel, UploadPictureModelMap>(csvFile, _productRepository.UploadPictures);
 		}
 
 		public async Task UploadProducts(IFormFile csvFile)
 		{
-			CsvConfiguration csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
-			{
-				Delimiter = ";"
-			};
-			using (StreamReader csvStreamReader = new StreamReader(csvFile.OpenReadStream()))
-			using (CsvReader csvReader = new CsvReader(csvStreamReader, csvConfig))
-			{
-				csvReader.Context.RegisterClassMap<UploadProductModelMap>();
-				List<UploadProductModel> products = csvReader.GetRecords<UploadProductModel>().ToList();
-				await _productRepository.UploadProducts(products); 
-			}
+			await CatalogHelper.UploadCsvFile<UploadProductModel, UploadProductModelMap>(csvFile, _productRepository.UploadProducts);
 		}
 	}
 }
