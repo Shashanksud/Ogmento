@@ -1,4 +1,5 @@
 ﻿using OgmentoAPI.Domain.Client.Abstractions.DataContext;
+using OgmentoAPI.Domain.Client.Abstractions.Dto;
 using OgmentoAPI.Domain.Client.Abstractions.Models;
 using OgmentoAPI.Domain.Client.Abstractions.Repositories;
 using OgmentoAPI.Domain.Client.Abstractions.Service;
@@ -51,11 +52,11 @@ namespace OgmentoAPI.Domain.Client.Services
 
             }
         }
-        public int? AddSalesCenter(SalesCenterModel salesCenterModel)
+        public int? AddSalesCenter(SalesCentersDto salesCenterDto)
         {
             try
             {
-                return _salesCenterRepository.AddSalesCenter(salesCenterModel);
+                return _salesCenterRepository.AddSalesCenter(salesCenterDto);
             }
             catch (Exception ex)
             {

@@ -1,4 +1,5 @@
 ﻿using OgmentoAPI.Domain.Client.Abstractions.DataContext;
+using OgmentoAPI.Domain.Client.Abstractions.Dto;
 using OgmentoAPI.Domain.Client.Abstractions.Models;
 
 namespace OgmentoAPI.Domain.Client.Abstractions.Service
@@ -15,7 +16,8 @@ namespace OgmentoAPI.Domain.Client.Abstractions.Service
 
         SalesCenter GetSalesCenterDetail(Guid salesCenterUid);
 
-        int? AddSalesCenter(SalesCenterModel salesCenterModel);
+		int? AddSalesCenter(SalesCentersDto salesCenterDto);
 
-    }
+
+	}
 }

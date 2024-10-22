@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OgmentoAPI.Domain.Client.Abstractions.DataContext;
+using OgmentoAPI.Domain.Client.Abstractions.Dto;
 using OgmentoAPI.Domain.Client.Abstractions.Models;
 using OgmentoAPI.Domain.Client.Abstractions.Repositories;
 using System.Linq.Expressions;
@@ -88,19 +89,19 @@ namespace OgmentoAPI.Domain.Client.Infrastructure.Repository
 
         }
 
-        public int? AddSalesCenter(SalesCenterModel salesCenterModel)
+        public int? AddSalesCenter(SalesCentersDto salesCenterDto)
         {
-            bool isExists = _context.SalesCenter.Any(x => x.SalesCenterName == salesCenterModel.SalesCenterName
-      && x.City == salesCenterModel.City
-      && x.CountryId == salesCenterModel.CountryId);
+            bool isExists = _context.SalesCenter.Any(x => x.SalesCenterName == salesCenterDto.SalesCenterName
+      && x.City == salesCenterDto.City
+      && x.CountryId == salesCenterDto.CountryId);
             if (!isExists)
             {
                 SalesCenter salesCenter = new SalesCenter()
                 {
                     SalesCenterUid = Guid.NewGuid(),
-                    SalesCenterName = salesCenterModel.SalesCenterName,
-                    City = salesCenterModel.City,
-                    CountryId = salesCenterModel.CountryId,
+                    SalesCenterName = salesCenterDto.SalesCenterName,
+                    City = salesCenterDto.City,
+                    CountryId = salesCenterDto.CountryId,
                 };
                 _context.SalesCenter.Add(salesCenter);
                 return _context.SaveChanges();
