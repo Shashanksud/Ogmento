@@ -1,8 +1,11 @@
-﻿using OgmentoAPI.Domain.Common.Abstractions.Models;
+﻿
+
+using OgmentoAPI.Domain.Common.Abstractions.Dto;
+using OgmentoAPI.Domain.Common.Abstractions.Models;
 
 namespace OgmentoAPI.Domain.Catalog.Abstractions.Models
 {
-	public class ProductModel
+	public class AddProductModel
 	{
 		public int ProductId { get; set; }
 		public string SkuCode { get; set; }
@@ -11,8 +14,8 @@ namespace OgmentoAPI.Domain.Catalog.Abstractions.Models
 		public int Price { get; set; }
 		public int Weight { get; set; }
 		public int? LoyaltyPoints { get; set; }
-		public DateOnly ExpiryDate { get; set; }
+		public DateOnly ProductExpiry { get; set; }
 		public List<PictureModel> Images { get; set; }
-		public CategoryModel Category { get; set; }
+		public List<Guid> Categories { get; set; }
 	}
 }

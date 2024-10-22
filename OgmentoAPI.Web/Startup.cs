@@ -42,13 +42,12 @@ namespace OgmentoAPI.Web
 			// configure strongly typed settings objects
 			var appSettingsSection = Configuration.GetSection("ServiceConfiguration");
 			services.Configure<ServiceConfiguration>(appSettingsSection);
-
+			services.Configure<FilePaths>(Configuration.GetSection("FilePaths"));
 			string dbConnectionString = Configuration["ConnectionString:DefaultConnection"];
 			services.AddAuth(dbConnectionString)
 					.AddClient(dbConnectionString)
 					.AddCommon(dbConnectionString)
 					.AddCatalog(dbConnectionString);
-
 
 			// configure jwt authentication
 			var serviceConfiguration = appSettingsSection.Get<ServiceConfiguration>();

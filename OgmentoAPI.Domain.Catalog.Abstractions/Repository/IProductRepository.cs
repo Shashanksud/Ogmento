@@ -8,9 +8,10 @@ namespace OgmentoAPI.Domain.Catalog.Abstractions.Repository
 		public Task<List<ProductModel>> GetAllProducts();
 		public Task<List<PictureModel>> GetImages(int productId);
 		public Task<ProductModel> GetProduct(string sku);
-		public Task<ProductModel> UpdateProduct(ProductModel productModel);
+		public Task UpdateProduct(AddProductModel productModel);
 		public Task DeleteProduct(string sku);
-		public Task<ProductModel> AddProduct(ProductModel productModel);
-		public Task<List<ProductModel>> UploadProducts(List<ProductModel> products);
+		public Task AddProduct(AddProductModel productModel);
+		public Task UploadProducts(List<UploadProductModel> products);
+		public Task UploadPictures(List<UploadPictureModel> pictures);
 	}
 }

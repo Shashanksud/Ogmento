@@ -1,4 +1,6 @@
-﻿using OgmentoAPI.Domain.Catalog.Abstractions.Models;
+﻿using Microsoft.AspNetCore.Http;
+using OgmentoAPI.Domain.Catalog.Abstractions.Models;
+using OgmentoAPI.Domain.Common.Abstractions.Models;
 
 namespace OgmentoAPI.Domain.Catalog.Abstractions.Services
 {
@@ -6,9 +8,10 @@ namespace OgmentoAPI.Domain.Catalog.Abstractions.Services
 	{
 		public Task<List<ProductModel>> GetAllProducts();
 		public Task<ProductModel> GetProduct(string sku);
-		public Task<ProductModel> UpdateProduct(ProductModel product);
+		public Task UpdateProduct(AddProductModel product);
 		public Task DeleteProduct(string sku);
-		public Task<ProductModel> AddProduct(ProductModel product);
-		public Task<List<ProductModel>> UploadProducts(List<ProductModel> products);
+		public Task<ProductModel> AddProduct(AddProductModel product);
+		public Task UploadProducts(IFormFile csvFile);
+		public Task UploadPictures(IFormFile csvFile);
 	}
 }
