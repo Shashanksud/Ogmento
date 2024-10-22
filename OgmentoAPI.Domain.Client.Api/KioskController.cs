@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OgmentoAPI.Domain.Authorization.Abstractions.Dto;
+using OgmentoAPI.Domain.Authorization.Abstractions.Models;
 using OgmentoAPI.Domain.Client.Abstractions.Dto;
+using OgmentoAPI.Domain.Client.Abstractions.Models;
 using OgmentoAPI.Domain.Client.Abstractions.Service;
 using System;
 using System.Collections.Generic;
@@ -23,16 +27,17 @@ namespace OgmentoAPI.Domain.Client.Api
             _kioskService = kioskService;
         }
 
-		
-        [Authorize]
-        [HttpGet]
-        [Route("GetKioskDetails")]
-        public IActionResult GetKioskDetails()
-        {
-            List<KioskDto> response = _kioskService.GetKioskDetails().ToDto();
-            return Ok(response);
-        }
-        [Authorize]
+		[Authorize]
+		[HttpGet]
+		[Route("GetKioskDetails")]
+		public IActionResult GetKioskDetails()
+		{
+			List<KioskModel> result = _kioskService.GetKioskDetails();
+			List<KioskDto> response = result.Adapt<List<KioskDto>>();
+			return Ok(response);
+		}
+
+		[Authorize]
         [HttpPut]
         [Route("UpdateKioskDetails/{kioskName}/{salesCenterUid}")]
         public IActionResult UpdateKioskDetails(string kioskName, Guid salesCenterUid)
@@ -42,14 +47,15 @@ namespace OgmentoAPI.Domain.Client.Api
             return Ok(name);
         }
 
-        [Route("delete/{kioskName}")]
-        [HttpDelete]
-        public IActionResult DeleteKiosk(string kioskName)
-        {
-            bool response = _kioskService.DeleteKioskByName(kioskName);
-            return Ok(response);
-        }
-    }
+		[HttpDelete]
+		[Route("delete/{kioskName}")]
+		public IActionResult DeleteKiosk(string kioskName)
+		{
+			bool response = _kioskService.DeleteKioskByName(kioskName);
+			return Ok(response);
+		}
+	}
 }
+
 
 

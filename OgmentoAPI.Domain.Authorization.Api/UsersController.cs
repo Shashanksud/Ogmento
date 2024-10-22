@@ -49,7 +49,7 @@ namespace OgmentoAPI.Domain.Authorization.Api
 		public IActionResult GetUserDetails()
 		{
 			List<UserModel> result = _userService.GetUserDetails();
-			List<UserDetailsDto> userDetailsDtos = UserMapper.MapToDto(result);
+			List<UserDetailsDto> userDetailsDtos = UserMapsterConfig.MapToDto(result);
 			return Ok(userDetailsDtos);
 		}
 

@@ -21,6 +21,9 @@ using static OgmentoAPI.Middlewares.ExceptionHandler;
 using System.Net;
 using Mapster;
 using OgmentoAPI.Domain.Authorization.Abstractions.Dto;
+using OgmentoAPI.Domain.Client.Abstractions.Dto;
+using System;
+using OgmentoAPI.MapperConfig;
 
 
 namespace OgmentoAPI.Web
@@ -40,12 +43,10 @@ namespace OgmentoAPI.Web
 		{
 
 			services.AddMvc();
+			MappingConfiguration.ConfigureMappings();
 
-			UserMapsterConfig.RegisterUserMappings();
-
-
-			// configure strongly typed settings objects
-			var appSettingsSection = Configuration.GetSection("ServiceConfiguration");
+					   // configure strongly typed settings objects
+					   var appSettingsSection = Configuration.GetSection("ServiceConfiguration");
 			services.Configure<ServiceConfiguration>(appSettingsSection);
 			services.Configure<FilePaths>(Configuration.GetSection("FilePaths"));
 			string dbConnectionString = Configuration["ConnectionString:DefaultConnection"];

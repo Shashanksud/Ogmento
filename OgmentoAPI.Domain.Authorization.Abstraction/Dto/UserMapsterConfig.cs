@@ -10,12 +10,6 @@ namespace OgmentoAPI.Domain.Authorization.Abstractions.Dto
 			TypeAdapterConfig<UserModel, UserDetailsDto>
 				.NewConfig()
 				.Map(dest => dest.EmailId, src => src.Email);
-			//.Map(dest => dest.UserName, src => src.UserName)
-			//.Map(dest => dest.UserRole, src => src.UserRole)
-			//.Map(dest => dest.City, src => src.City)
-			//.Map(dest => dest.PhoneNumber, src => src.PhoneNumber)
-			//.Map(dest => dest.ValidityDays, src => src.ValidityDays)
-			//.Map(dest => dest.SalesCenters, src => src.SalesCenters);
 
 			TypeAdapterConfig<UserDetailsDto, UserModel>
 				.NewConfig()
