@@ -131,7 +131,7 @@ namespace OgmentoAPI.Domain.Catalog.Infrastructure.Repository
 			{
 				CategoryName = categoryModel.CategoryName,
 				ParentCategoryId = categoryModel.ParentCategoryId,
-				CategoryUid = new Guid()
+				CategoryUid = Guid.NewGuid()
 			};
 			EntityEntry<Category> entity = _dbContext.Category.Add(category);
 			await _dbContext.SaveChangesAsync();

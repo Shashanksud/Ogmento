@@ -23,7 +23,7 @@ namespace OgmentoAPI.Domain.Client.Api
             _kioskService = kioskService;
         }
 
-
+		
         [Authorize]
         [HttpGet]
         [Route("GetKioskDetails")]

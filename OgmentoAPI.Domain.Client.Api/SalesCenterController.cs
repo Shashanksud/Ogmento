@@ -18,6 +18,7 @@ namespace OgmentoAPI.Domain.Client.Api
         }
 
         [HttpGet]
+
         public IActionResult GetAllSalesCenters()
         {
             List<SalesCentersDto> response = _salesCenterService.GetAllSalesCenters().ToDto();
@@ -35,9 +36,9 @@ namespace OgmentoAPI.Domain.Client.Api
 
         [HttpPost]
       [Route("AddSalesCenter")]
-        public IActionResult AddSalesCenter(SalesCenterModel salesCenterModel)
+        public IActionResult AddSalesCenter(SalesCentersDto salesCenterDto)
         {
-            var result = _salesCenterService.AddSalesCenter(salesCenterModel);
+            var result = _salesCenterService.AddSalesCenter(salesCenterDto);
             if (result.HasValue)
             {
                 return Ok(result);
