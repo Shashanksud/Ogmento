@@ -1,12 +1,7 @@
 ﻿using OgmentoAPI.Domain.Client.Abstractions.DataContext;
-using OgmentoAPI.Domain.Client.Abstractions.Dto;
 using OgmentoAPI.Domain.Client.Abstractions.Models;
 using OgmentoAPI.Domain.Client.Abstractions.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using OgmentoAPI.Domain.Common.Abstractions.CustomExceptions;
 
 namespace OgmentoAPI.Domain.Client.Infrastructure.Repository
 {
@@ -38,29 +33,35 @@ namespace OgmentoAPI.Domain.Client.Infrastructure.Repository
 
 		}
 
-		public int? UpdateKioskDetails(string kioskName, int salesCenterId)
+		public async Task UpdateKioskDetails(string kioskName, int salesCenterId)
 		{
-			Kiosk kiosk = _context.Kiosk.FirstOrDefault(x => x.KioskName == kioskName);
-			kiosk.SalesCenterId = salesCenterId;
-
-			_context.Update(kiosk);
-			return _context.SaveChanges();
-
-		}
-		public bool DeleteKioskByName(string kioskName)
-		{
-			int noOfRowsDeleted = 0;
 			Kiosk? kiosk = _context.Kiosk.FirstOrDefault(x => x.KioskName == kioskName);
 			if (kiosk == null)
 			{
-				_context.Kiosk.Remove(kiosk);
-				noOfRowsDeleted = _context.SaveChanges();
+				throw new EntityNotFoundException($"{kioskName} doesn't exist.");
 			}
-			if (noOfRowsDeleted > 0)
+			kiosk.SalesCenterId = salesCenterId;
+			_context.Update(kiosk);
+			int rowsUpdated = await _context.SaveChangesAsync();
+			if (rowsUpdated == 0)
 			{
-				return true;
+				throw new DatabaseOperationException($"Unable to delete Kiosk {kioskName}");
 			}
-			return false;
+
+		}
+		public async Task DeleteKioskByName(string kioskName)
+		{
+			Kiosk? kiosk = _context.Kiosk.FirstOrDefault(x => x.KioskName == kioskName);
+			if (kiosk == null)
+			{
+				throw new EntityNotFoundException($"{kioskName} doesn't exist.");
+			}
+			_context.Kiosk.Remove(kiosk);
+			int rowsDeleted = await _context.SaveChangesAsync();
+			if (rowsDeleted == 0)
+			{
+				throw new DatabaseOperationException($"Unable to delete Kiosk {kioskName}");
+			}
 		}
 
 		public List<KioskModel> GetKiosk(List<Kiosk> kiosk)
@@ -77,6 +78,27 @@ namespace OgmentoAPI.Domain.Client.Infrastructure.Repository
 			}).ToList();
 			return kioskModels;
 		}
-
+		public async Task AddKiosk(KioskModel kioskModel)
+		{
+			bool isExists = _context.Kiosk.Any(x => x.KioskName == kioskModel.KioskName
+	  && x.SalesCenterId == kioskModel.SalesCenterId);
+			if (isExists)
+			{
+				throw new InvalidDataException($"Kiosk Already Exists with name {kioskModel.KioskName}.");
+			}
+			Kiosk kiosk = new Kiosk()
+			{
+				KioskName = kioskModel.KioskName,
+				SalesCenterId = kioskModel.SalesCenterId,
+				IsActive = kioskModel.IsActive,
+				IsDeleted = kioskModel.IsDeleted,
+			};
+			_context.Kiosk.Add(kiosk);
+			int rowsAdded =await _context.SaveChangesAsync();
+			if (rowsAdded == 0)
+			{
+				throw new DatabaseOperationException("Unable to add Kiosk.");
+			}
+		}
 	}
 }

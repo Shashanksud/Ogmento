@@ -90,18 +90,13 @@ namespace OgmentoAPI.Domain.Authorization.Services
             }
         }
 
-        public int? AddUser(UserModel user)
+        public void AddUser(UserModel user)
         {
             try
             {
-                int? userId = _context.AddUser(user);
+                int userId = _context.AddUser(user);
                 List<Guid> guidList = new List<Guid>(user.SalesCenters.Keys);
-                if (userId.HasValue)
-                {
-                    _salesCenterService.UpdateSalesCenters(userId.Value, guidList);
-
-                }
-                return userId;
+				_salesCenterService.UpdateSalesCenters(userId, guidList);
             }
             catch (Exception ex)
             {
