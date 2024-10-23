@@ -19,13 +19,18 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Http;
 using static OgmentoAPI.Middlewares.ExceptionHandler;
 using System.Net;
+using Mapster;
+using OgmentoAPI.Domain.Authorization.Abstractions.Dto;
+using OgmentoAPI.Domain.Client.Abstractions.Dto;
 using System;
+using OgmentoAPI.MapperConfig;
 
 
 namespace OgmentoAPI.Web
 {
 	public class Startup
 	{
+
 		public Startup(IConfiguration configuration)
 		{
 			Configuration = configuration;
@@ -38,9 +43,10 @@ namespace OgmentoAPI.Web
 		{
 
 			services.AddMvc();
+			MappingConfiguration.ConfigureMappings();
 
-			// configure strongly typed settings objects
-			var appSettingsSection = Configuration.GetSection("ServiceConfiguration");
+					   // configure strongly typed settings objects
+					   var appSettingsSection = Configuration.GetSection("ServiceConfiguration");
 			services.Configure<ServiceConfiguration>(appSettingsSection);
 			services.Configure<FilePaths>(Configuration.GetSection("FilePaths"));
 			string dbConnectionString = Configuration["ConnectionString:DefaultConnection"];
@@ -97,7 +103,7 @@ namespace OgmentoAPI.Web
 				.AddPolicy(PolicyNames.Support, policy => policy.RequireClaim(CustomClaimTypes.Role, UserRoles.Support.ToString()))
 				.AddPolicy(PolicyNames.Marketing, policy => policy.RequireClaim(CustomClaimTypes.Role, UserRoles.MarketingTeam.ToString()));
 			services.AddHttpContextAccessor();
-
+		
 			services.AddCors(options =>
 			{
 #if DEBUG
@@ -117,7 +123,9 @@ namespace OgmentoAPI.Web
 				);
 #endif
 			});
+
 		}
+
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -140,6 +148,7 @@ namespace OgmentoAPI.Web
 			{
 				endpoints.MapControllers();
 			});
+			
 		}
 	}
 }
