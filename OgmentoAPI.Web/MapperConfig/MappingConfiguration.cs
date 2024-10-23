@@ -10,7 +10,7 @@ namespace OgmentoAPI.MapperConfig
 		public static void ConfigureMappings()
 		{
 			UserMapsterConfig.RegisterUserMappings();
-			KioskExtensions.RegisterKioskMappings();
+			KioskMapsterConfig.RegisterKioskMappings();
 			
 		}
 	}

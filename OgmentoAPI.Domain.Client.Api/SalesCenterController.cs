@@ -64,8 +64,7 @@ namespace OgmentoAPI.Domain.Client.Api
 		[Route("AddSalesCenter")]
 		public IActionResult AddSalesCenter(SalesCentersDto salesCenterDto)
 		{
-			SalesCenterModel model = salesCenterDto.Adapt<SalesCenterModel>();
-			var result = _salesCenterService.AddSalesCenter(model);
+			var result = _salesCenterService.AddSalesCenter(salesCenterDto);
 			if (result.HasValue)
 			{
 				return Ok(result);
