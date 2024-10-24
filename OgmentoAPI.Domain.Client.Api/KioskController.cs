@@ -1,35 +1,26 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OgmentoAPI.Domain.Authorization.Abstractions.Dto;
-using OgmentoAPI.Domain.Authorization.Abstractions.Models;
 using OgmentoAPI.Domain.Client.Abstractions.Dto;
 using OgmentoAPI.Domain.Client.Abstractions.Models;
 using OgmentoAPI.Domain.Client.Abstractions.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OgmentoAPI.Domain.Client.Api
 {
 
-    [ApiController]
-    [Authorize]
-    [Route("api/[controller]")]
-    public class KioskController : ControllerBase
-    {
-        private readonly IKioskService _kioskService;
+	[ApiController]
+	[Authorize]
+	[Route("api/[controller]")]
+	public class KioskController : ControllerBase
+	{
+		private readonly IKioskService _kioskService;
 
-        public KioskController(IKioskService kioskService)
-        {
-            _kioskService = kioskService;
-        }
+		public KioskController(IKioskService kioskService)
+		{
+			_kioskService = kioskService;
+		}
 
-		[Authorize]
 		[HttpGet]
-		[Route("GetKioskDetails")]
 		public IActionResult GetKioskDetails()
 		{
 			List<KioskModel> result = _kioskService.GetKioskDetails();
@@ -37,23 +28,32 @@ namespace OgmentoAPI.Domain.Client.Api
 			return Ok(response);
 		}
 
-		[Authorize]
-        [HttpPut]
-        [Route("UpdateKioskDetails/{kioskName}/{salesCenterUid}")]
-        public IActionResult UpdateKioskDetails(string kioskName, Guid salesCenterUid)
-        {
-            int? name = _kioskService.UpdateKioskDetails(kioskName, salesCenterUid);
-
-            return Ok(name);
-        }
-
-		[HttpDelete]
-		[Route("delete/{kioskName}")]
-		public IActionResult DeleteKiosk(string kioskName)
+		[Route("addkiosk")]
+		[HttpPost]
+		public async Task<IActionResult> AddKiosk(KioskDto kioskdto)
 		{
-			bool response = _kioskService.DeleteKioskByName(kioskName);
-			return Ok(response);
+			await _kioskService.AddKiosk(kioskdto.ToModel());
+			return Ok();
+
 		}
+
+		[HttpPut]
+		[Route("update/{kioskName}/{salesCenterUid}")]
+		public async Task<IActionResult> UpdateKioskDetails(string kioskName, Guid salesCenterUid)
+		{
+			await _kioskService.UpdateKioskDetails(kioskName, salesCenterUid);
+			return Ok();
+		}
+
+		[Route("delete/{kioskName}")]
+		[HttpDelete]
+		public async Task<IActionResult> DeleteKiosk(string kioskName)
+		{
+			await _kioskService.DeleteKioskByName(kioskName);
+			return Ok();
+		}
+
+		
 	}
 }
 

@@ -1,7 +1,9 @@
-﻿using OgmentoAPI.Domain.Authorization.Abstractions.DataContext;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using OgmentoAPI.Domain.Authorization.Abstractions.DataContext;
 using OgmentoAPI.Domain.Authorization.Abstractions.Enums;
 using OgmentoAPI.Domain.Authorization.Abstractions.Models;
 using OgmentoAPI.Domain.Authorization.Abstractions.Repository;
+using OgmentoAPI.Domain.Common.Abstractions.CustomExceptions;
 using OgmentoAPI.Web.DataContext;
 
 namespace OgmentoAPI.Domain.Authorization.Infrastructure.Repository
@@ -75,13 +77,13 @@ namespace OgmentoAPI.Domain.Authorization.Infrastructure.Repository
             userMaster.ValidityDays = user.ValidityDays;
             userMaster.City = user.City;
 
-           
+
             userMaster.RoleId = user.RoleId;
 
             _context.Update(userMaster);
             return _context.SaveChanges();
         }
-        public int? AddUser(UserModel user)
+        public int AddUser(UserModel user)
         {
             UsersMaster userMaster = new UsersMaster()
             {
@@ -98,8 +100,12 @@ namespace OgmentoAPI.Domain.Authorization.Infrastructure.Repository
             };
            
             userMaster.RoleId = user.RoleId;
-            var entity = _context.UsersMaster.Add(userMaster);
-            _context.SaveChanges();
+            EntityEntry<UsersMaster> entity = _context.UsersMaster.Add(userMaster);
+            int rowsAdded = _context.SaveChanges();
+			if (rowsAdded == 0)
+			{
+				throw new DatabaseOperationException("Unable to save user");
+			}
             return entity.Entity.UserId;
         }
         public bool DeleteUserDetails(Guid userUId)
