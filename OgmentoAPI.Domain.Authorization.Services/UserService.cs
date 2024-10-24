@@ -1,4 +1,5 @@
 ﻿using OgmentoAPI.Domain.Authorization.Abstractions.DataContext;
+using OgmentoAPI.Domain.Authorization.Abstractions.Enums;
 using OgmentoAPI.Domain.Authorization.Abstractions.Models;
 using OgmentoAPI.Domain.Authorization.Abstractions.Repository;
 using OgmentoAPI.Domain.Authorization.Abstractions.Services;
@@ -28,14 +29,14 @@ namespace OgmentoAPI.Domain.Authorization.Services
             try
             {
                 user = _context.GetUserByID(userId);
-                string userRole = _context.GetRoleName(userId);
+                UserRoles userRole = _context.GetUserRole(userId).RoleId;
                 List<SalesCenter> salesCenterNames = _salesCenterService.GetSalesCenterForUser(userId).ToList();
 
                 Dictionary<Guid, string> salesCenterDictionary = salesCenterNames.ToDictionary(sc => sc.SalesCenterUid, sc => sc.SalesCenterName);
 
                 if (user != null)
                 {
-                    user.UserRole = userRole;
+                    user.RoleId = userRole;
                     user.SalesCenters = salesCenterDictionary;
                     return user;
                 }
@@ -56,7 +57,7 @@ namespace OgmentoAPI.Domain.Authorization.Services
                 List<UserModel> userModels = _context.GetUserDetails();
                 userModels.ForEach(userModel =>
                 {
-                    string userRole = _context.GetRoleName(userModel.UserId);
+                    UserRoles userRole = _context.GetUserRole(userModel.UserId).RoleId;
 					List<SalesCenter> salesCenterList = _salesCenterService.GetSalesCenterForUser(userModel.UserId).ToList();
 					List<int> saleCenterIds = salesCenterList.Select(s => s.ID).ToList();
 					List<KioskModel> kioskDetails = _kioskService.GetKioskDetails(saleCenterIds);
@@ -64,7 +65,7 @@ namespace OgmentoAPI.Domain.Authorization.Services
 					userModel.KioskName = kioskNames;
 					Dictionary<Guid, string> salesCenterDictionary = salesCenterList.ToDictionary(sc => sc.SalesCenterUid, sc => sc.SalesCenterName);
 
-                    userModel.UserRole = userRole;
+                    userModel.RoleId = userRole;
 					userModel.SalesCenters = salesCenterDictionary;
 				});
                 return userModels;

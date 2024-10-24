@@ -75,8 +75,8 @@ namespace OgmentoAPI.Domain.Authorization.Infrastructure.Repository
             userMaster.ValidityDays = user.ValidityDays;
             userMaster.City = user.City;
 
-            var role = _context.RolesMaster.First(x => x.RoleName == user.UserRole);
-            userMaster.RoleId = role.RoleId;
+           
+            userMaster.RoleId = user.RoleId;
 
             _context.Update(userMaster);
             return _context.SaveChanges();
@@ -96,8 +96,8 @@ namespace OgmentoAPI.Domain.Authorization.Infrastructure.Repository
                 PhoneNumber = user.PhoneNumber,
                 CountryId = 1
             };
-            RolesMaster role = _context.RolesMaster.First(x => x.RoleName == user.UserRole);
-            userMaster.RoleId = role.RoleId;
+           
+            userMaster.RoleId = user.RoleId;
             var entity = _context.UsersMaster.Add(userMaster);
             _context.SaveChanges();
             return entity.Entity.UserId;

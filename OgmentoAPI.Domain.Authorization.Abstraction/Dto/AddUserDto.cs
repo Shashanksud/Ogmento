@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using OgmentoAPI.Domain.Authorization.Abstractions.Enums;
 
 namespace OgmentoAPI.Domain.Authorization.Abstractions.Dto
 {
-    public class AddUserDto:UserDetailsDto
+	public class AddUserDto : UserDetailsDto
 	{
-        public string Password { get; set; }
+		public string Password { get; set; }
+		
 	}
 }

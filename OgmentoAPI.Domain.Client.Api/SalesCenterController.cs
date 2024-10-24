@@ -64,7 +64,7 @@ namespace OgmentoAPI.Domain.Client.Api
 		[Route("AddSalesCenter")]
 		public IActionResult AddSalesCenter(SalesCentersDto salesCenterDto)
 		{
-			var result = _salesCenterService.AddSalesCenter(salesCenterDto);
+			int? result = _salesCenterService.AddSalesCenter(salesCenterDto);
 			if (result.HasValue)
 			{
 				return Ok(result);
