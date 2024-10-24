@@ -73,8 +73,8 @@ namespace OgmentoAPI.Domain.Authorization.Api
 		{
 			UserModel model = user.Adapt<UserModel>();
 			//model.UserId = Self.UserId;
-			var result = _userService.AddUser(model);
-			return Ok(result);
+			_userService.AddUser(model);
+			return Ok();
 		}
 
 		[Route("DeleteUserDetails/{userUId}")]
